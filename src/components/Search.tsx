@@ -16,7 +16,7 @@ const Search = ({ value, onChange }: SearchProps) => {
 
   return (
     <form
-      className="mr-auto lg:max-w-[450px] md:max-w-[340px] w-full relative flex items-center col-start-1 row-start-2 col-span-2 text-[14px] sm:text-[16px] sm:leading-[20px]"
+      className="mr-auto lg:max-w-[450px] md:max-w-[340px] w-full relative flex items-center col-start-1 row-start-2 col-span-2 text-sm sm:text-base sm:leading-[20px]"
       onSubmit={handleSubmit}
     >
       <Image
@@ -27,7 +27,7 @@ const Search = ({ value, onChange }: SearchProps) => {
         className="absolute left-2.5"
       />
       <input
-        className="bg-[#F2F2F3] w-full h-10 rounded-[10px] px-2.5 pl-10"
+        className="bg-gray-10 w-full h-10 rounded-[10px] px-2.5 pl-10"
         type="text"
         name="keyword"
         placeholder="가게 이름으로 찾아보세요"

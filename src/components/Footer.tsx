@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <footer className="w-full h-[126px] sm:h-[100px] px-5 pt-8 pb-4 sm:px-8 sm:py-[37px] bg-[#F2F2F3] relative sm:static">
-      <ul className="flex items-center justify-between text-[#7D7986] text-[14px] font-normal leading-[22px] sm:text-[16px] sm:leading-[26px]">
+    <footer className="w-full h-[126px] sm:h-[100px] px-5 pt-8 pb-4 sm:px-8 sm:py-[37px] bg-gray-10 relative sm:static">
+      <ul className="flex items-center justify-between text-[#7D7986] text-sm font-normal leading-[22px] sm:text-base sm:leading-[26px]">
         <li className="absolute bottom-4 sm:static sm:bottom-0">&copy;codeit-2023</li>
         <li>
           <ul className="flex items-center justify-between gap-[30px]">
