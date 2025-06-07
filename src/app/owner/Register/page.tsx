@@ -10,7 +10,7 @@ const Page = () => {
   };
 
   return (
-    <div className="w-full xl:px-[208px] md:px-16 sm:px-8 px-5 md:pt-0 pt-[18px]">
+    <div className="w-full h-screen xl:px-[208px] md:px-16 sm:px-8 px-5 md:pt-0 pt-[18px]">
       <div className="w-full mt-16">
         <div className="text-2xl text-[#111322] font-extrabold">내 가게</div>
         <div className="w-full mt-4 h-[217px] border border-solid border-gray-200 rounded-[12px] flex flex-col items-center justify-center">
