@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -14,7 +14,7 @@ export default function DetailFilter() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [selected, setSelected] = useState<Filters>({
     location: [],
-    startDay: { year: '2025', month: '06', date: '07' },
+    startDay: { year: '', month: '', date: '' },
     pay: '',
   });
 
@@ -46,6 +46,18 @@ export default function DetailFilter() {
     '서울시 중랑구',
   ];
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  useEffect(() => {
+    if (selectedDate) {
+      setSelected((prev) => ({
+        ...prev,
+        startDay: {
+          year: String(selectedDate.getFullYear()),
+          month: String(selectedDate.getMonth() + 1).padStart(2, '0'),
+          date: String(selectedDate.getDate()).padStart(2, '0'),
+        },
+      }));
+    }
+  }, [selectedDate]);
 
   return (
     <>
@@ -124,7 +136,15 @@ export default function DetailFilter() {
                 </div>
                 <div className="">
                   금액
-                  <input className="border"></input>
+                  <input
+                    onChange={(e) => {
+                      setSelected((prev) => ({
+                        ...prev,
+                        pay: e.target.value,
+                      }));
+                    }}
+                    className="border"
+                  ></input>
                 </div>
               </div>
             )}
