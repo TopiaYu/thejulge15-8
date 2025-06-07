@@ -3,7 +3,7 @@ import Alarm from './Alarm';
 import useAuth from '@/lib/use-auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import axios from '@/app/api/axios';
+import axios from '@/lib/api/axios';
 import { Notice, Shop } from '@/types/types';
 import AlarmDropDown from './AlarmDropDown';
 
