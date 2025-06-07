@@ -1,13 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 type Filters = {
-  location: string[];
-  startDay: [year: string, month: string, date: string];
-  pay: string;
-};
-type Date = {
   location: string[];
   startDay: { year: string; month: string; date: string };
   pay: string;
@@ -48,9 +45,8 @@ export default function DetailFilter() {
     '서울시 중구',
     '서울시 중랑구',
   ];
-  const startYearOptions = ['2025', '2026', '2027', '2028', '2029', '2030'];
-  const startMonthOptions = ['1', '2', '3', '4', '5', '6', 7, 8, 9, 10, 11, 12];
-  const startDateOptions = ['1', '2026', '2027', '2028', '2029', '2030'];
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
   return (
     <>
       <div className="flex flex-row">
@@ -99,7 +95,7 @@ export default function DetailFilter() {
                     </div>
                   ))}
                 </div>
-                <div className="">위치</div>
+                <div className="">선택</div>
                 <div className="">
                   {selected.location.map((loc) => (
                     <div key={loc}>
@@ -116,6 +112,19 @@ export default function DetailFilter() {
                       </button>
                     </div>
                   ))}
+                </div>
+                <div className="">
+                  시작일
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={(date) => setSelectedDate(date)}
+                    dateFormat="yyyy/MM/dd"
+                    className="border"
+                  />
+                </div>
+                <div className="">
+                  금액
+                  <input className="border"></input>
                 </div>
               </div>
             )}
