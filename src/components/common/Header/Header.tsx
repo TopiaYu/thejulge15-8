@@ -1,9 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import Search from './Search';
+import Search from '../Search/Search';
 import { useState } from 'react';
-import useAuth from '@/lib/use-auth';
+import useAuth from '@/lib/hooks/use-auth';
 import GuestMenu from './GuestMenu';
 import UserMenu from './UserMenu';
 import Link from 'next/link';
