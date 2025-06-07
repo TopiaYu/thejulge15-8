@@ -1,11 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import Search from './Search';
+import Search from './header/Search';
 import { useState } from 'react';
 import useAuth from '@/lib/use-auth';
-import GuestMenu from './GuestMenu';
-import UserMenu from './UserMenu';
+import GuestMenu from './header/GuestMenu';
+import UserMenu from './header/UserMenu';
 import Link from 'next/link';
 
 const Header = () => {
