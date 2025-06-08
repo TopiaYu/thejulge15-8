@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { LoginResponse } from '../types/types';
+import { LoginResponse } from '../../types/types';
 
 interface AuthState {
   userData: LoginResponse | null;
