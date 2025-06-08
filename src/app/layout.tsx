@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
+
+import LayoutWrapper from '../components/LayoutWrapper';
 import Header from '../components/common/Header/Header';
 import Footer from '../components/common/Footer/Footer';
 
@@ -16,9 +18,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <Header />
-        {children}
-        <Footer />
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   );
