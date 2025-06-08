@@ -4,7 +4,7 @@ import LoginSignAuthFormWrapper from '../../components/LoginSignAuthFormWrapper'
 import Link from 'next/link';
 import { useState } from 'react';
 import Image from 'next/image';
-import axios from '../api/axios';
+import axios from '../../lib/api/axios';
 import * as Axios from 'axios';
 import { useRouter } from 'next/navigation';
 
