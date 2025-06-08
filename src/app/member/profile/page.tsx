@@ -22,7 +22,7 @@ const Page = () => {
           </p>
           <button
             onClick={handleClick}
-            className="w-[346px] h-[47px] bg-[#ea3c12] text-white rounded-md hover:bg-orange-700"
+            className="w-[346px] h-[47px] bg-[#ea3c12] text-white rounded-md hover:bg-orange-700 font-bold"
           >
             내 프로필 등록하기
           </button>
