@@ -1,6 +1,8 @@
+//알바님 내 프로필 등록하기 패이지
 'use client';
 
 import { useState } from 'react';
+import Modal from '@/components/member/Modal';
 
 const regions = [
   '서울시 종로구',
@@ -35,13 +37,14 @@ const Page = () => {
   const [phone, setPhone] = useState('');
   const [region, setRegion] = useState('');
   const [bio, setBio] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   const isFormValid = name.trim() !== '' && phone.trim() !== '';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
-    console.log('등록폼 제출 콘솔테스트용:', { name, phone, region, bio });
+    setShowModal(true); // 모달 열기
   };
 
   return (
@@ -121,6 +124,8 @@ const Page = () => {
           </button>
         </div>
       </form>
+      {/* 모달 렌더링 */}
+      {showModal && <Modal message="등록이 완료되었습니다." onClose={() => setShowModal(false)} />}
     </div>
   );
 };
