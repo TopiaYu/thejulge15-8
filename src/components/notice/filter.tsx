@@ -18,8 +18,8 @@ export default function Filter() {
         </button>
 
         {filter && (
-          <div className="absolute top-full mt-[8px] w-[105px] grid grid-row-4 rounded-md border-[1px] border-gray-20 text-sm rounded shadow-lg">
-            <div className="bg-white w-full">
+          <div className="absolute mt-[8px] w-[105px] grid grid-row-4 rounded-md border-[1px] border-gray-20 text-sm shadow-lg">
+            <div className="bg-white w-full mt-[4px] mb-[4px] ">
               {filterOptions.map((option: string) => (
                 <button
                   key={option}
@@ -27,7 +27,7 @@ export default function Filter() {
                     setSelectFilter(option);
                     setFilter(false);
                   }}
-                  className="block px-4 py-2 hover:bg-gray-100 w-full"
+                  className="flex justify-center items-center w-full text-sm py-[8px] px-[12px] text-left hover:bg-gray-30 }"
                 >
                   {option}
                 </button>

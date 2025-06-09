@@ -24,8 +24,10 @@ export default function JobList() {
       <section className="flex flex-col justify-center items-center">
         <div className="flex flex-cols justify-between w-[964px]  mb-[31px] mt-[60px]">
           <div className="text-black text-2xl font-bold">전체 공고</div>
-          <Filter />
-          <DetailFilter />
+          <div className="flex gap-[10px]">
+            <Filter />
+            <DetailFilter />
+          </div>
         </div>
         <div className="grid grid-cols-3 grid-rows-2 gap-x-[14px] gap-y-[31px]">
           <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
