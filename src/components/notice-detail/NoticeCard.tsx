@@ -49,7 +49,7 @@ const NoticeCard = ({ info }: { info: LatestData }) => {
             {name}
           </h3>
           <div
-            className={`${clsx(closed ? 'text-gray-30' : 'text-black')}, text-xs sm:text-sm flex items-center gap-1.5 mb-2`}
+            className={`${clsx(closed ? 'text-gray-30' : 'text-black')}, text-xs sm:text-sm flex items-start sm:items-center gap-1.5 mb-2`}
           >
             <WorkHour startsAt={startsAt} workhour={workhour} className={timeClass} />
           </div>
