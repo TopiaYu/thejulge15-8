@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import Alarm from './Alarm';
-import useAuth from '@/lib/use-auth';
+import Alarm from '../Alarm/Alarm';
+import useAuth from '@/lib/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import axios from '@/app/api/axios';
+import axios from '@/lib/api/axios';
 import { Notice, Shop } from '@/types/types';
-import AlarmDropDown from './AlarmDropDown';
+import AlarmDropDown from '../Alarm/AlarmDropDown';
 
 interface UserValue {
   id: string | null;

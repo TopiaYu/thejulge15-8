@@ -1,5 +1,11 @@
+import RegisterForm from '../owner/Register/page';
+
 const Owner = () => {
-  return <div>사장님</div>;
+  return (
+    <div>
+      <RegisterForm />
+    </div>
+  );
 };
 
 export default Owner;
