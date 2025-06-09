@@ -3,7 +3,7 @@
 import NoticeInfo from '@/components/notice-detail/NoticeInfo';
 import axios from '@/lib/api/axios';
 import { use, useEffect, useState } from 'react';
-import LatestNotice from '../../../../../components/notice-detail/LatestNotice';
+import LatestNotice from '../../../../components/notice-detail/LatestNotice';
 
 interface Props {
   shopId: string;
