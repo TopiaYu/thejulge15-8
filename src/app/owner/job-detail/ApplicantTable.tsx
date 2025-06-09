@@ -1,4 +1,38 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
+interface Applicant {
+  id: string;
+  name: string;
+  introduction: string;
+  phoneNumber: string;
+  status: string;
+}
+
 export default function ApplicantsTable() {
+  const [allApplicants, setAllApplicants] = useState<Applicant[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(allApplicants.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentApplicant = allApplicants.slice(startIndex, endIndex);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  useEffect(() => {
+    setAllApplicants(mockApplicants);
+    setLoading(false);
+  }, []);
+
+  if (loading) {
+    return <div className="w-full max-w-[964px] mx-auto p-6">데이터를 불러오는 중입니다...</div>;
+  }
+
   return (
     <div className="w-full max-w-[964px] px-8 max-[375px]:px-4 mx-auto py-15">
       <header className="text-2xl font-bold mb-8">신청자 목록</header>
@@ -13,22 +47,36 @@ export default function ApplicantsTable() {
             </tr>
           </thead>
           <tbody>
-            {mockApplicants.map((applicant) => (
-              <tr key={applicant.id} className="border-b border-gray-20">
-                <td className="px-3.5 py-4">{applicant.name}</td>
-                <td className="px-3.5 py-4 max-w-[300px]">{applicant.introduction}</td>
-                <td className="px-3.5 py-4">{applicant.phoneNumber}</td>
-                <td className="px-3.5 py-4 flex gap-4">
-                  <button className="cursor-pointer border border-orange text-orange font-bold rounded-lg px-5 py-2.5">
-                    거절하기
-                  </button>
-                  <button className="cursor-pointer border border-blue-20 text-blue-20 font-bold rounded-lg px-5 py-2.5">
-                    승인하기
-                  </button>
-                </td>
-              </tr>
-            ))}
-            <tr>페이지네이션</tr>
+            {currentApplicant.length > 0 ? (
+              currentApplicant.map((applicant) => (
+                <tr key={applicant.id} className="border-b border-gray-20">
+                  <td className="px-3.5 py-4">{applicant.name}</td>
+                  <td className="px-3.5 py-4 max-w-[300px]">{applicant.introduction}</td>
+                  <td className="px-3.5 py-4">{applicant.phoneNumber}</td>
+                  <td className="px-3.5 py-4 flex gap-4">
+                    <button className="cursor-pointer border border-orange text-orange font-bold rounded-lg px-5 py-2.5">
+                      거절하기
+                    </button>
+                    <button className="cursor-pointer border border-blue-20 text-blue-20 font-bold rounded-lg px-5 py-2.5">
+                      승인하기
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <div>신청자가 없습니다</div>
+            )}
+
+            <tr>
+              <div>
+                {/* <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                /> */}
+                페이지네이션
+              </div>
+            </tr>
           </tbody>
         </table>
       </div>
