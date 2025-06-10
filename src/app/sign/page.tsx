@@ -90,7 +90,7 @@ export default function Signup() {
 
   return (
     <LoginSignAuthFormWrapper>
-      <div className="mb-8 cursor-pointer" onClick={() => router.push('/posts')}>
+      <div className="mb-8 cursor-pointer" onClick={() => router.push('/')}>
         <Image
           src="/logo.png"
           alt="더줄게 로고"

@@ -42,15 +42,15 @@ export default function Login() {
     if (!isEmailValid || !isPasswordValid) return;
 
     try {
-      const response = await axios.post(
-        'https://bootcamp-api.codeit.kr/api/15-8/the-julge/users/login',
-        { email, password },
-      );
+      const response = await axios.post('https://bootcamp-api.codeit.kr/api/15-8/the-julge/token', {
+        email,
+        password,
+      });
 
-      const token = response.data?.accessToken;
+      const token = response.data?.item?.token;
       if (token) {
         localStorage.setItem('accessToken', token);
-        router.push('/posts');
+        router.push('/');
       } else {
         alert('로그인에 실패했습니다.');
       }
@@ -65,7 +65,7 @@ export default function Login() {
 
   return (
     <LoginSignAuthFormWrapper>
-      <div className="text-center mb-8 cursor-pointer" onClick={() => router.push('/posts')}>
+      <div className="text-center mb-8 cursor-pointer" onClick={() => router.push('/')}>
         <Image
           src="/logo.png"
           alt="더줄게 로고"
