@@ -14,7 +14,7 @@ const Pagination = ({ totalPages, currentPage, onPageChange }: PaginationProps) 
         <button
           key={idx}
           onClick={() => onPageChange(idx + 1)}
-          className={`px-3 py-1 rounded ${currentPage === idx + 1 ? 'bg-[#EA3C12] text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded ${currentPage === idx + 1 ? 'bg-[#FF8D72] text-white' : 'bg-white'}`}
         >
           {idx + 1}
         </button>

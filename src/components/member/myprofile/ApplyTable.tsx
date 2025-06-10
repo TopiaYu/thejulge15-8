@@ -1,6 +1,6 @@
-//공고지원 내역 테이블 컴포넌트
-
 'use client';
+
+import clsx from 'clsx';
 
 interface ApplyItem {
   id: number;
@@ -14,11 +14,24 @@ interface ApplyTableProps {
   data: ApplyItem[];
 }
 
+const getStatusStyle = (status: string) => {
+  switch (status) {
+    case '승인 완료':
+      return 'bg-[#D6EBFF] text-[#007AFF]';
+    case '거절':
+      return 'bg-[#FFEFEA] text-[#E84025]';
+    case '대기중':
+      return 'bg-[#D9F5D9] text-[#1A7F37]';
+    default:
+      return 'bg-gray-200 text-gray-600';
+  }
+};
+
 const ApplyTable = ({ data }: ApplyTableProps) => {
   return (
-    <table className="w-full text-left border border-[#ddd]">
+    <table className="w-full text-left border border-[#E5E4E7]">
       <thead>
-        <tr className="bg-gray-100">
+        <tr className="bg-[#FFEBE7] border-[#E5E4E7] h-[50px]">
           <th className="p-2">가게</th>
           <th className="p-2">일자</th>
           <th className="p-2">시급</th>
@@ -26,12 +39,21 @@ const ApplyTable = ({ data }: ApplyTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((item, idx) => (
-          <tr key={idx} className="border-t">
+        {data.map((item) => (
+          <tr key={item.id} className="border-t border-[#E5E4E7] hover:bg-[#F9F9F9] h-[69px]">
             <td className="p-2">{item.title}</td>
             <td className="p-2">{item.date}</td>
             <td className="p-2">{item.hourlyPay}</td>
-            <td className="p-2">{item.status}</td>
+            <td className="p-2">
+              <span
+                className={clsx(
+                  'text-sm font-bold px-4 py-1 rounded-full inline-block text-center',
+                  getStatusStyle(item.status),
+                )}
+              >
+                {item.status}
+              </span>
+            </td>
           </tr>
         ))}
       </tbody>
