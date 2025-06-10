@@ -12,7 +12,13 @@ export default function JobPostFormPage() {
       <header className="flex justify-between mb-8">
         <h1 className="text-lg sm:text-2xl font-bold">공고등록</h1>
         <button className="cursor-pointer">
-          <Image src="/closeIcon.png" width={24} height={24} className="sm:w-8 sm:h-8" alt="exit" />
+          <Image
+            src="/close-icon.png"
+            width={24}
+            height={24}
+            className="sm:w-8 sm:h-8"
+            alt="exit"
+          />
         </button>
       </header>
 
