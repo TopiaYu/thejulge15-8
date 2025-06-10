@@ -12,7 +12,7 @@ export default function Filter() {
       <div className="">
         <button
           onClick={() => setFilter(!filter)}
-          className="relative bg-gray-100 rounded-[5px] text-sm font-bold w-[105px] h-[30px] flex items-center justify-center"
+          className="focus:outline-none cursor-pointer relative bg-gray-100 rounded-[5px] text-sm font-bold w-[105px] h-[30px] flex items-center justify-center"
         >
           {selectFilter} ▼
         </button>
