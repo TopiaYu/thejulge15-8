@@ -1,3 +1,4 @@
+//신청한 공고 내역이 없을 때 보여주는 컴포넌트(공고페이지로 이동하는 버튼 포함)
 'use client';
 
 interface EmptyStateProps {

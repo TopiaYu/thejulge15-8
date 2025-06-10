@@ -1,4 +1,4 @@
-// ApplyHistory.tsx
+// ApplyHistory.tsx(공고 신청 내역 컴포넌트)
 'use client';
 
 import ApplyTable from './ApplyTable';

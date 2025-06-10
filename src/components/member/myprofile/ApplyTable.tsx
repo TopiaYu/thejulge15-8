@@ -13,7 +13,7 @@ interface ApplyItem {
 interface ApplyTableProps {
   data: ApplyItem[];
 }
-
+//공고신청 상태 따른 스타일 적용
 const getStatusStyle = (status: string) => {
   switch (status) {
     case '승인 완료':
@@ -29,7 +29,7 @@ const getStatusStyle = (status: string) => {
 
 const ApplyTable = ({ data }: ApplyTableProps) => {
   return (
-    <table className="w-full text-left border border-[#E5E4E7]">
+    <table className="w-full text-left border border-[#E5E4E7] rounded-lg shadow-sm">
       <thead>
         <tr className="bg-[#FFEBE7] border-[#E5E4E7] h-[50px]">
           <th className="p-2">가게</th>

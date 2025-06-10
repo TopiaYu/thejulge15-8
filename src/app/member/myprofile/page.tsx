@@ -46,10 +46,14 @@ const mockApplyData = [
   },
 ];
 
-const dummyNotices = ['첫 번째 알림입니다.', '두 번째 알림입니다.', '세 번째 알림입니다.'];
+const dummyNotices = [
+  { message: 'HS 과일주스 공고 지원이 승인되었습니다.', timeAgo: '1분 전' },
+  { message: '써니 브런치 공고 지원이 승인되었습니다.', timeAgo: '3분 전' },
+  { message: '수리 에스프레소 공고 지원이 거절되었습니다.', timeAgo: '7분 전' },
+];
 
 const Page = () => {
-  const [showNotice, setShowNotice] = useState(false);
+  const [showNotice, setShowNotice] = useState(true); //디자인 확인하려고 true로 설정
   const router = useRouter();
 
   const handleClick = () => {
@@ -67,6 +71,7 @@ const Page = () => {
             {/* 왼쪽: 제목 */}
             <div>
               <h2 className="text-[28px] font-bold">내 프로필</h2>
+
               {showNotice && (
                 <div className="mt-4">
                   <NoticePopup notices={dummyNotices} onClose={() => setShowNotice(false)} />

@@ -1,3 +1,4 @@
+//내프로필 상세페이지에서 사용하는 프로필 카드 컴포넌트
 'use client';
 
 import Image from 'next/image';
@@ -21,7 +22,7 @@ const MyProfileCard = ({ name, phone, region, bio, onEdit }: MyProfileCardProps)
         </div>
         <button
           onClick={onEdit}
-          className="w-[108px] lg:w-[169px] px-3 py-1 h-[48px] border border-[#EA3C12] font-bold text-[#EA3C12] bg-white rounded-md"
+          className="w-[108px] lg:w-[169px] px-3 py-1 h-[48px] border border-[#EA3C12] font-bold text-[#EA3C12] bg-white rounded-md hover:bg-[#EA3C12] hover:text-white"
         >
           편집하기
         </button>
