@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import Modal from '@/components/member/Modal';
+import { useRouter } from 'next/navigation';
 
 const regions = [
   '서울시 종로구',
@@ -38,6 +39,7 @@ const Page = () => {
   const [region, setRegion] = useState('');
   const [bio, setBio] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
 
   const isFormValid = name.trim() !== '' && phone.trim() !== '';
 
@@ -45,6 +47,11 @@ const Page = () => {
     e.preventDefault();
     if (!isFormValid) return;
     setShowModal(true); // 모달 열기
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false); //모달 닫고
+    router.push('/member/myprofile'); // 내프로필 페이지로 이동
   };
 
   return (
@@ -125,7 +132,7 @@ const Page = () => {
         </div>
       </form>
       {/* 모달 렌더링 */}
-      {showModal && <Modal message="등록이 완료되었습니다." onClose={() => setShowModal(false)} />}
+      {showModal && <Modal message="등록이 완료되었습니다." onClose={handleModalClose} />}
     </div>
   );
 };
