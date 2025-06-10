@@ -28,10 +28,10 @@ export interface UserItem {
   id: string;
   email: string;
   type: 'employer' | 'employee';
-  name: string;
-  phone: string;
+  name?: string;
+  phone?: string;
   address: string;
-  bio: string;
+  bio?: string;
 }
 
 export interface LoginResponse {
