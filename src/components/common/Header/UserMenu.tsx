@@ -91,7 +91,7 @@ const UserMenu = () => {
     <>
       {userValue?.type === 'employer' ? (
         <>
-          <Link href="#">내 가게</Link>
+          <Link href="/owner">내 가게</Link>
           <button
             onClick={() => {
               logout();

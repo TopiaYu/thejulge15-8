@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import useAuth from '@/lib/hooks/use-auth';
 
 export default function Login() {
   const router = useRouter();
@@ -21,6 +22,8 @@ export default function Login() {
     const valid = Boolean(email && password && validateEmail(email) && password.length >= 8);
     setIsFormValid(valid);
   }, [email, password]);
+
+  const { login } = useAuth();
 
   const handleEmailBlur = () => {
     setEmailError(validateEmail(email) ? '' : '이메일 형식으로 작성해 주세요.');
@@ -46,7 +49,7 @@ export default function Login() {
         email,
         password,
       });
-
+      login(response.data);
       const token = response.data?.item?.token;
       if (token) {
         localStorage.setItem('accessToken', token);
