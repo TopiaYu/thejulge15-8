@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import useAuth from '@/lib/hooks/use-auth';
 import NoticeModal from './modal/NoticeModal';
 import NoticeModalItem from './modal/NoticeModalItem';
+import useToken from '@/lib/hooks/use-token';
 
 interface ApplyBtnProps {
   shopId: string;
@@ -29,6 +30,7 @@ const ApplyButton = ({ shopId, noticeId, closed }: ApplyBtnProps) => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const { userData } = useAuth();
+  const token = useToken();
   const className = clsx(
     'w-full h-12 rounded-md bg-orange text-white font-bold text-sm sm:text-base cursor-pointer',
     applyStatus.status !== 'pending'
@@ -57,7 +59,7 @@ const ApplyButton = ({ shopId, noticeId, closed }: ApplyBtnProps) => {
         { status: value },
         {
           headers: {
-            Authorization: `Bearer ${userData?.item.token}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
@@ -68,7 +70,7 @@ const ApplyButton = ({ shopId, noticeId, closed }: ApplyBtnProps) => {
         closed: data.item.notice.closed,
       });
     },
-    [shopId, noticeId, applyStatus.id, userData?.item.token],
+    [shopId, noticeId, applyStatus.id, token],
   );
 
   const handleCancel = useCallback(() => {

@@ -12,9 +12,12 @@ const Header = () => {
   const [value, setValue] = useState('');
   const { userData } = useAuth();
 
-  const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    setValue(inputValue);
+  const inputHandler = (e: React.ChangeEvent<HTMLInputElement> | string) => {
+    if (typeof e === 'string') {
+      setValue(e);
+    } else {
+      setValue(e.target.value);
+    }
   };
 
   return (
