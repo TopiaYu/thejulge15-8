@@ -90,7 +90,7 @@ export default function DetailFilter() {
             {detailOpen && (
               <div
                 ref={wrapperRef}
-                className="flex flex-col gap-[24px] absolute w-[390px] pt-[20px] pr-[20px] pl-[20px] pb-[20px] top-full right-0 bg-white border-gray-20 border-[1px] rounded-[10px] shadow-lg"
+                className="flex flex-col gap-[24px] absolute w-[390px] mt-[8px] pt-[20px] pr-[20px] pl-[20px] pb-[20px] top-full right-0 bg-white border-gray-20 border-[1px] rounded-[10px] shadow-lg"
               >
                 <div className="flex justify-between">
                   <div className="font-bold text-xl">상세 필터</div>
