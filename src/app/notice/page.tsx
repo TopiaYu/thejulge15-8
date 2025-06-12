@@ -5,6 +5,7 @@ import Filter from '@/components/notice/filter';
 import DetailFilter from '@/components/notice/detailfilter';
 import axios from '@/lib/api/axios';
 import Link from 'next/link';
+import { useSortOption } from '@/lib/zustand';
 
 interface JobList {
   id: string;
@@ -33,15 +34,23 @@ interface Shop {
   imageUrl: string;
   originalHourlyPay: number;
 }
-
 export default function JobList() {
   const [jobList, setJobList] = useState<JobList[]>([]);
+  const { sortOption, setSortOption } = useSortOption();
   useEffect(() => {
-    bringData();
-  }, []);
-  async function bringData() {
+    bringData(sortOption);
+  }, [sortOption]);
+  async function bringData(sort: string) {
+    const sortMap: Record<string, string> = {
+      '마감 임박 순': 'time',
+      '시급 많은 순': 'pay',
+      '시간 적은 순': 'hour',
+      '가나다 순': 'shop',
+    };
+
     const params = {
       limit: 100,
+      sort: sortMap[sort] || 'dueSoon',
     };
     try {
       const response = await axios.get('/notices', { params });
@@ -80,7 +89,7 @@ export default function JobList() {
         <div className="flex flex-cols justify-between w-[964px] mb-[31px] mt-[60px]">
           <div className="text-black text-2xl font-bold">전체 공고</div>
           <div className="flex gap-[10px]">
-            <Filter />
+            <Filter onSelect={setSortOption} />
             <DetailFilter />
           </div>
         </div>

@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-
+import { useSortOption } from '@/lib/zustand';
 export default function Filter() {
   const [filter, setFilter] = useState(false);
-  const [selectFilter, setSelectFilter] = useState('마감 임박 순');
-
   const filterOptions: string[] = ['마감 임박 순', '시급 많은 순', '시간 적은 순', '가나다 순'];
+  const { sortOption, setSortOption } = useSortOption();
+
+  const handleSelectOption = (option: string) => {
+    setFilter(false);
+    setSortOption(option);
+  };
   return (
     <>
       <div className="relative">
@@ -14,7 +18,7 @@ export default function Filter() {
           onClick={() => setFilter(!filter)}
           className="relative bg-gray-100 rounded-[5px] text-sm font-bold w-[105px] h-[30px] flex items-center justify-center cursor-pointer"
         >
-          {selectFilter} ▼
+          {sortOption} ▼
         </button>
 
         {filter && (
@@ -24,8 +28,7 @@ export default function Filter() {
                 <button
                   key={option}
                   onClick={() => {
-                    setSelectFilter(option);
-                    setFilter(false);
+                    handleSelectOption(option);
                   }}
                   className="block hover:bg-gray-100 w-full cursor-pointer p-[8px]"
                 >
