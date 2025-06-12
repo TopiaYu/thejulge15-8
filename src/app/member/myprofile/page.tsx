@@ -83,7 +83,7 @@ const Page = () => {
             <MyProfileCard
               name="강아지"
               phone="010-1234-5678"
-              region="서울시 마포구 멍멍동"
+              address="서울시 마포구 멍멍동"
               bio="성실하고 밝은 성격입니다!"
               onEdit={() => router.push('/member/register')}
             />

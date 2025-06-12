@@ -6,12 +6,12 @@ import Image from 'next/image';
 interface MyProfileCardProps {
   name: string;
   phone: string;
-  region: string;
+  address: string;
   bio: string;
   onEdit: () => void;
 }
 
-const MyProfileCard = ({ name, phone, region, bio, onEdit }: MyProfileCardProps) => {
+const MyProfileCard = ({ name, phone, address, bio, onEdit }: MyProfileCardProps) => {
   return (
     <div className="bg-[#FFEBE7] p-5 lg:p-8 rounded-md w-full lg:max-w-[665px] h-[256px]">
       {/* 상단 - 이름, 편집 버튼 */}
@@ -42,7 +42,7 @@ const MyProfileCard = ({ name, phone, region, bio, onEdit }: MyProfileCardProps)
           <div className="relative w-4 h-4 sm:w-5 sm:h-5">
             <Image src="/location.png" fill alt="주소" />
           </div>
-          <span>선호 지역: {region}</span>
+          <span>선호 지역: {address}</span>
         </div>
 
         {/* 소개 */}

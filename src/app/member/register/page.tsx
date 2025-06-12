@@ -36,7 +36,7 @@ const regions = [
 const Page = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [region, setRegion] = useState('');
+  const [address, setAddress] = useState('');
   const [bio, setBio] = useState('');
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
@@ -91,11 +91,11 @@ const Page = () => {
 
           {/* 선호 지역 */}
           <div className="flex flex-col">
-            <label htmlFor="region">선호 지역</label>
+            <label htmlFor="address">선호 지역</label>
             <select
-              id="region"
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
+              id="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               className="h-[58px] px-4 border border-[#CBC9CF] bg-white rounded-md"
             >
               <option value="">선택</option>
