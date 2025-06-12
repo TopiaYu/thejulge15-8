@@ -4,6 +4,9 @@
 import { useState } from 'react';
 import Modal from '@/components/member/Modal';
 import { useRouter } from 'next/navigation';
+import useAuth from '@/lib/hooks/use-auth';
+import axios from '@/lib/api/axios';
+import useToken from '@/lib/hooks/use-token';
 
 const regions = [
   '서울시 종로구',
@@ -39,14 +42,33 @@ const Page = () => {
   const [address, setAddress] = useState('');
   const [bio, setBio] = useState('');
   const [showModal, setShowModal] = useState(false);
+
   const router = useRouter();
+  const token = useToken();
+  const { userData } = useAuth();
 
   const isFormValid = name.trim() !== '' && phone.trim() !== '';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) return;
-    setShowModal(true); // 모달 열기
+    const userId = userData?.item.user.item.id;
+    if (!isFormValid || !userId || !token) return;
+
+    try {
+      await axios.put(
+        `/users/${userId}`,
+        { name, phone, address, bio },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setShowModal(true); // 모달 열기
+    } catch (error) {
+      console.error('프로필 등록 실패:', error);
+      alert('프로필 등록에 실패했습니다.');
+    }
   };
 
   const handleModalClose = () => {
