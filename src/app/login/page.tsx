@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import useAuth from '@/lib/hooks/use-auth';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 
 export default function Login() {
   const router = useRouter();
@@ -14,6 +16,11 @@ export default function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const validateEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
@@ -21,6 +28,8 @@ export default function Login() {
     const valid = Boolean(email && password && validateEmail(email) && password.length >= 8);
     setIsFormValid(valid);
   }, [email, password]);
+
+  const { login } = useAuth();
 
   const handleEmailBlur = () => {
     setEmailError(validateEmail(email) ? '' : '이메일 형식으로 작성해 주세요.');
@@ -46,7 +55,7 @@ export default function Login() {
         email,
         password,
       });
-
+      login(response.data);
       const token = response.data?.item?.token;
       if (token) {
         localStorage.setItem('accessToken', token);
@@ -65,7 +74,7 @@ export default function Login() {
 
   return (
     <LoginSignAuthFormWrapper>
-      <div className="text-center mb-8 cursor-pointer" onClick={() => router.push('/')}>
+      <div className="text-center mb-8  cursor-pointer" onClick={() => router.push('/')}>
         <Image
           src="/logo.png"
           alt="더줄게 로고"
@@ -75,7 +84,7 @@ export default function Login() {
         />
       </div>
 
-      <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+      <form className="space-y-2" onSubmit={handleSubmit} noValidate>
         <div>
           <label className="block mb-1">이메일</label>
           <input
@@ -93,14 +102,22 @@ export default function Login() {
 
         <div>
           <label className="block mb-1">비밀번호</label>
-          <input
-            type="password"
-            placeholder="비밀번호를 입력해주세요."
-            className={`w-full border rounded px-3 py-2 ${passwordError ? 'border-red-500' : ''}`}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onBlur={handlePasswordBlur}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="비밀번호를 입력해주세요."
+              className={`w-full border rounded px-3 py-2 pr-10 ${passwordError ? 'border-red-500' : ''}`}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={handlePasswordBlur}
+            />
+            <div
+              onClick={togglePasswordVisibility}
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+            >
+              {showPassword ? <HiEye size={20} /> : <HiEyeOff size={20} />}
+            </div>
+          </div>
           <p
             className={`text-sm mt-1 min-h-[20px] ${passwordError ? 'text-red-500' : 'invisible'}`}
           >
@@ -111,7 +128,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={!isFormValid}
-          className={`w-full py-2 rounded transition ${
+          className={`w-full py-2 cursor-pointer rounded transition ${
             isFormValid
               ? 'bg-[#EA3A00] text-white hover:opacity-90'
               : 'bg-gray-300 text-white cursor-not-allowed'
@@ -123,7 +140,7 @@ export default function Login() {
 
       <p className="mt-4 text-sm text-center">
         회원이 아니신가요?{' '}
-        <Link href="/sign" className="text-blue-600 underline">
+        <Link href="/sign" className="text-blue-600 cursor-pointer underline">
           회원가입하기
         </Link>
       </p>
