@@ -74,7 +74,7 @@ export default function Login() {
 
   return (
     <LoginSignAuthFormWrapper>
-      <div className="text-center mb-8 cursor-pointer" onClick={() => router.push('/')}>
+      <div className="text-center mb-8  cursor-pointer" onClick={() => router.push('/')}>
         <Image
           src="/logo.png"
           alt="더줄게 로고"
