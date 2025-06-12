@@ -4,21 +4,33 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import InputValidator from '../Header/input-validator';
 import { useEffect, useRef, useState } from 'react';
+import axios from '@/lib/api/axios';
 
 interface SearchProps {
   value: string;
   onChange: (value: string) => void;
 }
 
+interface Recommend {
+  id: string;
+  name: string;
+}
+
 const Search = ({ value, onChange }: SearchProps) => {
   const [isFocus, setFocus] = useState<boolean>(false);
   const [isBlurBlocking, setIsBlurBlocking] = useState(false);
   const [recently, setRecently] = useState<string[]>([]);
+  const [recommend, setRecommend] = useState<Recommend[]>([]);
+  const [liIndex, setLiIndex] = useState(-1);
   const ref = useRef<HTMLInputElement>(null);
+  const recentlyRef = useRef<(HTMLLIElement | null)[]>([]);
+  const recommendRef = useRef<(HTMLLIElement | null)[]>([]);
   const router = useRouter();
+  const validate = InputValidator(value);
+  const listClassName = 'bg-gray-30';
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const validate = InputValidator(value);
+    e.preventDefault();
     const storage = localStorage.getItem('searched');
     const history = storage ? JSON.parse(storage) : [];
 
@@ -38,7 +50,7 @@ const Search = ({ value, onChange }: SearchProps) => {
 
   const handleFocus = () => {
     if (value.length === 0) {
-      setFocus(!isFocus);
+      setFocus(true);
     }
   };
 
@@ -60,11 +72,68 @@ const Search = ({ value, onChange }: SearchProps) => {
     setIsBlurBlocking(true);
   };
 
+  const handleArrowBtn = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const activeRef = value.length === 0 ? recentlyRef : recommendRef;
+    const listLength = activeRef.current.length;
+    let newIndex = liIndex;
+
+    if (e.key === 'Enter') {
+      const selectedItem = activeRef.current[newIndex]?.textContent;
+      if (selectedItem) {
+        onChange(selectedItem);
+      }
+    }
+
+    if (e.key === 'ArrowDown') {
+      newIndex = liIndex < listLength - 1 ? liIndex + 1 : 0;
+    } else if (e.key === 'ArrowUp') {
+      newIndex = liIndex > 0 ? liIndex - 1 : listLength - 1;
+    } else {
+      return;
+    }
+
+    activeRef.current.forEach((item) => {
+      item?.classList.remove(listClassName);
+    });
+
+    activeRef.current[newIndex]?.classList.add(listClassName);
+
+    setLiIndex(newIndex);
+  };
+
   useEffect(() => {
     const searcedItem = localStorage.getItem('searched');
     if (!searcedItem) return;
     setRecently(JSON.parse(searcedItem));
   }, []);
+
+  useEffect(() => {
+    const keyword: Recommend[] = [];
+    const autoComplete = async () => {
+      try {
+        const res = await axios.get(`/notices?keyword=${value}`);
+        const data = res.data.items;
+
+        for (const obj of data) {
+          if (!obj) return;
+          keyword.push({ id: obj.item.id, name: obj.item.shop.item.name });
+        }
+        setRecommend(keyword);
+      } catch (err) {
+        console.error('자동 완성 실패', err);
+      }
+    };
+
+    if (value.length >= 2) {
+      autoComplete();
+    }
+
+    if (ref.current === document.activeElement && value.length === 0) {
+      setFocus(true);
+    }
+  }, [value]);
+
+  console.log(recentlyRef.current);
 
   return (
     <div className="lg:max-w-[450px] md:max-w-[340px] w-full flex flex-col relative">
@@ -89,19 +158,43 @@ const Search = ({ value, onChange }: SearchProps) => {
           onChange={(e) => onChange(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          onKeyDown={handleArrowBtn}
         />
       </form>
-      {isFocus && value.length === 0 ? (
+      {isFocus && value.length === 0 && recently.length > 0 ? (
         <ul className="w-full absolute top-11 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
-          {recently.map((item) => {
+          {recently.length !== 0 &&
+            recently.map((item, index) => {
+              if (!item) return;
+              return (
+                <li
+                  className="hover:bg-gray-30 rounded-sm p-1"
+                  key={item}
+                  ref={(el) => {
+                    recentlyRef.current[index] = el;
+                  }}
+                  onMouseDown={liClickHandler}
+                >
+                  {item}
+                </li>
+              );
+            })}
+        </ul>
+      ) : null}
+      {recommend.length > 0 && value.length > 0 && recommend.length > 0 ? (
+        <ul className="w-full absolute top-11 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
+          {recommend.map((item, index) => {
             if (!item) return;
             return (
               <li
+                ref={(el) => {
+                  recommendRef.current[index] = el;
+                }}
                 className="hover:bg-gray-30 rounded-sm p-1"
-                key={item}
-                onMouseDown={(e) => liClickHandler(e)}
+                key={item.id}
+                onMouseDown={liClickHandler}
               >
-                {item}
+                {item.name}
               </li>
             );
           })}
