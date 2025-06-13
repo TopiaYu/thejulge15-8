@@ -2,7 +2,47 @@
 
 import Image from 'next/image';
 
-export default function StoreDetail() {
+interface ShopItem {
+  id: string;
+  name: string;
+  category: string;
+  address1: string;
+  address2: string;
+  description: string;
+  imageUrl: string;
+  originalHourlyPay: number;
+}
+
+interface JobPostDetailItem {
+  id: string;
+  hourlyPay: number;
+  startsAt: string;
+  workhour: number;
+  description: string;
+  closed: boolean;
+  shop: {
+    item: ShopItem;
+    href: string;
+  };
+  currentUserApplication?: {
+    item: {
+      id: string;
+      status: 'pending' | 'accepted' | 'rejected' | 'canceled';
+      createdAt: string;
+    };
+  };
+}
+
+interface StoreDetailProps {
+  item: JobPostDetailItem;
+}
+
+export default function StoreDetail({ item }: StoreDetailProps) {
+  const { hourlyPay, startsAt, workhour, description, shop } = item;
+  const { name, category, address1, address2, imageUrl, originalHourlyPay } = shop.item;
+  const fullAddress = `${address1} ${address2}`;
+  const wageIncreaseRate = ((hourlyPay - originalHourlyPay) / originalHourlyPay) * 100;
+
   const handleButton = () => {
     return console.log('dd');
   };
@@ -10,22 +50,22 @@ export default function StoreDetail() {
   return (
     <div className="w-full max-w-[964px] px-8 max-[375px]:px-4 mx-auto">
       <header className="mt-15 mb-6">
-        <h3 className="text-base max-[374px]:text-sm text-orange font-bold">식당</h3>
-        <h1 className="text-2xl max-[374px]:text-lg font-bold">도토리 식당</h1>
+        <h3 className="text-base max-[374px]:text-sm text-orange font-bold">{category}</h3>
+        <h1 className="text-2xl max-[374px]:text-lg font-bold">{name}</h1>
       </header>
       <div
         className="w-full border border-gray-20 grid grid-cols-1 gap-8 p-6 rounded-2xl
                     md:grid-cols-[1fr_minmax(0,346px)]"
       >
-        <div className="w-full min-h-[308px] border-0 rounded-xl bg-amber-700">
-          <img />
+        <div className="w-full min-h-[308px] border-0 rounded-xl bg-amber-700 overflow-hidden">
+          {/* <Image src={imageUrl} alt="가게 이미지" layout="fill" objectFit="cover" /> */}
         </div>
         <div className="mt-4">
           <h3 className="text-base max-[374px]:text-sm text-orange font-bold">시급</h3>
           <div className="flex gap-2 items-center">
-            <h2 className="text-2xl max-[374px]:text-xl font-bold mt-2">15,000원</h2>
+            <h2 className="text-2xl max-[374px]:text-xl font-bold mt-2">{hourlyPay}</h2>
             <div className="flex bg-orange text-white border-0 rounded-4xl px-3 py-2">
-              <p className="text-sm max-[374px]:text-xs">기존 시급보다 50%</p>
+              <p className="text-sm max-[374px]:text-xs">{`기존 시급보다 ${wageIncreaseRate}%`}</p>
               <span className="flex items-center">
                 <Image
                   src="/arrow-up-bold.png"
@@ -47,7 +87,7 @@ export default function StoreDetail() {
                 alt="time"
               />
             </span>
-            <p className="text-gray-50 text-base max-[374px]:text-sm">날짜 및 시간</p>
+            <p className="text-gray-50 text-base max-[374px]:text-sm">{startsAt}</p>
           </div>
           <div className="flex gap-1.5 mt-3">
             <span className="flex items-center">
@@ -59,12 +99,9 @@ export default function StoreDetail() {
                 alt="location"
               />
             </span>
-            <p className="text-gray-50 text-base max-[374px]:text-sm">위치</p>
+            <p className="text-gray-50 text-base max-[374px]:text-sm">{fullAddress}</p>
           </div>
-          <p className="mt-3 min-h-[78px] text-base max-[374px]:text-sm">
-            알바하기 편한 너구리네 라면집! <br />
-            라면 올려두고 끓이기만 하면 되어서 쉬운 편에 속하는 가게입니다.
-          </p>
+          <p className="mt-3 min-h-[78px] text-base max-[374px]:text-sm">{description}</p>
           <div className="flex justify-center mt-3 w-full">
             <button
               className="cursor-pointer border px-1 w-full py-3.5 text-orange text-base max-[374px]:text-sm font-bold border-orange rounded-md"
