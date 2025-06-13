@@ -28,7 +28,13 @@
   --text-xl: 24px;
   --text-2xl: 28px;
 }
-
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 body {
   font-family: 'Spoqa Han Sans Neo', 'sans-serif';
 }

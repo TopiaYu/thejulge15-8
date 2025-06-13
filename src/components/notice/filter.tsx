@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSortOption } from '@/lib/zustand';
+
 export default function Filter() {
   const [filter, setFilter] = useState(false);
   const filterOptions: string[] = ['마감 임박 순', '시급 많은 순', '시간 적은 순', '가나다 순'];
@@ -11,6 +12,7 @@ export default function Filter() {
     setFilter(false);
     setSortOption(option);
   };
+
   return (
     <>
       <div className="relative">
