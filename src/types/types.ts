@@ -44,3 +44,31 @@ export interface LoginResponse {
   };
   links: [];
 }
+
+export interface AlarmItem {
+  id: string;
+  createdAt: string;
+  result: 'accepted' | 'rejected';
+  read: boolean;
+  application: {
+    item: {
+      id: string;
+      status: 'pending' | 'accepted' | 'rejected';
+    };
+    href: string;
+  };
+}
+
+export interface AlarmListItem {
+  item: AlarmItem;
+  shop: Shop;
+  notice: Notice;
+}
+
+export interface AlarmList {
+  offset: number;
+  limit: number;
+  count: number;
+  hasNext: boolean;
+  items: AlarmListItem[];
+}

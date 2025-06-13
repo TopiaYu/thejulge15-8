@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import axios from '../../lib/api/axios';
 import * as Axios from 'axios';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 
 export default function Signup() {
@@ -19,6 +20,10 @@ export default function Signup() {
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
   const [showDuplicateModal, setShowDuplicateModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+  const togglePasswordConfirmVisibility = () => setShowPasswordConfirm((prev) => !prev);
 
   const validateEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
@@ -118,14 +123,22 @@ export default function Signup() {
 
         <label>
           <span className="block mb-[13px]">비밀번호</span>
-          <input
-            type="password"
-            placeholder="비밀번호를 입력해주세요."
-            className={`w-full border rounded px-3 py-2 ${passwordError ? 'border-red-500' : ''}`}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onBlur={onPasswordBlur}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="비밀번호를 입력해주세요."
+              className={`w-full border rounded px-3 py-2 pr-10 ${passwordError ? 'border-red-500' : ''}`}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={onPasswordBlur}
+            />
+            <div
+              onClick={togglePasswordVisibility}
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+            >
+              {showPassword ? <HiEye size={20} /> : <HiEyeOff size={20} />}
+            </div>
+          </div>
           <p
             className={`text-sm mt-1 min-h-[20px] ${passwordError ? 'text-red-500' : 'invisible'}`}
           >
@@ -135,16 +148,24 @@ export default function Signup() {
 
         <label>
           <span className="block mb-[13px]">비밀번호 확인</span>
-          <input
-            type="password"
-            placeholder="비밀번호를 다시 한 번 입력해주세요."
-            className={`w-full border rounded px-3 py-2 ${
-              passwordConfirmError ? 'border-red-500' : ''
-            }`}
-            value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
-            onBlur={onPasswordConfirmBlur}
-          />
+          <div className="relative">
+            <input
+              type={showPasswordConfirm ? 'text' : 'password'}
+              placeholder="비밀번호를 다시 한 번 입력해주세요."
+              className={`w-full border rounded px-3 py-2 pr-10 ${
+                passwordConfirmError ? 'border-red-500' : ''
+              }`}
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              onBlur={onPasswordConfirmBlur}
+            />
+            <div
+              onClick={togglePasswordConfirmVisibility}
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+            >
+              {showPasswordConfirm ? <HiEye size={20} /> : <HiEyeOff size={20} />}
+            </div>
+          </div>
           <p
             className={`text-sm mt-1 min-h-[20px] ${
               passwordConfirmError ? 'text-red-500' : 'invisible'
@@ -202,7 +223,7 @@ export default function Signup() {
         <button
           type="submit"
           disabled={!isFormValid || isLoading}
-          className={`w-full py-2 rounded text-white ${
+          className={`w-full py-2 cursor-pointer rounded text-white ${
             isFormValid && !isLoading ? 'bg-[#EA3A00]' : 'bg-gray-300 cursor-not-allowed'
           }`}
         >
@@ -212,7 +233,7 @@ export default function Signup() {
 
       <p className="mt-4 text-sm text-center">
         이미 가입하셨나요?{' '}
-        <Link href="/login" className="text-blue-600 underline">
+        <Link href="/login" className="text-blue-600 cursor-pointer underline">
           로그인하기
         </Link>
       </p>
@@ -225,7 +246,7 @@ export default function Signup() {
             </p>
             <button
               onClick={() => setShowDuplicateModal(false)}
-              className="w-full bg-[#EA3A00] text-white py-2 rounded"
+              className="w-full cursor-pointer bg-[#EA3A00] text-white py-2 rounded"
             >
               닫기
             </button>

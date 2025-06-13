@@ -43,7 +43,9 @@ const ApplyButton = ({ shopId, noticeId, closed }: ApplyBtnProps) => {
       setIsOpen(!isOpen);
       return;
     }
-    const res = await axios.post(`/shops/${shopId}/notices/${noticeId}/applications`);
+    const res = await axios.post(`/shops/${shopId}/notices/${noticeId}/applications`, {
+      header: token,
+    });
     const data = res.data;
     setApplyStatus({
       id: data.item.id,

@@ -4,40 +4,13 @@ import useAuth from '@/lib/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from '@/lib/api/axios';
-import { Notice, Shop } from '@/types/types';
+import { AlarmList } from '@/types/types';
 import AlarmDropDown from '../Alarm/AlarmDropDown';
+import useToken from '@/lib/hooks/use-token';
 
 interface UserValue {
   id: string | null;
   type: 'employer' | 'employee';
-}
-
-interface AlarmItem {
-  id: string;
-  createdAt: string;
-  result: 'accepted' | 'rejected';
-  read: boolean;
-  application: {
-    item: {
-      id: string;
-      status: 'pending' | 'accepted' | 'rejected';
-    };
-    href: string;
-  };
-}
-
-interface AlarmListItem {
-  item: AlarmItem;
-  shop: Shop;
-  notice: Notice;
-}
-
-interface AlarmList {
-  offset: number;
-  limit: number;
-  count: number;
-  hasNext: boolean;
-  items: AlarmListItem[];
 }
 
 const UserMenu = () => {
@@ -47,6 +20,7 @@ const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { userData, logout } = useAuth();
   const router = useRouter();
+  const token = useToken();
 
   // 유저 데이터
   useEffect(() => {
@@ -68,16 +42,27 @@ const UserMenu = () => {
   useEffect(() => {
     const getAlarmList = async () => {
       try {
-        const res = await axios.get(`/users/${userValue?.id}/alerts`);
-        setAlarmList(res.data);
+        const res = await axios.get(`/users/${userValue?.id}/alerts`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = res.data;
+        setAlarmList(data);
       } catch (error) {
         console.error('Alarm Api 호출 에러:', error);
       }
     };
-    if (userValue) {
-      getAlarmList();
-    }
+    const alarmInterval = setInterval(() => {
+      if (userValue) {
+        getAlarmList();
+      }
+    }, 3000);
+    return () => {
+      clearInterval(alarmInterval);
+    };
   }, [userValue]);
+  console.log(alarmList);
 
   // 새로운 알림 있으면 newAlarm true로 변경
   useEffect(() => {
@@ -91,7 +76,7 @@ const UserMenu = () => {
     <>
       {userValue?.type === 'employer' ? (
         <>
-          <Link href="#">내 가게</Link>
+          <Link href="/owner">내 가게</Link>
           <button
             onClick={() => {
               logout();
@@ -101,7 +86,7 @@ const UserMenu = () => {
             로그아웃
           </button>
           <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
-          {isOpen && <AlarmDropDown />}
+          {isOpen && <AlarmDropDown alarm={alarmList} />}
         </>
       ) : (
         <>
@@ -114,8 +99,10 @@ const UserMenu = () => {
           >
             로그아웃
           </button>
-          <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
-          {isOpen && <AlarmDropDown />}
+          <div className="relative flex flex-col items-end">
+            <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
+            {isOpen && <AlarmDropDown alarm={alarmList} />}
+          </div>
         </>
       )}
     </>
