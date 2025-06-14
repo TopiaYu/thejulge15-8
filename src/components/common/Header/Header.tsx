@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import Search from '../Search/Search';
 import { useState } from 'react';

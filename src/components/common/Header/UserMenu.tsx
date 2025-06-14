@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Alarm from '../Alarm/Alarm';
 import useAuth from '@/lib/hooks/use-auth';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from '@/lib/api/axios';
 import { AlarmList } from '@/types/types';
 import AlarmDropDown from '../Alarm/AlarmDropDown';
@@ -18,6 +18,7 @@ const UserMenu = () => {
   const [alarmList, setAlarmList] = useState<AlarmList | null>(null);
   const [newAlarm, setNewAlarm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [alarmid, setAlarmId] = useState('');
   const { userData, logout } = useAuth();
   const router = useRouter();
   const token = useToken();
@@ -61,7 +62,7 @@ const UserMenu = () => {
     return () => {
       clearInterval(alarmInterval);
     };
-  }, [userValue]);
+  }, [userValue, token]);
   // console.log(alarmList);
 
   // 새로운 알림 있으면 newAlarm true로 변경
@@ -71,6 +72,40 @@ const UserMenu = () => {
       setNewAlarm(true);
     }
   }, [alarmList]);
+
+  // 알림 읽음 처리
+  useEffect(() => {
+    if (!alarmid) return;
+    const alarmRead = async () => {
+      const userId = userData?.item.user.item.id;
+      const res = await axios.put(`/users/${userId}/alerts/${alarmid}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = res.data;
+    };
+
+    alarmRead();
+  }, [userData, alarmid, token]);
+
+  const getAlarmId = (e: React.MouseEvent<HTMLDivElement>) => {
+    setAlarmId(e.currentTarget.id);
+  };
+
+  const alarmRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (alarmRef.current && !alarmRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -86,7 +121,7 @@ const UserMenu = () => {
             로그아웃
           </button>
           <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
-          {isOpen && <AlarmDropDown alarm={alarmList} />}
+          {isOpen && <AlarmDropDown alarm={alarmList} getAlarmId={getAlarmId} ref={alarmRef} />}
         </>
       ) : (
         <>
@@ -101,7 +136,7 @@ const UserMenu = () => {
           </button>
           <div className="relative flex flex-col items-end">
             <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
-            {isOpen && <AlarmDropDown alarm={alarmList} />}
+            {isOpen && <AlarmDropDown alarm={alarmList} getAlarmId={getAlarmId} ref={alarmRef} />}
           </div>
         </>
       )}
