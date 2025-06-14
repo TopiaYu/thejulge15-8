@@ -21,11 +21,11 @@ const LatestNotice = ({ checkPoint }: { checkPoint?: string | null }) => {
 
   useEffect(() => {
     const storage = localStorage.getItem('latest');
-    setLatestArray(storage ? JSON.parse(storage) : null);
+    setLatestArray(storage ? JSON.parse(storage).slice(0, 6) : null);
 
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'latest') {
-        setLatestArray(e.newValue ? JSON.parse(e.newValue) : null);
+        setLatestArray(e.newValue ? JSON.parse(e.newValue).slice(0, 6) : null);
       }
     };
 
