@@ -12,12 +12,12 @@ interface NoticeListItem {
   closed: boolean;
 }
 
-interface MyJobPostListProps {
+interface MyJobPostProps {
   notice: NoticeListItem;
   shopId: string;
 }
 
-export default function MyJobPostList({ notice, shopId }: MyJobPostListProps) {
+export default function MyJobPost({ notice, shopId }: MyJobPostProps) {
   const router = useRouter;
   const startsAtDate = new Date(notice.startsAt);
   const endTime = new Date(startsAtDate.getTime() + notice.workhour);
