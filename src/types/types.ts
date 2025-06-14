@@ -44,3 +44,55 @@ export interface LoginResponse {
   };
   links: [];
 }
+
+export interface ApplyItem {
+  id: number;
+  title: string;
+  status: string;
+  date: string;
+  hourlyPay: string;
+}
+
+export interface RawApplication {
+  item: {
+    id: string;
+    status: 'pending' | 'accepted' | 'rejected' | 'canceled';
+    createdAt: string;
+    shop: {
+      item: ShopItem;
+      href: string;
+    };
+    notice: {
+      item: NoticeItem;
+      href: string;
+    };
+  };
+}
+
+export interface ApplicationsResponse {
+  offset: number;
+  limit: number;
+  count: number;
+  hasNext: boolean;
+  items: RawApplication[];
+}
+
+export interface ShopItem {
+  id: string;
+  name: string;
+  category: string;
+  address1: string;
+  address2: string;
+  description: string;
+  imageUrl: string;
+  originalHourlyPay: number;
+}
+
+export interface NoticeItem {
+  id: string;
+  hourlyPay: number;
+  description: string;
+  startsAt: string;
+  workhour: number;
+  closed: boolean;
+}
