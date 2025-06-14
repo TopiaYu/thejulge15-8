@@ -69,6 +69,14 @@ export interface RawApplication {
   };
 }
 
+export interface ApplicationsResponse {
+  offset: number;
+  limit: number;
+  count: number;
+  hasNext: boolean;
+  items: RawApplication[];
+}
+
 export interface ShopItem {
   id: string;
   name: string;

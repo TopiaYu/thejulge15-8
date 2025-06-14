@@ -13,7 +13,7 @@ import NoticePopup from '@/components/member/myprofile/NoticePopup';
 import EmptyState from '@/components/member/myprofile/EmptyState';
 
 import type { AxiosResponse } from 'axios';
-import type { UserItem, ApplyItem, RawApplication } from '@/types/types';
+import type { UserItem, ApplyItem, RawApplication, ApplicationsResponse } from '@/types/types';
 
 const dummyNotices = [
   { message: 'HS 과일주스 공고 지원이 승인되었습니다.', timeAgo: '1분 전' },
@@ -32,6 +32,14 @@ const Page = () => {
 
   const [applications, setApplications] = useState<ApplyItem[]>([]);
   const hasApplied = applications.length > 0;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 5; // 페이지당 항목 수
+  const [totalCount, setTotalCount] = useState(0);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   // 프로필 데이터 가져오기
   useEffect(() => {
@@ -59,18 +67,19 @@ const Page = () => {
       if (!userId || !token) return;
 
       try {
-        const response: AxiosResponse<{ items: RawApplication[] }> = await axios.get(
+        const response: AxiosResponse<ApplicationsResponse> = await axios.get(
           `/users/${userId}/applications`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
             params: {
-              offset: 0,
-              limit: 5,
+              offset: (currentPage - 1) * limit,
+              limit,
             },
           },
         );
+        setTotalCount(response.data.count);
 
         const formatted: ApplyItem[] = response.data.items.map((app: RawApplication): ApplyItem => {
           type ApplicationStatusKey = 'pending' | 'accepted' | 'rejected' | 'canceled';
@@ -107,7 +116,7 @@ const Page = () => {
     };
 
     fetchApplications();
-  }, [userId, token]);
+  }, [userId, token, currentPage]);
 
   const handleClick = () => {
     router.push('/notice');
@@ -148,9 +157,9 @@ const Page = () => {
           {hasApplied ? (
             <ApplyHistory
               applyData={applications}
-              totalPages={7}
-              currentPage={1}
-              onPageChange={() => {}}
+              totalPages={Math.ceil(totalCount / limit)}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
               onEmptyClick={handleClick}
             />
           ) : (
