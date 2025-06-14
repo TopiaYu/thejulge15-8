@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import Modal from '@/components/member/Modal';
+import { useRouter } from 'next/navigation';
 
 export default function JobPostFormPage() {
   const [hourlyWage, setHourlyWage] = useState<string>('');
@@ -17,6 +18,8 @@ export default function JobPostFormPage() {
 
   const [showModal, setShowModal] = useState(false);
 
+  const router = useRouter();
+
   const handleButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // 데이터 보내기 (추가)
@@ -26,13 +29,14 @@ export default function JobPostFormPage() {
   const handleCloseModal = () => {
     setShowModal(false);
     //라우터 이동 (추가)
+    router.push('/owner/job-detail');
   };
 
   return (
     <div className="w-full max-w-[964px] p-8 max-[375px]:p-4 flex flex-col justify-center mx-auto">
       <header className="flex justify-between mb-8">
         <h1 className="text-lg sm:text-2xl font-bold">공고등록</h1>
-        <button className="cursor-pointer" onClick={() => alert('이전창으로 가기')}>
+        <button className="cursor-pointer" onClick={() => router.push('/owner/owner-store-detail')}>
           <Image
             src="/close-icon.png"
             width={24}
