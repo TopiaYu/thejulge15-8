@@ -67,18 +67,65 @@ const Page = () => {
       if (!userId || !token) return;
 
       try {
-        const response: AxiosResponse<ApplicationsResponse> = await axios.get(
-          `/users/${userId}/applications`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
+        // const response: AxiosResponse<ApplicationsResponse> = await axios.get(
+        //   `/users/${userId}/applications`,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //     params: {
+        //       offset: (currentPage - 1) * limit,
+        //       limit,
+        //     },
+        //   },
+        // );
+
+        {
+          /* 페이지네이션-지원한 공고 목록 테스트용 Mock 데이터 생성 */
+        }
+        const mockApplications: RawApplication[] = Array.from({ length: 23 }, (_, index) => ({
+          item: {
+            id: (index + 1).toString(),
+            status: ['pending', 'accepted', 'rejected', 'canceled'][index % 4] as
+              | 'pending'
+              | 'accepted'
+              | 'rejected'
+              | 'canceled',
+            createdAt: new Date().toISOString(),
+            shop: {
+              item: {
+                id: 'shop-' + index,
+                name: `가게 ${index + 1}`,
+                category: '카페',
+                address1: '서울시 어딘가',
+                address2: '101호',
+                description: '맛있는 카페',
+                imageUrl: '',
+                originalHourlyPay: 10000 + index * 100,
+              },
+              href: '',
             },
-            params: {
-              offset: (currentPage - 1) * limit,
-              limit,
+            notice: {
+              item: {
+                id: 'notice-' + index,
+                hourlyPay: 10000 + index * 100,
+                description: '설명',
+                startsAt: new Date().toISOString(),
+                workhour: 4,
+                closed: false,
+              },
+              href: '',
             },
           },
-        );
+        }));
+
+        const response = {
+          data: {
+            items: mockApplications.slice((currentPage - 1) * limit, currentPage * limit),
+            count: mockApplications.length,
+          },
+        };
+
         setTotalCount(response.data.count);
 
         const formatted: ApplyItem[] = response.data.items.map((app: RawApplication): ApplyItem => {
