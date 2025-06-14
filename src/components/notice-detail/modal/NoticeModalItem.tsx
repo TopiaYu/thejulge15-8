@@ -55,7 +55,7 @@ const NoticeModalItem = ({ status, handler, modalClose }: ModalProps) => {
   } else if (userData && !userData.item.user.item.phone && !userData.item.user.item.bio) {
     return (
       <div className={boxClassName}>
-        <Image className={boxClassName} src={'/check.png'} width={24} height={24} alt="체크" />
+        <Image className="mb-4" src={'/check.png'} width={24} height={24} alt="체크" />
         <p className="mb-8">내 프로필을 먼저 등록해 주세요.</p>
         <button className={whiteButton} type="button" onClick={ProfileAlertHandler}>
           확인
@@ -65,7 +65,7 @@ const NoticeModalItem = ({ status, handler, modalClose }: ModalProps) => {
   } else if (userData && status === 'pending') {
     return (
       <div className={boxClassName}>
-        <Image className={boxClassName} src={'/check.png'} width={24} height={24} alt="체크" />
+        <Image className="mb-4" src={'/check.png'} width={24} height={24} alt="체크" />
         <p className="mb-8">신청을 취소하시겠어요?</p>
         <div className="w-full flex items-center justify-center gap-2">
           <button className={whiteButton} type="button" onClick={modalClose}>
