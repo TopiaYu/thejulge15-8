@@ -32,7 +32,7 @@ const MyProfileCard = ({ name, phone, address, bio, onEdit }: MyProfileCardProps
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2 text-sm text-[#7D7986] mb-1">
           <div className="relative w-4 h-4 sm:w-5 sm:h-5">
-            <Image src="/phone.png" fill alt="전화번호" />
+            <Image src="/phone.png" alt="전화번호" fill sizes="16px, 20px" />
           </div>
           <span>{phone}</span>
         </div>
@@ -40,7 +40,7 @@ const MyProfileCard = ({ name, phone, address, bio, onEdit }: MyProfileCardProps
         {/* 선호 지역 */}
         <div className="flex items-center gap-2 text-sm text-[#7D7986] mb-1">
           <div className="relative w-4 h-4 sm:w-5 sm:h-5">
-            <Image src="/location.png" fill alt="주소" />
+            <Image src="/location.png" alt="주소" fill sizes="16px, 20px" />
           </div>
           <span>선호 지역: {address}</span>
         </div>
