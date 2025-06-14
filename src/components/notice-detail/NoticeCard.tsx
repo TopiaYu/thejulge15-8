@@ -35,14 +35,26 @@ const NoticeCard = ({ info }: { info: LatestData }) => {
   const rateArrow = 'relative w-[11px] h-[11px] sm:w-[13px] sm:h-[13px]';
   const imgClass = 'first:hidden sm:first:inline-block sm:last:hidden';
   const timeClass = `relative w-4 h-4 sm:w-5 sm:h-5 shrink-0`;
+
+  // 지난 공고
+  const startAt = new Date(startsAt);
+  const now = new Date();
+
+  const isPast = startAt < now;
   return (
     <Link
       href={`/notice/${shopId}/${noticeId}`}
-      className="max-w-[171px] md:w-[312px] sm:max-w-[332px] w-full h-[261px] sm:h-[359px] md:h-[349px]"
+      className="md:w-[312px] sm:max-w-[332px] w-full h-[261px] sm:h-[359px] md:h-[349px]"
     >
       <div className="w-full h-full p-3 md:p-4 flex flex-col gap-3 md:gap-5 border border-solid border-gray-20 rounded-xl">
-        <NoticeImage imageUrl={imageUrl} name={name} closed={closed} className={className} />
-        <div>
+        <NoticeImage
+          imageUrl={imageUrl}
+          name={name}
+          closed={closed}
+          className={className}
+          isPast={isPast}
+        />
+        <div className={isPast ? 'bg-white opacity-20' : ''}>
           <h3
             className={`${clsx(closed ? 'text-gray-30' : 'text-black')}, text-base sm:text-lg font-bold mb-2`}
           >

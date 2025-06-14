@@ -21,7 +21,7 @@ interface NoticeInfo {
   originalHourlyPay: number;
 }
 
-const NoticeInfo = ({ info }: { info: NoticeInfo }) => {
+const NoticeInfo = ({ info, isPast }: { info: NoticeInfo; isPast: boolean }) => {
   const className =
     'relative p-6 w-full rounded-xl overflow-hidden min-h-[178px] sm:h-full mb-3 md:mb-0 sm:mb-4';
   const rateArrow = 'relative w-[11px] h-[11px] sm:w-[13px] sm:h-[13px]';
@@ -42,6 +42,7 @@ const NoticeInfo = ({ info }: { info: NoticeInfo }) => {
           name={info.name}
           closed={info.closed}
           className={className}
+          isPast={isPast}
         />
         <div className="flex flex-col items-start justify-between md:max-w-[346px] w-full h-full">
           <div>
@@ -72,7 +73,12 @@ const NoticeInfo = ({ info }: { info: NoticeInfo }) => {
             </div>
           </div>
 
-          <ApplyButton shopId={info.shopId} noticeId={info.noticeId} closed={info.closed} />
+          <ApplyButton
+            shopId={info.shopId}
+            noticeId={info.noticeId}
+            closed={info.closed}
+            isPast={isPast}
+          />
         </div>
       </div>
       <div className="bg-gray-10 rounded-xl p-8 mb-[60px] text-sm sm:text-base">

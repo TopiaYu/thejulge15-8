@@ -42,7 +42,7 @@ const LatestNotice = ({ checkPoint }: { checkPoint?: string | null }) => {
           <h3>최근에 본 공고가 없습니다.</h3>
         </div>
       ) : (
-        <div className="flex flex-wrap justify-center sm:justify-start gap-2 sm:gap-3.5">
+        <div className="grid grid-cols-2 md:flex flex-wrap justify-start gap-2 sm:gap-3.5">
           {latestArray.map((item: LatestData) => {
             if (item.noticeId === '') return;
             return <NoticeCard info={item} key={item.shopId} />;

@@ -48,21 +48,17 @@ export interface LoginResponse {
 export interface AlarmItem {
   id: string;
   createdAt: string;
-  result: 'accepted' | 'rejected';
+  result: string;
   read: boolean;
+  shop: Shop;
+  notice: Notice;
   application: {
     item: {
       id: string;
-      status: 'pending' | 'accepted' | 'rejected';
+      status: string;
     };
     href: string;
   };
-}
-
-export interface AlarmListItem {
-  item: AlarmItem;
-  shop: Shop;
-  notice: Notice;
 }
 
 export interface AlarmList {
@@ -70,5 +66,5 @@ export interface AlarmList {
   limit: number;
   count: number;
   hasNext: boolean;
-  items: AlarmListItem[];
+  items: AlarmItem[];
 }

@@ -62,11 +62,11 @@ const UserMenu = () => {
       clearInterval(alarmInterval);
     };
   }, [userValue]);
-  console.log(alarmList);
+  // console.log(alarmList);
 
   // 새로운 알림 있으면 newAlarm true로 변경
   useEffect(() => {
-    const alarmCheckPoint = alarmList?.items.some(({ item }) => item.read === false);
+    const alarmCheckPoint = alarmList?.items.some(({ read }) => read === false);
     if (alarmCheckPoint) {
       setNewAlarm(true);
     }

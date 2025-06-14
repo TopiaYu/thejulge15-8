@@ -35,8 +35,8 @@ const Search = ({ value, onChange }: SearchProps) => {
     const history = storage ? JSON.parse(storage) : [];
 
     if (!validate) {
-      e.preventDefault();
       alert('검색어를 다시 입력해주세요!');
+      return;
     }
 
     const oldHistory = history.filter((item: string) => item && value !== item);
@@ -60,6 +60,7 @@ const Search = ({ value, onChange }: SearchProps) => {
       return;
     }
     setFocus(false);
+    setLiIndex(-1);
   };
 
   const liClickHandler = (e: React.MouseEvent<HTMLLIElement>) => {
@@ -101,6 +102,13 @@ const Search = ({ value, onChange }: SearchProps) => {
     setLiIndex(newIndex);
   };
 
+  const handleMouseEnter = () => {
+    const activeRef = value.length === 0 ? recentlyRef : recommendRef;
+    activeRef.current.forEach((item) => {
+      item?.classList.remove(listClassName);
+    });
+  };
+
   useEffect(() => {
     const searcedItem = localStorage.getItem('searched');
     if (!searcedItem) return;
@@ -136,7 +144,7 @@ const Search = ({ value, onChange }: SearchProps) => {
   console.log(recentlyRef.current);
 
   return (
-    <div className="lg:max-w-[450px] md:max-w-[340px] w-full flex flex-col relative">
+    <div className="col-span-2 lg:max-w-[450px] md:max-w-[340px] w-full flex flex-col relative">
       <form
         className="mr-auto lg:max-w-[450px] md:max-w-[340px] w-full relative flex items-center col-start-1 row-start-2 col-span-2 text-sm sm:text-base sm:leading-[20px]"
         onSubmit={handleSubmit}
@@ -174,6 +182,7 @@ const Search = ({ value, onChange }: SearchProps) => {
                     recentlyRef.current[index] = el;
                   }}
                   onMouseDown={liClickHandler}
+                  onMouseEnter={handleMouseEnter}
                 >
                   {item}
                 </li>
@@ -181,7 +190,7 @@ const Search = ({ value, onChange }: SearchProps) => {
             })}
         </ul>
       ) : null}
-      {recommend.length > 0 && value.length > 0 && recommend.length > 0 ? (
+      {recommend.length > 0 && value.length > 0 && (
         <ul className="w-full absolute top-11 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
           {recommend.map((item, index) => {
             if (!item) return;
@@ -199,7 +208,7 @@ const Search = ({ value, onChange }: SearchProps) => {
             );
           })}
         </ul>
-      ) : null}
+      )}
     </div>
   );
 };

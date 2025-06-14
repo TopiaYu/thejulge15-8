@@ -13,14 +13,14 @@ const AlarmDropDown = ({ alarm }: AlarmDropDownProps) => {
         alarm.items.map((alItem) => {
           return (
             <AlarmCard
-              key={alItem.item.id}
-              id={alItem.item.id}
-              result={alItem.item.result}
-              shopName={alItem.shop.item.name}
-              startsAt={alItem.notice.item.startsAt}
-              workHour={alItem.notice.item.workhour}
-              createAt={alItem.item.createdAt}
-              read={alItem.item.read}
+              key={alItem.id}
+              id={alItem.id}
+              result={alItem.result}
+              shopName={alItem.shop?.item?.name}
+              startsAt={alItem.notice?.item?.startsAt}
+              workHour={alItem.notice?.item?.workhour}
+              createAt={alItem.createdAt}
+              read={alItem.read}
             />
           );
         })}

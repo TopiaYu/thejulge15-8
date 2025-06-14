@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 interface Props {
   id: string;
-  result: 'accepted' | 'rejected';
+  result: string;
   shopName: string;
   startsAt: string;
   workHour: number;

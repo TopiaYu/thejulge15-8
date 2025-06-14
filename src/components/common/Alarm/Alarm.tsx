@@ -11,7 +11,7 @@ const Alarm = ({ newAlarm, onClick }: NewAlarm) => {
   return (
     <div
       onClick={onClick}
-      className="relative w-5 h-5 border-solid border-2 border-black rounded-md ml-10 cursor-pointer"
+      className="relative w-5 h-5 border-solid border-2 border-black rounded-md cursor-pointer"
     >
       <div className="absolute flex justify-center items-center w-3.5 h-3.5 rounded-[9999px] bg-white bottom-2 left-2.5 p-0.5">
         <div className={className}></div>
