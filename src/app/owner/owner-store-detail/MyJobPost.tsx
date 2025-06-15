@@ -47,21 +47,31 @@ export default function MyJobPost({
 
   return (
     <div className="p-4 max-w-[312px] max-h-[349px] border border-gray-20 bg-white rounded-2xl">
-      <div className="w-full max-w-[280px] max-h-[160px] border rounded-xl">
-        <img className="w-full max-w-[280px] max-h-[160px]" src={shopImageUrl} />
+      <div className="w-full max-w-[280px] h-40 max-h-[160px] border rounded-xl relative overflow-hidden">
+        <Image
+          src={shopImageUrl || ''}
+          alt={'가게 이미지'}
+          layout="fill"
+          objectFit="cover"
+          className="rounded-lg"
+        />
       </div>
       <div>
         <h3 className="text-black mt-4 font-bold text-lg">{shopName}</h3>
 
         <div className="flex gap-1.5 mt-2">
           <span className="flex items-center">
-            <Image
-              src="/clock-icon.png"
-              width={16}
-              height={16}
-              className="min-[375px]:w-5 min-[375px]:h-5"
-              alt="time"
-            />
+            {shopImageUrl ? (
+              <Image
+                src="/clock-icon.png"
+                width={16}
+                height={16}
+                className="min-[375px]:w-5 min-[375px]:h-5"
+                alt="time"
+              />
+            ) : (
+              <div>이미지 없음</div>
+            )}
           </span>
           <p className="text-gray-50 text-base max-[374px]:text-sm">{notice.startsAt}</p>
         </div>
