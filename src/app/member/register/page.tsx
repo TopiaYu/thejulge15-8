@@ -4,6 +4,9 @@
 import { useState } from 'react';
 import Modal from '@/components/member/Modal';
 import { useRouter } from 'next/navigation';
+import useAuth from '@/lib/hooks/use-auth';
+import axios from '@/lib/api/axios';
+import useToken from '@/lib/hooks/use-token';
 
 const regions = [
   '서울시 종로구',
@@ -36,17 +39,36 @@ const regions = [
 const Page = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [region, setRegion] = useState('');
+  const [address, setAddress] = useState('');
   const [bio, setBio] = useState('');
   const [showModal, setShowModal] = useState(false);
+
   const router = useRouter();
+  const token = useToken();
+  const { userData } = useAuth();
 
   const isFormValid = name.trim() !== '' && phone.trim() !== '';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) return;
-    setShowModal(true); // 모달 열기
+    const userId = userData?.item.user.item.id;
+    if (!isFormValid || !userId || !token) return;
+
+    try {
+      await axios.put(
+        `/users/${userId}`,
+        { name, phone, address, bio },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setShowModal(true); // 모달 열기
+    } catch (error) {
+      console.error('프로필 등록 실패:', error);
+      alert('프로필 등록에 실패했습니다.');
+    }
   };
 
   const handleModalClose = () => {
@@ -91,11 +113,11 @@ const Page = () => {
 
           {/* 선호 지역 */}
           <div className="flex flex-col">
-            <label htmlFor="region">선호 지역</label>
+            <label htmlFor="address">선호 지역</label>
             <select
-              id="region"
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
+              id="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               className="h-[58px] px-4 border border-[#CBC9CF] bg-white rounded-md"
             >
               <option value="">선택</option>

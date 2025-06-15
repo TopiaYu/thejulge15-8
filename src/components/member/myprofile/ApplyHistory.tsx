@@ -1,17 +1,12 @@
 // ApplyHistory.tsx(공고 신청 내역 컴포넌트)
 'use client';
 
+import { ApplyItem } from '@/types/types';
+
 import ApplyTable from './ApplyTable';
 import EmptyState from './EmptyState';
 import Pagination from './Pagination';
 
-interface ApplyItem {
-  id: number;
-  title: string;
-  status: string;
-  date: string;
-  hourlyPay: string;
-}
 interface ApplyHistoryProps {
   applyData: ApplyItem[];
   totalPages: number;
