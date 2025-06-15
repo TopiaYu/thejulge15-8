@@ -16,19 +16,19 @@ interface LinkItem {
   description: string;
   method: string;
   href: string;
-  body?: {
-    // `body`는 POST/PUT 요청에 대한 링크에만 존재하며, 그 내용도 명시
-    hourlyPay?: number;
-    startsAt?: string;
-    workhour?: number;
-    description?: string;
-    name?: string;
-    category?: string;
-    address1?: string;
-    address2?: string;
-    imageUrl?: string;
-    originalHourlyPay?: number;
-  };
+  //   body?: {
+  //     // `body`는 POST/PUT 요청에 대한 링크에만 존재하며, 그 내용도 명시
+  //     hourlyPay?: number;
+  //     startsAt?: string;
+  //     workhour?: number;
+  //     description?: string;
+  //     name?: string;
+  //     category?: string;
+  //     address1?: string;
+  //     address2?: string;
+  //     imageUrl?: string;
+  //     originalHourlyPay?: number;
+  //   };
 }
 
 interface GetNoticesResponse {
@@ -36,7 +36,7 @@ interface GetNoticesResponse {
   limit: number;
   count: number; // 전체 개수
   hasNext: boolean; // 다음 내용 존재 여부
-  items: NoticeListItem[];
+  items: { item: NoticeListItem; links: LinkItem[] }[];
   links: LinkItem[];
 }
 
@@ -81,7 +81,7 @@ export const useMyStoreNoticeStore = create<MyStoreNoticesState>((set, get) => (
           limit: limit,
         },
       });
-      const newNotices = response.data.items;
+      const newNotices = response.data.items.map((itemWrapper) => itemWrapper.item);
       set((state) => ({
         notices: loadMore ? [...state.notices, ...newNotices] : newNotices,
         totalCount: response.data.count,
