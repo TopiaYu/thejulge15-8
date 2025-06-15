@@ -117,6 +117,7 @@ const UserMenu = () => {
               logout();
               router.push('/');
             }}
+            className="cursor-pointer"
           >
             로그아웃
           </button>
@@ -131,6 +132,7 @@ const UserMenu = () => {
               logout();
               router.push('/');
             }}
+            className="cursor-pointer"
           >
             로그아웃
           </button>
