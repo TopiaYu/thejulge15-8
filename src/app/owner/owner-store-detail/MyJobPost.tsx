@@ -31,7 +31,19 @@ export default function MyJobPost({
 }: MyJobPostProps) {
   const router = useRouter();
   const startsAtDate = new Date(notice.startsAt);
-  const endTime = new Date(startsAtDate.getTime() + notice.workhour);
+
+  // 시급 인상률 계산 로직
+  // originalHourlyPay가 유효하고, 0이 아니며, 현재 시급과 다를 때만 계산 및 표시
+  const showWageComparison =
+    originalHourlyPay !== undefined &&
+    originalHourlyPay !== 0 &&
+    notice.hourlyPay !== originalHourlyPay;
+
+  const increaseRate = showWageComparison
+    ? ((notice.hourlyPay - originalHourlyPay!) / originalHourlyPay!) * 100 // ! 단언문은 undefined가 아님을 확신할 때 사용
+    : 0; // 조건이 맞지 않으면 0%로 설정
+
+  const wageComparisonText = `기존 시급보다 ${increaseRate.toFixed(0)}%`;
 
   return (
     <div className="p-4 max-w-[312px] max-h-[349px] border border-gray-20 bg-white rounded-2xl">
@@ -69,16 +81,18 @@ export default function MyJobPost({
         <div className="flex justify-between items-center mt-3">
           <h2 className="text-xl font-bold">{notice.hourlyPay}원</h2>
           {/* 있으면 보여주기 */}
-          <div className="rounded-4xl bg-orange px-3 py-2 flex gap-1">
-            <p className="text-white text-sm">기존 시급보다 50%</p>
-            <Image
-              src="/arrow-up-bold.png"
-              width={16}
-              height={16}
-              className="min-[375px]:w-5 min-[375px]:h-5"
-              alt="location"
-            />{' '}
-          </div>
+          {showWageComparison && (
+            <div className="rounded-4xl bg-orange px-3 py-2 flex gap-1">
+              <p className="text-white text-sm">{wageComparisonText}</p>
+              <Image
+                src="/arrow-up-bold.png"
+                width={16}
+                height={16}
+                className="min-[375px]:w-5 min-[375px]:h-5"
+                alt="arrow-up"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
