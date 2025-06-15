@@ -1,10 +1,12 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function MyStore() {
+  const router = useRouter();
   const handleButton = () => {
-    return console.log('dd');
+    router.push('/owner/register-job');
   };
 
   return (
@@ -52,7 +54,7 @@ export default function MyStore() {
               className="cursor-pointer border px-1 w-full py-3.5 text-white text-base max-[374px]:text-sm font-bold bg-orange rounded-md"
               onClick={handleButton}
             >
-              공고 편집하기
+              공고 등록하기
             </button>
           </div>
         </div>

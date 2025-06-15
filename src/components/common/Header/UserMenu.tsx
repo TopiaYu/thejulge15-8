@@ -2,42 +2,15 @@ import Link from 'next/link';
 import Alarm from '../Alarm/Alarm';
 import useAuth from '@/lib/hooks/use-auth';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from '@/lib/api/axios';
-import { Notice, Shop } from '@/types/types';
+import { AlarmList } from '@/types/types';
 import AlarmDropDown from '../Alarm/AlarmDropDown';
+import useToken from '@/lib/hooks/use-token';
 
 interface UserValue {
   id: string | null;
   type: 'employer' | 'employee';
-}
-
-interface AlarmItem {
-  id: string;
-  createdAt: string;
-  result: 'accepted' | 'rejected';
-  read: boolean;
-  application: {
-    item: {
-      id: string;
-      status: 'pending' | 'accepted' | 'rejected';
-    };
-    href: string;
-  };
-}
-
-interface AlarmListItem {
-  item: AlarmItem;
-  shop: Shop;
-  notice: Notice;
-}
-
-interface AlarmList {
-  offset: number;
-  limit: number;
-  count: number;
-  hasNext: boolean;
-  items: AlarmListItem[];
 }
 
 const UserMenu = () => {
@@ -45,8 +18,10 @@ const UserMenu = () => {
   const [alarmList, setAlarmList] = useState<AlarmList | null>(null);
   const [newAlarm, setNewAlarm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [alarmid, setAlarmId] = useState('');
   const { userData, logout } = useAuth();
   const router = useRouter();
+  const token = useToken();
 
   // 유저 데이터
   useEffect(() => {
@@ -68,24 +43,69 @@ const UserMenu = () => {
   useEffect(() => {
     const getAlarmList = async () => {
       try {
-        const res = await axios.get(`/users/${userValue?.id}/alerts`);
-        setAlarmList(res.data);
+        const res = await axios.get(`/users/${userValue?.id}/alerts`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = res.data;
+        setAlarmList(data);
       } catch (error) {
         console.error('Alarm Api 호출 에러:', error);
       }
     };
-    if (userValue) {
-      getAlarmList();
-    }
-  }, [userValue]);
+    const alarmInterval = setInterval(() => {
+      if (userValue) {
+        getAlarmList();
+      }
+    }, 3000);
+    return () => {
+      clearInterval(alarmInterval);
+    };
+  }, [userValue, token]);
+  // console.log(alarmList);
 
   // 새로운 알림 있으면 newAlarm true로 변경
   useEffect(() => {
-    const alarmCheckPoint = alarmList?.items.some(({ item }) => item.read === false);
+    const alarmCheckPoint = alarmList?.items.some(({ read }) => read === false);
     if (alarmCheckPoint) {
       setNewAlarm(true);
     }
   }, [alarmList]);
+
+  // 알림 읽음 처리
+  useEffect(() => {
+    if (!alarmid) return;
+    const alarmRead = async () => {
+      const userId = userData?.item.user.item.id;
+      const res = await axios.put(`/users/${userId}/alerts/${alarmid}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = res.data;
+    };
+
+    alarmRead();
+  }, [userData, alarmid, token]);
+
+  const getAlarmId = (e: React.MouseEvent<HTMLDivElement>) => {
+    setAlarmId(e.currentTarget.id);
+  };
+
+  const alarmRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (alarmRef.current && !alarmRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -97,11 +117,12 @@ const UserMenu = () => {
               logout();
               router.push('/');
             }}
+            className="cursor-pointer"
           >
             로그아웃
           </button>
           <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
-          {isOpen && <AlarmDropDown />}
+          {isOpen && <AlarmDropDown alarm={alarmList} getAlarmId={getAlarmId} ref={alarmRef} />}
         </>
       ) : (
         <>
@@ -111,11 +132,14 @@ const UserMenu = () => {
               logout();
               router.push('/');
             }}
+            className="cursor-pointer"
           >
             로그아웃
           </button>
-          <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
-          {isOpen && <AlarmDropDown />}
+          <div className="relative flex flex-col items-end">
+            <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
+            {isOpen && <AlarmDropDown alarm={alarmList} getAlarmId={getAlarmId} ref={alarmRef} />}
+          </div>
         </>
       )}
     </>

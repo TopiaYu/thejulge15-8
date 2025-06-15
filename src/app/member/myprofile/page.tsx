@@ -1,50 +1,28 @@
-// 알바님 마이프로필 페이지
+//알바님 프로필 페이지(프로필 카드 + 신청한 공고내역)
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import useAuth from '@/lib/hooks/use-auth';
+import useToken from '@/lib/hooks/use-token';
+import axios from '@/lib/api/axios';
+
 import MyProfileCard from '@/components/member/myprofile/MyProfileCard';
 import ApplyHistory from '@/components/member/myprofile/ApplyHistory';
 import NoticePopup from '@/components/member/myprofile/NoticePopup';
 import EmptyState from '@/components/member/myprofile/EmptyState';
 
-const mockApplyData = [
-  {
-    id: 1,
-    title: '너구리네 라면가게',
-    date: '2023-10-01 10:00 - 12:00 (2시간)',
-    status: '승인 완료',
-    hourlyPay: '10,000원',
-  },
-  {
-    id: 2,
-    title: '자두 복숭아 수박',
-    date: '2023-10-01 10:00 - 12:00 (2시간)',
-    status: '승인 완료',
-    hourlyPay: '10,000원',
-  },
-  {
-    id: 3,
-    title: '햄부기네 햄버거',
-    date: '2023-10-01 10:00 - 12:00 (2시간)',
-    status: '거절',
-    hourlyPay: '10,000원',
-  },
-  {
-    id: 4,
-    title: '김볶천국',
-    date: '2023-10-01 10:00 - 12:00 (2시간)',
-    status: '대기중',
-    hourlyPay: '10,000원',
-  },
-  {
-    id: 5,
-    title: '다이어트 건강식단',
-    date: '2023-10-01 10:00 - 12:00 (2시간)',
-    status: '대기중',
-    hourlyPay: '10,000원',
-  },
-];
+import type { AxiosResponse } from 'axios';
+import type { UserItem, ApplyItem, RawApplication } from '@/types/types'; //주석 풀면 더 추가
+
+const LIMIT = 5; //하단 페이지네이션에서 한 페이지에 보여줄 신청 내역 개수
+
+const statusMap: Record<'pending' | 'accepted' | 'rejected' | 'canceled', string> = {
+  accepted: '승인 완료',
+  rejected: '거절',
+  pending: '대기중',
+  canceled: '취소됨',
+};
 
 const dummyNotices = [
   { message: 'HS 과일주스 공고 지원이 승인되었습니다.', timeAgo: '1분 전' },
@@ -52,39 +30,155 @@ const dummyNotices = [
   { message: '수리 에스프레소 공고 지원이 거절되었습니다.', timeAgo: '7분 전' },
 ];
 
-const Page = () => {
-  const [showNotice, setShowNotice] = useState(true); //디자인 확인하려고 true로 설정
-  const router = useRouter();
+const formatDate = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+    date.getDate(),
+  ).padStart(
+    2,
+    '0',
+  )} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 
-  const handleClick = () => {
-    router.push('/');
+const formatApplication = (app: RawApplication): ApplyItem => {
+  const start = new Date(app.item.notice.item.startsAt);
+  const end = new Date(start.getTime() + app.item.notice.item.workhour * 60 * 60 * 1000);
+
+  return {
+    id: Number(app.item.id),
+    title: app.item.shop.item.name,
+    status: statusMap[app.item.status] || '알 수 없음',
+    date: `${formatDate(start)} ~ ${formatDate(end)} (${app.item.notice.item.workhour}시간)`,
+    hourlyPay: `${app.item.notice.item.hourlyPay.toLocaleString()}원`,
   };
+};
 
-  const hasApplied = mockApplyData.length > 0;
+const Page = () => {
+  const router = useRouter();
+  const token = useToken();
+  const { userData } = useAuth();
+  const userId = userData?.item.user.item.id;
+
+  const [profile, setProfile] = useState<UserItem | null>(null);
+  const [showNotice, setShowNotice] = useState(true); // 공고 알림 팝업 나중에 삭제 예정
+  const [applications, setApplications] = useState<ApplyItem[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const hasApplied = applications.length > 0;
+
+  const handlePageChange = (page: number) => setCurrentPage(page);
+
+  // 프로필 데이터 가져오기
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!userId || !token) return;
+      try {
+        const response: AxiosResponse<{ item: UserItem }> = await axios.get(`/users/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setProfile(response.data.item);
+      } catch (error) {
+        console.error('프로필 데이터 가져오기 실패:', error);
+      }
+    };
+    fetchProfile();
+  }, [userId, token]);
+
+  //  신청 내역 데이터 가져오기 (현재는 mock)
+  useEffect(() => {
+    const fetchApplications = async () => {
+      if (!userId || !token) return;
+
+      try {
+        // 실제 요청 코드 (주석 처리 중)
+        /*
+        const response: AxiosResponse<ApplicationsResponse> = await axios.get(
+          `/users/${userId}/applications`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { offset: (currentPage - 1) * LIMIT, limit: LIMIT },
+          }
+        );
+        */
+
+        // Mock Data로 테스트 중(지원한 공고 목록 페이지네이션 삭제 예정)
+        const mockApplications: RawApplication[] = Array.from({ length: 23 }, (_, index) => ({
+          item: {
+            id: (index + 1).toString(),
+            status: ['pending', 'accepted', 'rejected', 'canceled'][index % 4] as
+              | 'pending'
+              | 'accepted'
+              | 'rejected'
+              | 'canceled',
+            createdAt: new Date().toISOString(),
+            shop: {
+              item: {
+                id: 'shop-' + index,
+                name: `가게 ${index + 1}`,
+                category: '카페',
+                address1: '서울시 어딘가',
+                address2: '101호',
+                description: '맛있는 카페',
+                imageUrl: '',
+                originalHourlyPay: 10000 + index * 100,
+              },
+              href: '',
+            },
+            notice: {
+              item: {
+                id: 'notice-' + index,
+                hourlyPay: 10000 + index * 100,
+                description: '설명',
+                startsAt: new Date().toISOString(),
+                workhour: 4,
+                closed: false,
+              },
+              href: '',
+            },
+          },
+        }));
+
+        const response = {
+          data: {
+            items: mockApplications.slice((currentPage - 1) * LIMIT, currentPage * LIMIT),
+            count: mockApplications.length,
+          },
+        };
+
+        setTotalCount(response.data.count);
+        setApplications(response.data.items.map(formatApplication));
+      } catch (error) {
+        console.error('신청 내역 가져오기 실패:', error);
+      }
+    };
+
+    fetchApplications();
+  }, [userId, token, currentPage]);
+
+  const goToNoticePage = () => {
+    router.push('/notice');
+  };
 
   return (
     <div className="w-full">
-      {/* 상단 섹션: 내 프로필 */}
+      {/* 상단 섹션 : 냐 프로필*/}
       <section className="w-full bg-white pt-6 pb-12">
-        <div className="px-4 sm:px-6 lg:px-20 max-w-[1200px] mx-auto  gap-6">
+        <div className="px-4 sm:px-6 lg:px-20 max-w-[1200px] mx-auto gap-6">
           <div className="flex flex-col lg:flex-row justify-between items-start">
             {/* 왼쪽: 제목 */}
             <div>
               <h2 className="text-[28px] font-bold">내 프로필</h2>
-
               {showNotice && (
                 <div className="mt-4">
                   <NoticePopup notices={dummyNotices} onClose={() => setShowNotice(false)} />
                 </div>
               )}
             </div>
-
             {/* 오른쪽: 카드 */}
             <MyProfileCard
-              name="강아지"
-              phone="010-1234-5678"
-              region="서울시 마포구 멍멍동"
-              bio="성실하고 밝은 성격입니다!"
+              name={profile?.name || ''}
+              phone={profile?.phone || ''}
+              address={profile?.address || ''}
+              bio={profile?.bio || ''}
               onEdit={() => router.push('/member/register')}
             />
           </div>
@@ -96,14 +190,14 @@ const Page = () => {
         <div className="px-4 sm:px-6 lg:px-20 max-w-[1200px] mx-auto">
           {hasApplied ? (
             <ApplyHistory
-              applyData={mockApplyData}
-              totalPages={7}
-              currentPage={1}
-              onPageChange={() => {}}
-              onEmptyClick={handleClick}
+              applyData={applications}
+              totalPages={Math.ceil(totalCount / LIMIT)}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              onEmptyClick={goToNoticePage}
             />
           ) : (
-            <EmptyState onClick={handleClick} />
+            <EmptyState onClick={goToNoticePage} />
           )}
         </div>
       </section>
