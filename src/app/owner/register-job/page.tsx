@@ -97,7 +97,7 @@ export default function JobPostFormPage() {
         },
       );
       console.log('공고 등록 성공', response.data);
-      alert('공고 등록 완료');
+      alert('공고 등록 완료'); // 추후 삭제
       setNewRegisteredId(response.data.item.id);
 
       setShowModal(true);
@@ -121,7 +121,7 @@ export default function JobPostFormPage() {
     setShowModal(false);
     //라우터 이동
     if (newRegisteredId) {
-      router.push('/owner/job-detail');
+      router.push(`/owner/job-detail/${Hardcooded_shop_id}/${newRegisteredId}`);
     } else {
       router.push('/owner/owner-store-detail');
     }

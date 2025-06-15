@@ -1,10 +1,10 @@
 'use client';
 
-import StoreDetail from './StoreDetail';
-import ApplicantsTable from './ApplicantTable';
+import StoreDetail from '../../StoreDetail';
+import ApplicantsTable from '../../ApplicantTable';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useJobPostStore } from './stores/jobPostStore';
+import { useJobPostStore } from '../../stores/jobPostStore';
 
 export default function JobDetail() {
   const params = useParams();
@@ -21,6 +21,8 @@ export default function JobDetail() {
       clearJobPost();
     };
   }, [shopId, noticeId, fetchJobPost, clearJobPost]);
+
+  console.log(`jp`, jobPostItem);
 
   if (isLoading) {
     return (

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Pagenation from './Pagenation';
+import Pagenation from './pagenation';
 
 interface Applicant {
   id: string;

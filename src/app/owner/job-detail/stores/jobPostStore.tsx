@@ -51,7 +51,7 @@ export const useJobPostStore = create<jobPostState>((set) => ({
     try {
       const response = await axoisInstance.get(`/shops/${shopId}/notices/${noticeId}`);
       set({ jobPostItem: response.data.item, isLoading: false });
-    } catch (err) {
+    } catch {
       console.log('error');
     }
   },
