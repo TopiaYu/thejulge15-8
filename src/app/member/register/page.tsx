@@ -1,7 +1,7 @@
 //알바님 내 프로필 등록하기 패이지
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '@/components/member/Modal';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/lib/hooks/use-auth';
@@ -48,6 +48,32 @@ const Page = () => {
   const { userData } = useAuth();
 
   const isFormValid = name.trim() !== '' && phone.trim() !== '';
+
+  // 유저 정보 불어오기
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userId = userData?.item.user.item.id;
+      if (!userId || !token) return;
+
+      try {
+        const response = await axios.get(`/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const user = response.data.item;
+
+        setName(user.name || '');
+        setPhone(user.phone || '');
+        setAddress(user.address || '');
+        setBio(user.bio || '');
+      } catch (error) {
+        console.error('유저 정보 불러오기 실패:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, [userData, token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
