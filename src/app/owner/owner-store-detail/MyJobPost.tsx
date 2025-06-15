@@ -45,8 +45,15 @@ export default function MyJobPost({
 
   const wageComparisonText = `기존 시급보다 ${increaseRate.toFixed(0)}%`;
 
+  const handleViewDetail = () => {
+    router.push(`/owner/job-detail/${shopId}/${notice.id}`);
+  };
+
   return (
-    <div className="p-4 max-w-[312px] max-h-[349px] border border-gray-20 bg-white rounded-2xl">
+    <div
+      className="p-4 max-w-[312px] max-h-[349px] border border-gray-20 bg-white rounded-2xl cursor-pointer"
+      onClick={handleViewDetail}
+    >
       <div className="w-full max-w-[280px] h-40 max-h-[160px] border rounded-xl relative overflow-hidden">
         <Image
           src={shopImageUrl || ''}
