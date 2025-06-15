@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import InputValidator from '../Header/input-validator';
 import { useEffect, useRef, useState } from 'react';
 import axios from '@/lib/api/axios';
@@ -22,6 +22,7 @@ const Search = ({ value, onChange }: SearchProps) => {
   const [recently, setRecently] = useState<string[]>([]);
   const [recommend, setRecommend] = useState<Recommend[]>([]);
   const [liIndex, setLiIndex] = useState(-1);
+  const [isOpen, setIsOpen] = useState(true);
   const ref = useRef<HTMLInputElement>(null);
   const recentlyRef = useRef<(HTMLLIElement | null)[]>([]);
   const recommendRef = useRef<(HTMLLIElement | null)[]>([]);
@@ -51,6 +52,7 @@ const Search = ({ value, onChange }: SearchProps) => {
   const handleFocus = () => {
     if (value.length === 0) {
       setFocus(true);
+      setIsOpen(true);
     }
   };
 
@@ -61,6 +63,7 @@ const Search = ({ value, onChange }: SearchProps) => {
     }
     setFocus(false);
     setLiIndex(-1);
+    setIsOpen(false);
   };
 
   const liClickHandler = (e: React.MouseEvent<HTMLLIElement>) => {
@@ -69,8 +72,10 @@ const Search = ({ value, onChange }: SearchProps) => {
     if (value !== null) {
       onChange(value);
       ref.current?.focus();
+      router.push(`/result?keyword=${value}`);
     }
     setIsBlurBlocking(true);
+    setLiIndex(-1);
   };
 
   const handleArrowBtn = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -82,7 +87,9 @@ const Search = ({ value, onChange }: SearchProps) => {
       const selectedItem = activeRef.current[newIndex]?.textContent;
       if (selectedItem) {
         onChange(selectedItem);
+        router.push(`/result?keyword=${selectedItem}`);
       }
+      return;
     }
 
     if (e.key === 'ArrowDown') {
@@ -93,20 +100,18 @@ const Search = ({ value, onChange }: SearchProps) => {
       return;
     }
 
-    activeRef.current.forEach((item) => {
-      item?.classList.remove(listClassName);
-    });
-
-    activeRef.current[newIndex]?.classList.add(listClassName);
-
     setLiIndex(newIndex);
   };
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = (index: number) => {
     const activeRef = value.length === 0 ? recentlyRef : recommendRef;
     activeRef.current.forEach((item) => {
       item?.classList.remove(listClassName);
     });
+
+    activeRef.current[index]?.classList.add(listClassName);
+
+    setLiIndex(index);
   };
 
   useEffect(() => {
@@ -169,20 +174,20 @@ const Search = ({ value, onChange }: SearchProps) => {
           onKeyDown={handleArrowBtn}
         />
       </form>
-      {isFocus && value.length === 0 && recently.length > 0 ? (
+      {isFocus && value.length === 0 && recently.length > 0 && isOpen ? (
         <ul className="w-full absolute top-11 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
           {recently.length !== 0 &&
             recently.map((item, index) => {
               if (!item) return;
               return (
                 <li
-                  className="hover:bg-gray-30 rounded-sm p-1"
+                  className={`${liIndex === index ? 'bg-gray-30' : ''} rounded-sm p-1 cursor-pointer`}
                   key={item}
                   ref={(el) => {
                     recentlyRef.current[index] = el;
                   }}
                   onMouseDown={liClickHandler}
-                  onMouseEnter={handleMouseEnter}
+                  onMouseEnter={() => handleMouseEnter(index)}
                 >
                   {item}
                 </li>
@@ -190,7 +195,7 @@ const Search = ({ value, onChange }: SearchProps) => {
             })}
         </ul>
       ) : null}
-      {recommend.length > 0 && value.length > 0 && (
+      {recommend.length > 0 && value.length > 0 && isOpen ? (
         <ul className="w-full absolute top-11 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
           {recommend.map((item, index) => {
             if (!item) return;
@@ -199,16 +204,17 @@ const Search = ({ value, onChange }: SearchProps) => {
                 ref={(el) => {
                   recommendRef.current[index] = el;
                 }}
-                className="hover:bg-gray-30 rounded-sm p-1"
+                className={`${liIndex === index ? 'bg-gray-30' : ''} rounded-sm p-1 cursor-pointer`}
                 key={item.id}
                 onMouseDown={liClickHandler}
+                onMouseEnter={() => handleMouseEnter(index)}
               >
                 {item.name}
               </li>
             );
           })}
         </ul>
-      )}
+      ) : null}
     </div>
   );
 };
