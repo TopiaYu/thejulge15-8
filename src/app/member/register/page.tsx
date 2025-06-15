@@ -68,21 +68,20 @@ const Page = () => {
   // 유저 정보 불어오기
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const userId = userData?.item.user.item.id;
+      const userId = userData?.item?.user?.item?.id;
       if (!userId || !token) return;
 
       try {
-        const response = await axios.get(`/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const { data } = await axios.get(`/users/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        const user = response.data.item;
 
-        setName(user.name || '');
-        setPhone(user.phone ? formatPhoneNumber(user.phone) : '');
-        setAddress(user.address || '');
-        setBio(user.bio || '');
+        const { name, phone, address, bio } = data.item;
+
+        setName(name || '');
+        setPhone(phone ? formatPhoneNumber(phone) : '');
+        setAddress(address || '');
+        setBio(bio || '');
       } catch (error) {
         console.error('유저 정보 불러오기 실패:', error);
       }
