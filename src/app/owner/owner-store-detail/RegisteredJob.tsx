@@ -134,7 +134,7 @@ export default function RegisteredJob({ shopId }: RegisteredJobProps) {
         <header className="mb-6">
           <h1 className="text-2xl max-[374px]:text-lg font-bold">내가 등록한 공고</h1>
         </header>
-        <div className="grid grid-cols-1 md: grid-cols-2 lg: grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {notices.map((notice) => (
             <MyJobPost
               key={notice.id}

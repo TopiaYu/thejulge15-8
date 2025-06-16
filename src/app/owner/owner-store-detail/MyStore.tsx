@@ -48,7 +48,7 @@ export default function MyStore() {
               className="cursor-pointer border px-1 w-full py-3.5 text-orange text-base max-[374px]:text-sm font-bold bg-white border-orange rounded-md"
               onClick={handleButton}
             >
-              공고 편집하기
+              편집하기
             </button>
             <button
               className="cursor-pointer border px-1 w-full py-3.5 text-white text-base max-[374px]:text-sm font-bold bg-orange rounded-md"

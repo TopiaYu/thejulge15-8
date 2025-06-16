@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface ShopItem {
   id: string;
@@ -42,9 +43,10 @@ export default function StoreDetail({ item }: StoreDetailProps) {
   const { name, category, address1, address2, imageUrl, originalHourlyPay } = shop.item;
   const fullAddress = `${address1} ${address2}`;
   const wageIncreaseRate = ((hourlyPay - originalHourlyPay) / originalHourlyPay) * 100;
+  const router = useRouter();
 
   const handleButton = () => {
-    return console.log('dd');
+    router.push('/owner/register-job');
   };
 
   return (

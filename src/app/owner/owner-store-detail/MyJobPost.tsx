@@ -21,6 +21,8 @@ interface MyJobPostProps {
   originalHourlyPay?: number;
 }
 
+const default_shop_image_url = '/logo.png';
+
 export default function MyJobPost({
   notice,
   shopId,
@@ -56,7 +58,7 @@ export default function MyJobPost({
     >
       <div className="w-full max-w-[280px] h-40 max-h-[160px] border rounded-xl relative overflow-hidden">
         <Image
-          src={shopImageUrl || ''}
+          src={shopImageUrl || default_shop_image_url}
           alt={'가게 이미지'}
           layout="fill"
           objectFit="cover"
