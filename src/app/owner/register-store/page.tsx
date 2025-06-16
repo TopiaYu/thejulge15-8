@@ -53,6 +53,7 @@ export default function Page() {
   const [addressOpen, setAddressOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false); // 모달 표시 상태 추가
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -147,8 +148,8 @@ export default function Page() {
       return;
     }
 
-    const token = localStorage.getItem('accessToken'); // 'token' → 'accessToken'
-    console.log('Submit Token:', token); // 디버깅용 로그
+    const token = localStorage.getItem('accessToken');
+    console.log('Submit Token:', token);
     if (!token) {
       setError('로그인이 필요합니다.');
       router.push('/login');
@@ -177,9 +178,8 @@ export default function Page() {
       });
 
       if (!response.ok) {
-        // JSON 파싱 전에 응답 텍스트 확인
         const responseText = await response.text();
-        console.log('Error Response:', responseText); // 디버깅용
+        console.log('Error Response:', responseText);
         let errorData;
         try {
           errorData = JSON.parse(responseText);
@@ -194,8 +194,12 @@ export default function Page() {
         throw new Error(errorData.message || '가게 등록 실패');
       }
 
-      console.log('가게 등록 성공');
-      router.push('../owner');
+      const responseData = await response.json();
+      console.log('가게 등록 성공:', responseData);
+
+      // 성공적으로 등록된 가게 정보를 localStorage에 저장
+      localStorage.setItem('registeredShop', JSON.stringify(responseData.item));
+      setShowModal(true); // 모달 표시
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message || '가게 등록 중 오류가 발생했습니다.');
@@ -216,18 +220,26 @@ export default function Page() {
     if (key === 'district') setAddressOpen(false);
   };
 
+  // 모달의 '확인' 버튼 클릭 시 호출될 함수
+  const handleModalConfirm = () => {
+    setShowModal(false); // 모달 닫기
+    router.push('/owner/owner-store-detail'); // 지정된 상세 페이지로 이동
+  };
+
   const isFormValid =
     form.name && form.category && form.district && form.detailAddress && form.basePay;
 
   return (
-    <div className="xl:px-[208px] mx-auto p-4">
+    <div className="xl:px-[208px] mx-auto p-4 relative">
+      {' '}
+      {/* relative 추가 */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl font-bold">가게 정보</h1>
         <button className="text-2xl cursor-pointer" onClick={handleClose}>
           ✕
         </button>
       </div>
-
+      {/* ... (기존 폼 내용) ... */}
       {/* 가게 이름 & 분류 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
@@ -263,7 +275,6 @@ export default function Page() {
           )}
         </div>
       </div>
-
       {/* 주소 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div className="relative" ref={addressRef}>
@@ -299,7 +310,6 @@ export default function Page() {
           />
         </div>
       </div>
-
       {/* 기본 시급 */}
       <div className="mb-4">
         <label className="text-sm block mb-1">기본 시급*</label>
@@ -314,7 +324,6 @@ export default function Page() {
           <span className="absolute right-3 text-gray-500">원</span>
         </div>
       </div>
-
       {/* 이미지 업로드 */}
       <div className="mb-4">
         <label className="text-sm block mb-1">가게 이미지</label>
@@ -343,7 +352,6 @@ export default function Page() {
         </div>
         {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
       </div>
-
       {/* 설명 */}
       <div className="mb-6">
         <label className="text-sm block mb-1">가게 설명</label>
@@ -355,7 +363,6 @@ export default function Page() {
           onChange={(e) => setForm({ ...form, description: e.target.value })}
         />
       </div>
-
       {/* 등록 버튼 */}
       <div className="flex justify-center">
         <button
@@ -366,6 +373,20 @@ export default function Page() {
           등록하기
         </button>
       </div>
+      {/* 모달 */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg text-center w-[327px] h-[200px] flex flex-col justify-center items-center">
+            <p className="text-lg font-semibold mb-6">등록이 완료되었습니다.</p>
+            <button
+              className="bg-orange text-white px-8 py-3 rounded-md hover:bg-orange-700 transition-colors"
+              onClick={handleModalConfirm}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
