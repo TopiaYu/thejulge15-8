@@ -1,18 +1,28 @@
 'use client';
-
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Filter from '@/components/notice/filter';
 import DetailFilter from '@/components/notice/detailfilter';
 import axios from '@/lib/api/axios';
+import Link from 'next/link';
+import { useSortOption, useDetailOption } from '@/lib/zustand';
 
-interface Job {
+interface JobList {
   id: string;
   hourlyPay: number;
   startsAt: string;
   workhour: number;
   description: string;
   closed: boolean;
-  shop: Shop;
+  shop: Item;
+}
+interface dataItem {
+  item: JobList;
+  links: number;
+}
+interface Item {
+  item: Shop;
+  href: string;
 }
 interface Shop {
   id: string;
@@ -24,79 +34,175 @@ interface Shop {
   imageUrl: string;
   originalHourlyPay: number;
 }
-
 export default function JobList() {
-  const [jobList, setJobList] = useState<Job[]>([]);
+  const [jobList, setJobList] = useState<JobList[]>([]);
+  const { sortOption } = useSortOption();
+  const { detailOption } = useDetailOption();
   useEffect(() => {
-    bringData();
-  }, []);
-  async function bringData() {
+    bringData(sortOption, detailOption);
+  }, [sortOption, detailOption]);
+  async function bringData(sort: string, option: typeof detailOption) {
+    const sortMap: Record<string, string> = {
+      '마감 임박 순': 'time',
+      '시급 많은 순': 'pay',
+      '시간 적은 순': 'hour',
+      '가나다 순': 'shop',
+    };
+
+    const params = {
+      limit: 100,
+      sort: sortMap[sort] || 'time',
+      address: option.location,
+      offset: option.startDay,
+      hourlyPayGte: option.pay,
+    };
     try {
-      const response = await axios.get('/notices', {
-        headers: {
-          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmMzgxYjNiYy0xOTFhLTQ2ODEtOWZlMy05ZmFkYzQ4NGFkOGQiLCJpYXQiOjE3NDk0NTc5OTZ9.443I9RQURayX-cQahXmXj0L7cUHKVoifWdibO0_Pj7w`, // 보통 "Bearer " 접두사가 필요합니다!
-        },
-      });
-      console.log('응답 데이터:', response.data);
-      setJobList(response.data.items);
+      const response = await axios.get('/notices', { params });
+      const settingData: JobList[] = response.data.items.map((dataItem: dataItem) => ({
+        id: dataItem.item.id,
+        hourlyPay: dataItem.item.hourlyPay,
+        startsAt: dataItem.item.startsAt,
+        workhour: dataItem.item.workhour,
+        description: dataItem.item.description,
+        closed: dataItem.item.closed,
+        shop: dataItem.item.shop,
+      }));
+      setJobList(settingData);
+      console.log({ params });
     } catch (error) {
       console.error('API 호출 에러:', error);
     }
   }
   return (
     <>
-      <section className="bg-red-10 flex flex-col justify-center items-center h-[535px]">
-        <div className="w-[964px] text-black text-2xl font-bold mb-[31px]">맞춤 공고</div>
-        <div className="grid grid-cols-3 gap-[14px]">
-          <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
-            1
-          </div>
-          <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
-            2
-          </div>
-          <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
-            3
+      <section className="bg-red-10 flex flex-col justify-center items-center py-[40px]">
+        <div className="w-full flex flex-col max-w-[964px] px-4">
+          <h1 className="text-black text-xl md:text-2xl font-bold mb-[31px] w-full flex justify-start">
+            맞춤 공고
+          </h1>
+
+          <div className="w-full overflow-x-auto scrollbar-hide">
+            <div className="flex gap-[14px] justify-center md:justify-start min-w-max px-2">
+              <div className="w-[171px] h-[261px] md:w-[312px] md:h-[349px] p-[14px] bg-white border border-gray-200 rounded-xl shrink-0">
+                1
+              </div>
+              <div className="w-[171px] h-[261px] md:w-[312px] md:h-[349px] p-[14px] bg-white border border-gray-200 rounded-xl shrink-0">
+                2
+              </div>
+              <div className="w-[171px] h-[261px] md:w-[312px] md:h-[349px] p-[14px] bg-white border border-gray-200 rounded-xl shrink-0">
+                3
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="flex flex-col justify-center items-center">
-        <div className="flex flex-cols justify-between w-[964px]  mb-[31px] mt-[60px]">
-          <div className="text-black text-2xl font-bold">전체 공고</div>
+        <div className="w-[350px] mb-[16px] flex flex-col gap-[16px] items-start md:flex-row md:justify-between md:items-center md:pb-[32px] md:w-[638px] pt-[60px] xl:w-[964px]">
+          <div className="text-black text-xl md:text-2xl font-bold ">전체 공고</div>
           <div className="flex gap-[10px]">
             <Filter />
             <DetailFilter />
           </div>
         </div>
-        <div className="grid grid-cols-3 grid-rows-2 gap-x-[14px] gap-y-[31px]">
-          <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
-            {jobList.map((item) => (
+        <div className="grid grid-cols-2 gap-x-[8px] gap-y-[16px] md:gap-x-[14px] md:gap-y-[31px] xl:grid-cols-3">
+          {jobList.map((job) => {
+            const originalPay = job.shop.item.originalHourlyPay;
+            const currentPay = job.hourlyPay;
+
+            let percentageIncrease = 0;
+            let displayMessage = '';
+            let shouldDisplayIncreaseInfo = false;
+
+            if (originalPay > 0 && currentPay > originalPay) {
+              percentageIncrease = ((currentPay - originalPay) / originalPay) * 100;
+              displayMessage = `${Math.round(percentageIncrease)}%`;
+              shouldDisplayIncreaseInfo = true;
+            } else if (currentPay > 0 && originalPay === 0) {
+              displayMessage = '새로운 시급';
+              shouldDisplayIncreaseInfo = true;
+            }
+
+            return (
               <div
-                key={item.id}
-                className="w-[312px] h-[349px] p-[14px] bg-white border border-gray-20 rounded-xl"
+                key={job.id}
+                className="w-[171px] h-[261px] p-[8px] bg-white border border-gray-20 rounded-xl md:w-[312px] md:h-[349px] md:p-[14px]"
               >
-                <div>{item.shop.name}</div>
-                <div>{item.description}</div>
-                <div>{item.hourlyPay}원</div>
+                <Link href={job.shop.href}>
+                  <div className="rounded-xl h-[84px] mb-[12px] md:mb-[20px] md:h-[171px]">
+                    {/* <Image src={job.shop.item.imageUrl} alt="대표 이미지" width={300} height={200} /> */}
+                  </div>
+                  <div className="flex flex-col gap-[16px]">
+                    <section className="flex flex-col gap-[8px]">
+                      <label className="text-base font-bold md:text-xl ">
+                        {job.shop.item.name}
+                      </label>
+                      <div className="flex gap-[6px] h-[20px]">
+                        <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                          <Image src="/clock-icon.png" alt="일시" fill className="object-contain" />
+                        </div>
+                        <span className="text-xs text-gray-50 md:text-sm">
+                          {new Date(job.startsAt).toLocaleDateString('ko-KR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                          })}
+                        </span>
+                        <span className="text-xs text-gray-50 md:text-sm">
+                          ({job.workhour}시간)
+                        </span>
+                      </div>
+                      <div className="flex gap-[6px] h-[20px]">
+                        <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                          <Image
+                            src="/location-icon.png"
+                            alt="장소"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <span className="text-gray-50 text-sm">{job.shop.item.address1}</span>
+                      </div>
+                    </section>
+                    <section className="flex flex-col justify-between items-start md:flex-row md:items-center">
+                      <span className="font-bold text-lg md:text-2xl">
+                        {job.hourlyPay.toLocaleString()}원
+                      </span>
+                      {shouldDisplayIncreaseInfo && (
+                        <div className="flex justify-center items-center rounded-[20px] md:bg-red-40 pt-[8px] md:pb-[8px] md:pr-[12px] md:pl-[12px]">
+                          <span className="text-red-40 text-xs md:text-white md:text-sm ">
+                            기존 시급보다{' '}
+                          </span>
+                          <span className="text-red-40 text-xs md:text-white md:text-sm">
+                            {' '}
+                            {displayMessage}
+                          </span>
+                          <div className="">
+                            <Image
+                              src="/arrow-up-bold.png"
+                              alt="시급 인상"
+                              width={20}
+                              height={20}
+                              className="hidden md:block"
+                            />
+                            <Image
+                              src="/arrow-orange.png"
+                              alt="시급 인상"
+                              width={11}
+                              height={11}
+                              className="block md:hidden"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </section>
+                  </div>
+                </Link>
               </div>
-            ))}
-          </div>
-          <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
-            2
-          </div>
-          <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
-            3
-          </div>
-          <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
-            4
-          </div>
-          <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
-            5
-          </div>
-          <div className="w-[312px] h-[349px] p-[14px] bg-white border-1 border-gray-20 rounded-xl">
-            6
-          </div>
+            );
+          })}
         </div>
+        \
       </section>
     </>
   );
