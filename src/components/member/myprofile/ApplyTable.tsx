@@ -2,13 +2,7 @@
 
 import clsx from 'clsx';
 
-interface ApplyItem {
-  id: number;
-  title: string;
-  status: string;
-  date: string;
-  hourlyPay: string;
-}
+import { ApplyItem } from '@/types/types';
 
 interface ApplyTableProps {
   data: ApplyItem[];

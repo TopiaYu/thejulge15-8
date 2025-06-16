@@ -60,8 +60,6 @@ const NoticeDetail = ({ params }: { params: Promise<Props> }) => {
   const [checkPoint, setCheckPoint] = useState<string | null>();
   const { shopId, noticeId } = use(params);
 
-  console.log(notice);
-
   useEffect(() => {
     const getNotice = async () => {
       try {
@@ -133,15 +131,20 @@ const NoticeDetail = ({ params }: { params: Promise<Props> }) => {
     }
   }, [notice]);
 
+  const startsAt = new Date(notice.startsAt);
+  const now = new Date();
+
+  const isPast = startsAt < now;
+
   return (
     <div className="bg-gray-5 flex flex-col items-center pt-10 sm:pt-[60px] px-3 lg:px-8 pb-20 sm:pb-[60px] lg:pb-[120px]">
-      <NoticeInfo info={notice} />
-      <div className="max-w-[936px] min-w-[350px] w-full">
+      <NoticeInfo info={notice} isPast={isPast} />
+      <section className="max-w-[936px] min-w-[350px] w-full">
         <h3 className="text-lg sm:text-2xl font-bold text-[#111322] mb-4 sm:mb-8">
           최근에 본 공고
         </h3>
         <LatestNotice checkPoint={checkPoint} />
-      </div>
+      </section>
     </div>
   );
 };
