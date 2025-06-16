@@ -5,7 +5,7 @@ import Filter from '@/components/notice/filter';
 import DetailFilter from '@/components/notice/detailfilter';
 import axios from '@/lib/api/axios';
 import Link from 'next/link';
-import { useSortOption, useDetailOption } from '@/lib/zustand';
+import { useSortOption, useDetailOption } from '@/lib/hooks/zustand';
 
 interface JobList {
   id: string;
@@ -51,11 +51,14 @@ export default function JobList() {
 
     const params = {
       limit: 100,
+      offset: 0, // 페이지네이션 시작점
       sort: sortMap[sort] || 'time',
-      address: option.location,
-      offset: option.startDay,
+      address: Array.isArray(option.location)
+        ? option.location.slice(0, 3).join(', ')
+        : option.location,
       hourlyPayGte: option.pay,
     };
+
     try {
       const response = await axios.get('/notices', { params });
       const settingData: JobList[] = response.data.items.map((dataItem: dataItem) => ({
@@ -69,6 +72,7 @@ export default function JobList() {
       }));
       setJobList(settingData);
       console.log({ params });
+      console.log('잡리스트', settingData);
     } catch (error) {
       console.error('API 호출 에러:', error);
     }

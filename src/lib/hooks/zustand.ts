@@ -11,7 +11,7 @@ interface Filters {
 }
 interface DetailOptionStore {
   detailOption: Filters;
-  setDetailOption: (updater: (prev: Filters) => Filters) => void;
+  setDetailOption: (Option: Filters) => void;
 }
 export const useSortOption = create<SortOptionStore>((set) => ({
   sortOption: '마감 임박 순',
@@ -23,8 +23,5 @@ export const useDetailOption = create<DetailOptionStore>((set) => ({
     startDay: { year: '', month: '', date: '' },
     pay: 0,
   },
-  setDetailOption: (updater) =>
-    set((state) => ({
-      detailOption: updater(state.detailOption),
-    })),
+  setDetailOption: (option) => set({ detailOption: option }),
 }));
