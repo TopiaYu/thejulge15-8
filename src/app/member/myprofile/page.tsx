@@ -9,7 +9,6 @@ import axios from '@/lib/api/axios';
 
 import MyProfileCard from '@/components/member/myprofile/MyProfileCard';
 import ApplyHistory from '@/components/member/myprofile/ApplyHistory';
-import NoticePopup from '@/components/member/myprofile/NoticePopup';
 import EmptyState from '@/components/member/myprofile/EmptyState';
 
 import type { AxiosResponse } from 'axios';
@@ -23,12 +22,6 @@ const statusMap: Record<'pending' | 'accepted' | 'rejected' | 'canceled', string
   pending: '대기중',
   canceled: '취소됨',
 };
-
-const dummyNotices = [
-  { message: 'HS 과일주스 공고 지원이 승인되었습니다.', timeAgo: '1분 전' },
-  { message: '써니 브런치 공고 지원이 승인되었습니다.', timeAgo: '3분 전' },
-  { message: '수리 에스프레소 공고 지원이 거절되었습니다.', timeAgo: '7분 전' },
-];
 
 // 시작 날짜 전체 반환 (예: 2023-01-12 10:00)
 const formatDate = (date: Date) =>
@@ -63,7 +56,6 @@ const Page = () => {
   const userId = userData?.item.user.item.id;
 
   const [profile, setProfile] = useState<UserItem | null>(null);
-  const [showNotice, setShowNotice] = useState(true); // 공고 알림 팝업 나중에 삭제 예정
   const [applications, setApplications] = useState<ApplyItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -172,11 +164,6 @@ const Page = () => {
             {/* 왼쪽: 제목 */}
             <div>
               <h2 className="text-[28px] font-bold">내 프로필</h2>
-              {showNotice && (
-                <div className="mt-4">
-                  <NoticePopup notices={dummyNotices} onClose={() => setShowNotice(false)} />
-                </div>
-              )}
             </div>
             {/* 오른쪽: 카드 */}
             <MyProfileCard
