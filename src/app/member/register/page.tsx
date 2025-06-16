@@ -1,7 +1,7 @@
 //알바님 내 프로필 등록하기 패이지
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '@/components/member/Modal';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/lib/hooks/use-auth';
@@ -49,6 +49,47 @@ const Page = () => {
 
   const isFormValid = name.trim() !== '' && phone.trim() !== '';
 
+  const formatPhoneNumber = (value: string) => {
+    // 숫자만 남기기
+    const numbersOnly = value.replace(/\D/g, '');
+
+    // 01X-XXXX-XXXX 형식으로
+    if (numbersOnly.length < 4) {
+      return numbersOnly;
+    } else if (numbersOnly.length < 8) {
+      return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3)}`;
+    } else if (numbersOnly.length <= 11) {
+      return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7)}`;
+    } else {
+      return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7, 11)}`;
+    }
+  };
+
+  // 유저 정보 불어오기
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userId = userData?.item?.user?.item?.id;
+      if (!userId || !token) return;
+
+      try {
+        const { data } = await axios.get(`/users/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const { name, phone, address, bio } = data.item;
+
+        setName(name || '');
+        setPhone(phone ? formatPhoneNumber(phone) : '');
+        setAddress(address || '');
+        setBio(bio || '');
+      } catch (error) {
+        console.error('유저 정보 불러오기 실패:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, [userData, token]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const userId = userData?.item.user.item.id;
@@ -67,7 +108,7 @@ const Page = () => {
       setShowModal(true); // 모달 열기
     } catch (error) {
       console.error('프로필 등록 실패:', error);
-      alert('프로필 등록에 실패했습니다.');
+      alert('유효하지 않은 휴대폰 번호입니다.');
     }
   };
 
@@ -106,7 +147,7 @@ const Page = () => {
               placeholder="입력"
               type="text"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => setPhone(formatPhoneNumber(e.target.value))}
               className="h-[58px] px-4 border border-[#CBC9CF] bg-white rounded-md"
             />
           </div>
