@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 const Header = () => {
   const [value, setValue] = useState('');
-  const { userData } = useAuth();
+  const { userData, isInitialized } = useAuth();
 
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement> | string) => {
     if (typeof e === 'string') {
@@ -27,7 +27,7 @@ const Header = () => {
       </div>
       <Search value={value} onChange={inputHandler} />
       <div className="flex items-start font-bold leading-5 lg:gap-10 sm:gap-3 gap-4 col-start-2 row-start-1 ml-auto text-sm sm:text-base sm:leading-[20px]">
-        {!userData ? <GuestMenu /> : <UserMenu />}
+        {isInitialized ? userData ? <UserMenu /> : <GuestMenu /> : null}
       </div>
     </header>
   );

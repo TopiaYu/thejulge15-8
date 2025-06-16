@@ -126,7 +126,7 @@ const UserMenu = () => {
         </>
       ) : (
         <>
-          <Link href="#">내 프로필</Link>
+          <Link href="/member/profile">내 프로필</Link>
           <button
             onClick={() => {
               logout();
