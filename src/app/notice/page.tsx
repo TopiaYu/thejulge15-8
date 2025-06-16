@@ -5,7 +5,7 @@ import Filter from '@/components/notice/filter';
 import DetailFilter from '@/components/notice/detailfilter';
 import axios from '@/lib/api/axios';
 import Link from 'next/link';
-import { useSortOption } from '@/lib/zustand';
+import { useSortOption, useDetailOption } from '@/lib/zustand';
 
 interface JobList {
   id: string;
@@ -37,10 +37,11 @@ interface Shop {
 export default function JobList() {
   const [jobList, setJobList] = useState<JobList[]>([]);
   const { sortOption } = useSortOption();
+  const { detailOption } = useDetailOption();
   useEffect(() => {
-    bringData(sortOption);
-  }, [sortOption]);
-  async function bringData(sort: string) {
+    bringData(sortOption, detailOption);
+  }, [sortOption, detailOption]);
+  async function bringData(sort: string, option: typeof detailOption) {
     const sortMap: Record<string, string> = {
       '마감 임박 순': 'time',
       '시급 많은 순': 'pay',
@@ -51,6 +52,9 @@ export default function JobList() {
     const params = {
       limit: 100,
       sort: sortMap[sort] || 'time',
+      address: option.location,
+      offset: option.startDay,
+      hourlyPayGte: option.pay,
     };
     try {
       const response = await axios.get('/notices', { params });
@@ -64,6 +68,7 @@ export default function JobList() {
         shop: dataItem.item.shop,
       }));
       setJobList(settingData);
+      console.log({ params });
     } catch (error) {
       console.error('API 호출 에러:', error);
     }
@@ -76,9 +81,7 @@ export default function JobList() {
             맞춤 공고
           </h1>
 
-          {/* 스크롤 가능한 영역 */}
           <div className="w-full overflow-x-auto scrollbar-hide">
-            {/* 콘텐츠 정렬용 래퍼 */}
             <div className="flex gap-[14px] justify-center md:justify-start min-w-max px-2">
               <div className="w-[171px] h-[261px] md:w-[312px] md:h-[349px] p-[14px] bg-white border border-gray-200 rounded-xl shrink-0">
                 1
