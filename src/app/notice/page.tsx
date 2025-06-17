@@ -6,6 +6,7 @@ import DetailFilter from '@/components/notice/detailfilter';
 import axios from '@/lib/api/axios';
 import Link from 'next/link';
 import { useSortOption, useDetailOption } from '@/lib/hooks/zustand';
+import Pagenation from '@/components/member/myprofile/Pagination';
 
 interface JobList {
   id: string;
@@ -38,10 +39,19 @@ export default function JobList() {
   const [jobList, setJobList] = useState<JobList[]>([]);
   const { sortOption } = useSortOption();
   const { detailOption } = useDetailOption();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const itemsCounts = 6;
+  const totalPages = Math.ceil(totalItems / itemsCounts);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   useEffect(() => {
-    bringData(sortOption, detailOption);
-  }, [sortOption, detailOption]);
-  async function bringData(sort: string, option: typeof detailOption) {
+    bringData(sortOption, detailOption, currentPage);
+  }, [sortOption, detailOption, currentPage]);
+  async function bringData(sort: string, option: typeof detailOption, page: number) {
     const sortMap: Record<string, string> = {
       '마감 임박 순': 'time',
       '시급 많은 순': 'pay',
@@ -50,10 +60,10 @@ export default function JobList() {
     };
 
     const params = new URLSearchParams();
-    params.append('limit', '100');
-    params.append('offset', '0');
     params.append('sort', sortMap[sort] || 'time');
     params.append('hourlyPayGte', String(option.pay));
+    params.append('limit', String(itemsCounts));
+    params.append('offset', String((page - 1) * itemsCounts));
 
     // ✅ address 여러 개 추가
     if (Array.isArray(option.location)) {
@@ -75,6 +85,7 @@ export default function JobList() {
         closed: dataItem.item.closed,
         shop: dataItem.item.shop,
       }));
+      setTotalItems(response.data.count);
       setJobList(settingData);
       console.log({ params });
       console.log('요청 URL:', `/notices?${params.toString()}`);
@@ -218,8 +229,12 @@ export default function JobList() {
             );
           })}
         </div>
-        \
       </section>
+      <Pagenation
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 }
