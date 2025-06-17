@@ -57,13 +57,13 @@ export default function ApplicantsTable() {
                   <td className="px-3.5 py-4 flex gap-4">
                     <button
                       onClick={() => alert('거절되었습니다')}
-                      className="cursor-pointer border border-orange text-orange font-bold rounded-lg px-5 py-2.5"
+                      className="cursor-pointer max-w-[92px] max-h-[38px] border border-orange text-orange font-bold text-sm rounded-lg px-5 py-2.5"
                     >
                       거절하기
                     </button>
                     <button
                       onClick={() => alert('승인되었습니다.')}
-                      className="cursor-pointer border border-blue-20 text-blue-20 font-bold rounded-lg px-5 py-2.5"
+                      className="cursor-pointer max-w-[92px] max-h-[38px] border border-blue-20 text-blue-20 font-bold text-sm rounded-lg px-5 py-2.5"
                     >
                       승인하기
                     </button>

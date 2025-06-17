@@ -7,7 +7,7 @@ interface PagenationProps {
 }
 
 export default function Pagenation({ currentPage, totalPages, onPageChange }: PagenationProps) {
-  const maxPageNumbersToShow = 3;
+  const maxPageNumbersToShow = 7;
   let startPage = Math.max(1, currentPage - Math.floor(maxPageNumbersToShow / 2));
   const endPage = Math.min(totalPages, startPage + maxPageNumbersToShow - 1);
 

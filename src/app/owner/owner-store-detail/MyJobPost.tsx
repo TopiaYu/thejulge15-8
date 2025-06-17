@@ -57,7 +57,7 @@ export default function MyJobPost({
     const dateStr = `${localStartDate.getFullYear()}-${pad(localStartDate.getMonth() + 1)}-${pad(localStartDate.getDate())}`;
     const startTimeStr = `${pad(localStartDate.getHours())}:${pad(localStartDate.getMinutes())}`;
     const endTimeStr = `${pad(endDate.getHours())}:${pad(endDate.getMinutes())}`;
-    return `${dateStr} ${startTimeStr} ~ ${endTimeStr} (${workhour}시간)`;
+    return `${dateStr} ${startTimeStr}~${endTimeStr}(${workhour}시간)`;
   }
   const displayTime = formatJobTime(notice.startsAt, notice.workhour);
 
@@ -78,23 +78,19 @@ export default function MyJobPost({
       <div>
         <h3 className="text-black mt-4 font-bold text-lg">{shopName}</h3>
 
-        <div className="flex gap-1.5 mt-2">
+        <div className="flex gap-1 mt-2">
           <span className="flex items-center">
-            {shopImageUrl ? (
-              <Image
-                src="/clock-icon.png"
-                width={16}
-                height={16}
-                className="min-[375px]:w-5 min-[375px]:h-5"
-                alt="time"
-              />
-            ) : (
-              <div>이미지 없음</div>
-            )}
+            <Image
+              src="/clock-icon.png"
+              width={16}
+              height={16}
+              className="min-[375px]:w-5 min-[375px]:h-5"
+              alt="time"
+            />
           </span>
           <p className="text-gray-50 text-base max-[374px]:text-sm">{displayTime}</p>
         </div>
-        <div className="flex gap-1.5 mt-2">
+        <div className="flex gap-1 mt-2">
           <span className="flex items-center">
             <Image
               src="/location-icon.png"

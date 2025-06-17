@@ -25,13 +25,13 @@ interface JobPostDetailItem {
     item: ShopItem;
     href: string;
   };
-  currentUserApplication?: {
-    item: {
-      id: string;
-      status: 'pending' | 'accepted' | 'rejected' | 'canceled';
-      createdAt: string;
-    };
-  };
+  // currentUserApplication?: {
+  //   item: {
+  //     id: string;
+  //     status: 'pending' | 'accepted' | 'rejected' | 'canceled';
+  //     createdAt: string;
+  //   };
+  // };
 }
 
 interface StoreDetailProps {
@@ -42,7 +42,6 @@ export default function StoreDetail({ item }: StoreDetailProps) {
   const { hourlyPay, startsAt, workhour, description, shop } = item;
   const { name, category, address1, address2, imageUrl, originalHourlyPay } = shop.item;
   const fullAddress = `${address1} ${address2}`;
-  const wageIncreaseRate = ((hourlyPay - originalHourlyPay) / originalHourlyPay) * 100;
   const router = useRouter();
 
   const handleButton = () => {
@@ -131,7 +130,7 @@ export default function StoreDetail({ item }: StoreDetailProps) {
             </span>
             <p className="text-gray-50 text-base max-[374px]:text-sm">{fullAddress}</p>
           </div>
-          <p className="mt-3 min-h-[78px] text-base max-[374px]:text-sm">{description}</p>
+          <p className="mt-3 min-h-[78px] text-base max-[374px]:text-sm">{shop.item.description}</p>
           <div className="flex justify-center mt-3 w-full">
             <button
               className="cursor-pointer border px-1 w-full py-3.5 text-orange text-base max-[374px]:text-sm font-bold border-orange rounded-md"
@@ -144,10 +143,7 @@ export default function StoreDetail({ item }: StoreDetailProps) {
       </div>
       <div className="bg-gray-10 rounded-xl p-8 mt-6 mb-15">
         <h3 className="font-bold mb-3">공고 설명</h3>
-        <p className="text-base max-[374px]:text-sm">
-          기존 알바 친구가 그만둬서 새로운 친구를 구했는데, 그 사이에 하루가 비네요. 급해서 시급도
-          높였고 그렇게 바쁜 날이 아니라서 괜찮을거예요.
-        </p>
+        <p className="text-base max-[374px]:text-sm">{description}</p>
       </div>
     </div>
   );

@@ -78,7 +78,7 @@ export default function RegisteredJob() {
     fetchShopDetail,
   } = useShopDetailStore();
 
-  const [shopId, setShopId] = useState<string | null>(null); //shopId 저장
+  const [shopId, setShopId] = useState<string>(''); //shopId 저장
 
   useEffect(() => {
     const storeedShop = localStorage.getItem('registeredShop');
@@ -140,7 +140,7 @@ export default function RegisteredJob() {
         <header className="mb-6">
           <h1 className="text-2xl max-[374px]:text-lg font-bold">내가 등록한 공고</h1>
         </header>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {notices.map((notice) => (
             <MyJobPost
               key={notice.id}
