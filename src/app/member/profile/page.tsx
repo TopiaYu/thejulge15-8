@@ -17,12 +17,13 @@ const Page = () => {
         <h2 className="text-2xl font-extrabold text-[#111322] mb-4">내 프로필</h2>
 
         <div className="w-full h-[217px] border border-gray-200 rounded-[12px] flex flex-col items-center justify-center text-center px-4">
-          <p className="mb-4 text-base text-center ">
+          <p className="mb-4 text-base text-center whitespace-nowrap">
             내 프로필을 등록하고 원하는 가게에 지원해 보세요.
           </p>
           <button
             onClick={handleClick}
-            className="w-[346px] h-[47px] bg-[#ea3c12] text-white rounded-md hover:bg-orange-700 font-bold"
+            // className="w-[346px] h-[47px] bg-[#ea3c12] text-white rounded-md hover:bg-orange-700 font-bold"
+            className="w-[150px] sm:w-[346px] h-[47px] bg-[#ea3c12] text-white rounded-md hover:bg-orange-700 font-bold text-[14px] lg:text-base"
           >
             내 프로필 등록하기
           </button>
