@@ -65,7 +65,7 @@ export default function JobList() {
     }
 
     try {
-      const response = await axios.get(`/notices?${params.toString()}`);
+      const response = await axios.get('/notices', { params });
       const settingData: JobList[] = response.data.items.map((dataItem: dataItem) => ({
         id: dataItem.item.id,
         hourlyPay: dataItem.item.hourlyPay,
@@ -78,6 +78,7 @@ export default function JobList() {
       setJobList(settingData);
       console.log({ params });
       console.log('요청 URL:', `/notices?${params.toString()}`);
+      console.log('세팅데이터', settingData);
     } catch (error) {
       console.error('API 호출 에러:', error);
     }

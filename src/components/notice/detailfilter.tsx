@@ -15,7 +15,7 @@ export default function DetailFilter() {
 
   //임시 저장소
   const [selectOption, setSelectOption] = useState<Option>({
-    location: [''],
+    location: [],
     startDay: null,
     pay: 0,
   });
