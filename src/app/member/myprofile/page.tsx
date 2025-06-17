@@ -12,7 +12,7 @@ import ApplyHistory from '@/components/member/myprofile/ApplyHistory';
 import EmptyState from '@/components/member/myprofile/EmptyState';
 
 import type { AxiosResponse } from 'axios';
-import type { UserItem, ApplyItem, RawApplication } from '@/types/types'; //주석 풀면 더 추가
+import type { UserItem, ApplyItem, RawApplication, ApplicationsResponse } from '@/types/types'; //주석 풀면 더 추가
 
 const LIMIT = 5; //하단 페이지네이션에서 한 페이지에 보여줄 신청 내역 개수
 
@@ -86,66 +86,19 @@ const Page = () => {
     fetchProfile();
   }, [userId, token]);
 
-  //  신청 내역 데이터 가져오기 (현재는 mock)
+  //  신청 내역 데이터 가져오기
   useEffect(() => {
     const fetchApplications = async () => {
       if (!userId || !token) return;
 
       try {
-        // 실제 요청 코드 (주석 처리 중)
-        /*
         const response: AxiosResponse<ApplicationsResponse> = await axios.get(
           `/users/${userId}/applications`,
           {
             headers: { Authorization: `Bearer ${token}` },
             params: { offset: (currentPage - 1) * LIMIT, limit: LIMIT },
-          }
+          },
         );
-        */
-
-        // Mock Data로 테스트 중(지원한 공고 목록 페이지네이션 삭제 예정)
-        const mockApplications: RawApplication[] = Array.from({ length: 40 }, (_, index) => ({
-          item: {
-            id: (index + 1).toString(),
-            status: ['pending', 'accepted', 'rejected', 'canceled'][index % 4] as
-              | 'pending'
-              | 'accepted'
-              | 'rejected'
-              | 'canceled',
-            createdAt: new Date().toISOString(),
-            shop: {
-              item: {
-                id: 'shop-' + index,
-                name: `가게 ${index + 1}`,
-                category: '카페',
-                address1: '서울시 어딘가',
-                address2: '101호',
-                description: '맛있는 카페',
-                imageUrl: '',
-                originalHourlyPay: 10000 + index * 100,
-              },
-              href: '',
-            },
-            notice: {
-              item: {
-                id: 'notice-' + index,
-                hourlyPay: 10000 + index * 100,
-                description: '설명',
-                startsAt: new Date().toISOString(),
-                workhour: 4,
-                closed: false,
-              },
-              href: '',
-            },
-          },
-        }));
-
-        const response = {
-          data: {
-            items: mockApplications.slice((currentPage - 1) * LIMIT, currentPage * LIMIT),
-            count: mockApplications.length,
-          },
-        };
 
         setTotalCount(response.data.count);
         setApplications(response.data.items.map(formatApplication));
