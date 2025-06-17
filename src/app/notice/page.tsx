@@ -62,13 +62,13 @@ export default function JobList() {
     const params = new URLSearchParams();
     params.append('sort', sortMap[sort] || 'time');
     params.append('hourlyPayGte', String(option.pay));
-    params.append('startsAtGte', String(option.startDay));
     params.append('limit', String(itemsCounts));
     params.append('offset', String((page - 1) * itemsCounts));
 
+    // ✅ address 여러 개 추가
     if (Array.isArray(option.location)) {
       option.location.slice(0, 3).forEach((loc) => {
-        params.append('address', loc);
+        params.append('address', loc); // 같은 키로 append!
       });
     } else if (option.location) {
       params.append('address', option.location);
