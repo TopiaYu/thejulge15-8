@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useMyStoreNoticeStore } from './store/MyStoreNoticesStore';
 import MyJobPost from './MyJobPost';
 import { useShopDetailStore } from './store/ShopDetailStore';
@@ -69,11 +69,7 @@ interface ShopDetail {
   };
 }
 
-interface RegisteredJobProps {
-  shopId: string;
-}
-
-export default function RegisteredJob({ shopId }: RegisteredJobProps) {
+export default function RegisteredJob() {
   const router = useRouter();
   const {
     shopItem,
@@ -81,6 +77,16 @@ export default function RegisteredJob({ shopId }: RegisteredJobProps) {
     error: shopError,
     fetchShopDetail,
   } = useShopDetailStore();
+
+  const [shopId, setShopId] = useState<string | null>(null); //shopId 저장
+
+  useEffect(() => {
+    const storeedShop = localStorage.getItem('registeredShop');
+    if (storeedShop) {
+      const paredShop: ShopDetail = JSON.parse(storeedShop);
+      setShopId(paredShop.id);
+    }
+  }, []);
 
   const { notices, totalCount, isLoading, error, hasMore, fetchNotices, clearNotices } =
     useMyStoreNoticeStore();

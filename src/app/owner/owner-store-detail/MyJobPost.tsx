@@ -32,24 +32,34 @@ export default function MyJobPost({
   originalHourlyPay,
 }: MyJobPostProps) {
   const router = useRouter();
-  const startsAtDate = new Date(notice.startsAt);
-
   // 시급 인상률 계산 로직
   // originalHourlyPay가 유효하고, 0이 아니며, 현재 시급과 다를 때만 계산 및 표시
   const showWageComparison =
     originalHourlyPay !== undefined &&
     originalHourlyPay !== 0 &&
     notice.hourlyPay !== originalHourlyPay;
-
   const increaseRate = showWageComparison
     ? ((notice.hourlyPay - originalHourlyPay!) / originalHourlyPay!) * 100 // ! 단언문은 undefined가 아님을 확신할 때 사용
     : 0; // 조건이 맞지 않으면 0%로 설정
-
   const wageComparisonText = `기존 시급보다 ${increaseRate.toFixed(0)}%`;
 
   const handleViewDetail = () => {
     router.push(`/owner/job-detail/${shopId}/${notice.id}`);
   };
+
+  //시간 조절 함수
+  function formatJobTime(startsAt: string, workhour: number): string {
+    const startDate = new Date(startsAt);
+    const localStartDate = new Date(startDate.getTime() + 9 * 60 * 60 * 1000);
+    const endDate = new Date(localStartDate);
+    endDate.setHours(endDate.getHours() + workhour);
+    const pad = (num: number) => num.toString().padStart(2, '0');
+    const dateStr = `${localStartDate.getFullYear()}-${pad(localStartDate.getMonth() + 1)}-${pad(localStartDate.getDate())}`;
+    const startTimeStr = `${pad(localStartDate.getHours())}:${pad(localStartDate.getMinutes())}`;
+    const endTimeStr = `${pad(endDate.getHours())}:${pad(endDate.getMinutes())}`;
+    return `${dateStr} ${startTimeStr} ~ ${endTimeStr} (${workhour}시간)`;
+  }
+  const displayTime = formatJobTime(notice.startsAt, notice.workhour);
 
   return (
     <div
@@ -82,7 +92,7 @@ export default function MyJobPost({
               <div>이미지 없음</div>
             )}
           </span>
-          <p className="text-gray-50 text-base max-[374px]:text-sm">{notice.startsAt}</p>
+          <p className="text-gray-50 text-base max-[374px]:text-sm">{displayTime}</p>
         </div>
         <div className="flex gap-1.5 mt-2">
           <span className="flex items-center">

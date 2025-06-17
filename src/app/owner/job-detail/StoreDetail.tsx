@@ -49,6 +49,30 @@ export default function StoreDetail({ item }: StoreDetailProps) {
     router.push('/owner/register-job');
   };
 
+  // 시급 인상률 계산 로직
+  // originalHourlyPay가 유효하고, 0이 아니며, 현재 시급과 다를 때만 계산 및 표시
+  const showWageComparison =
+    originalHourlyPay !== undefined && originalHourlyPay !== 0 && hourlyPay !== originalHourlyPay;
+  const increaseRate = showWageComparison
+    ? ((hourlyPay - originalHourlyPay!) / originalHourlyPay!) * 100 // ! 단언문은 undefined가 아님을 확신할 때 사용
+    : 0; // 조건이 맞지 않으면 0%로 설정
+  const wageComparisonText = `기존 시급보다 ${increaseRate.toFixed(0)}%`;
+
+  //시간 조절 함수
+  function formatJobTime(startsAt: string, workhour: number): string {
+    const startDate = new Date(startsAt);
+    const localStartDate = new Date(startDate.getTime() + 9 * 60 * 60 * 1000);
+    const endDate = new Date(localStartDate);
+    endDate.setHours(endDate.getHours() + workhour);
+    const pad = (num: number) => num.toString().padStart(2, '0');
+    const dateStr = `${localStartDate.getFullYear()}-${pad(localStartDate.getMonth() + 1)}-${pad(localStartDate.getDate())}`;
+    const startTimeStr = `${pad(localStartDate.getHours())}:${pad(localStartDate.getMinutes())}`;
+    const endTimeStr = `${pad(endDate.getHours())}:${pad(endDate.getMinutes())}`;
+    return `${dateStr} ${startTimeStr} ~ ${endTimeStr} (${workhour}시간)`;
+  }
+
+  const displayTime = formatJobTime(startsAt, workhour);
+
   return (
     <div className="w-full max-w-[964px] px-8 max-[375px]:px-4 mx-auto">
       <header className="mt-15 mb-6">
@@ -59,25 +83,29 @@ export default function StoreDetail({ item }: StoreDetailProps) {
         className="w-full border border-gray-20 grid grid-cols-1 gap-8 p-6 rounded-2xl
                     md:grid-cols-[1fr_minmax(0,346px)]"
       >
-        <div className="w-full min-h-[308px] border-0 rounded-xl bg-amber-700 overflow-hidden">
-          {/* <Image src={imageUrl} alt="가게 이미지" layout="fill" objectFit="cover" /> */}
+        <div className="w-full min-h-[308px] border-0 rounded-xl bg-amber-700 relative overflow-hidden">
+          <Image src={imageUrl} alt="가게 이미지" layout="fill" objectFit="cover" />
         </div>
         <div className="mt-4">
           <h3 className="text-base max-[374px]:text-sm text-orange font-bold">시급</h3>
           <div className="flex gap-2 items-center">
             <h2 className="text-2xl max-[374px]:text-xl font-bold mt-2">{hourlyPay}</h2>
-            <div className="flex bg-orange text-white border-0 rounded-4xl px-3 py-2">
-              <p className="text-sm max-[374px]:text-xs">{`기존 시급보다 ${wageIncreaseRate}%`}</p>
-              <span className="flex items-center">
-                <Image
-                  src="/arrow-up-bold.png"
-                  width={16}
-                  height={16}
-                  className="min-[375px]:w-5 min-[375px]:h-5"
-                  alt=""
-                />
-              </span>
-            </div>
+
+            {/* 있으면 보여주기 */}
+            {showWageComparison && (
+              <div className="flex bg-orange text-white border-0 rounded-4xl px-3 py-2">
+                <p className="text-sm max-[374px]:text-xs">{wageComparisonText}</p>
+                <span className="flex items-center">
+                  <Image
+                    src="/arrow-up-bold.png"
+                    width={16}
+                    height={16}
+                    className="min-[375px]:w-5 min-[375px]:h-5"
+                    alt="arrow-up"
+                  />
+                </span>
+              </div>
+            )}
           </div>
           <div className="flex gap-1.5 mt-3">
             <span className="flex items-center">
@@ -89,7 +117,7 @@ export default function StoreDetail({ item }: StoreDetailProps) {
                 alt="time"
               />
             </span>
-            <p className="text-gray-50 text-base max-[374px]:text-sm">{startsAt}</p>
+            <p className="text-gray-50 text-base max-[374px]:text-sm">{displayTime}</p>
           </div>
           <div className="flex gap-1.5 mt-3">
             <span className="flex items-center">

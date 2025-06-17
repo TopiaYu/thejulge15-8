@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from '@/components/member/Modal';
 import { useRouter } from 'next/navigation';
 import useToken from '@/lib/hooks/use-token';
@@ -57,7 +57,15 @@ export default function JobPostFormPage() {
   const router = useRouter();
   const token = useToken();
 
-  const Hardcooded_shop_id = 'cc5003b4-870f-4adb-bfe2-d906c33d04b7';
+  const [shopId, setShopId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storeedShop = localStorage.getItem('registeredShop');
+    if (storeedShop) {
+      const paredShop: JobPostDetailResponseItem = JSON.parse(storeedShop);
+      setShopId(paredShop.id);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,11 +74,10 @@ export default function JobPostFormPage() {
     setError(null);
 
     const selectedDate = new Date(startDate);
-    const fullStartsAtDateTime = `${startDate}T09:00:00Z`; // YYYY-MM-DDTHH:MM:SSZ
+    const fullStartsAtDateTime = selectedDate.toISOString(); // YYYY-MM-DDTHH:MM:SSZ
     if (new Date(fullStartsAtDateTime).getTime() < Date.now()) {
       setError('시작 일시는 현재 시간보다 미래여야 합니다.');
       setIsSubmitting(false);
-      return;
     }
 
     if (!token) {
@@ -88,7 +95,7 @@ export default function JobPostFormPage() {
 
     try {
       const response = await axios.post<{ item: JobPostDetailResponseItem }>(
-        `https://bootcamp-api.codeit.kr/api/15-8/the-julge/shops/${Hardcooded_shop_id}/notices`,
+        `https://bootcamp-api.codeit.kr/api/15-8/the-julge/shops/${shopId}/notices`,
         requestBody,
         {
           headers: {
@@ -99,6 +106,7 @@ export default function JobPostFormPage() {
       console.log('공고 등록 성공', response.data);
       alert('공고 등록 완료'); // 추후 삭제
       setNewRegisteredId(response.data.item.id);
+      console.log(fullStartsAtDateTime);
 
       setShowModal(true);
     } catch (err) {
@@ -121,7 +129,7 @@ export default function JobPostFormPage() {
     setShowModal(false);
     //라우터 이동
     if (newRegisteredId) {
-      router.push(`/owner/job-detail/${Hardcooded_shop_id}/${newRegisteredId}`);
+      router.push(`/owner/job-detail/${shopId}/${newRegisteredId}`);
     } else {
       router.push('/owner/owner-store-detail');
     }
@@ -170,7 +178,7 @@ export default function JobPostFormPage() {
             </label>
             <input
               id="start-date"
-              type="date"
+              type="datetime-local"
               onChange={(e) => {
                 setStartDate(e.target.value);
               }}

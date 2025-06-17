@@ -49,28 +49,3 @@ export default function JobDetail() {
     </>
   );
 }
-
-const dummyApiItem = {
-  id: 'job-post-xyz-789',
-  hourlyPay: 18000, // 이 공고의 시급
-  startsAt: '2025-06-15T10:00:00Z', // ISO 8601 형식의 시작 시간
-  workhour: 5, // 5시간 근무
-  description:
-    '저희 라면집에서 주방 보조 및 홀 서빙을 담당할 분을 찾습니다. 친절하고 책임감 있는 분 환영!',
-  closed: false,
-  shop: {
-    item: {
-      id: 'shop-abc-123',
-      name: '너구리네 라면집', // 가게 이름
-      category: '식당', // 가게 카테고리
-      address1: '서울시 종로구',
-      address2: '관철동 12-34번지',
-      description:
-        '맛있는 라면과 다양한 분식을 제공하는 아늑한 라면집입니다. 언제나 손님을 환영합니다!', // 가게 설명
-      imageUrl:
-        'https://images.unsplash.com/photo-1588166524941-e5a9b73673d3?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // 가게 이미지 URL
-      originalHourlyPay: 12000, // 가게의 원래 시급 (공고 시급과 다를 수 있음)
-    },
-    href: '/api/shops/shop-abc-123',
-  },
-};
