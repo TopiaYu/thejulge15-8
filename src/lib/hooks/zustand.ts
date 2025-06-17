@@ -6,12 +6,12 @@ interface SortOptionStore {
 }
 interface Filters {
   location: string[];
-  startDay: { year: string; month: string; date: string };
+  startDay: Date | null;
   pay: number;
 }
 interface DetailOptionStore {
   detailOption: Filters;
-  setDetailOption: (updater: (prev: Filters) => Filters) => void;
+  setDetailOption: (Option: Filters) => void;
 }
 export const useSortOption = create<SortOptionStore>((set) => ({
   sortOption: '마감 임박 순',
@@ -20,11 +20,8 @@ export const useSortOption = create<SortOptionStore>((set) => ({
 export const useDetailOption = create<DetailOptionStore>((set) => ({
   detailOption: {
     location: [],
-    startDay: { year: '', month: '', date: '' },
+    startDay: null,
     pay: 0,
   },
-  setDetailOption: (updater) =>
-    set((state) => ({
-      detailOption: updater(state.detailOption),
-    })),
+  setDetailOption: (option) => set({ detailOption: option }),
 }));
