@@ -2,20 +2,14 @@ import Link from 'next/link';
 import Alarm from '../Alarm/Alarm';
 import useAuth from '@/lib/hooks/use-auth';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import axios from '@/lib/api/axios';
 import { AlarmList } from '@/types/types';
 import AlarmDropDown from '../Alarm/AlarmDropDown';
 import useToken from '@/lib/hooks/use-token';
 import { CancelData } from '../../../types/types';
 
-interface UserValue {
-  id: string | null;
-  type: 'employer' | 'employee';
-}
-
 const UserMenu = () => {
-  const [userValue, setUserValue] = useState<UserValue | null>(null);
   const [alarmList, setAlarmList] = useState<AlarmList | null>(null);
   const [newAlarm, setNewAlarm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -27,20 +21,10 @@ const UserMenu = () => {
   const albaActiveLink = userData?.item.user.item.name ? '/member/myprofile' : '/member/profile';
   const ownerActiveLink = userData?.item.user.item.name ? '/owner/owner-store-detail' : '/owner';
 
-  // 유저 데이터
-  useEffect(() => {
-    if (!userData) return;
-    const {
-      item: {
-        user: {
-          item: { id, type },
-        },
-      },
-    } = userData;
-    setUserValue({
-      id,
-      type,
-    });
+  const userValue = useMemo(() => {
+    if (!userData) return null;
+    const { id, type } = userData.item.user.item;
+    return { id, type };
   }, [userData]);
 
   // 지원 목록 가져오기
@@ -63,21 +47,23 @@ const UserMenu = () => {
 
   // 알림 목록 조회
   useEffect(() => {
+    if (!userValue?.id || !storageData) return;
+    console.log('알림 데이터 시작');
+
     const getAlarmList = async () => {
       try {
-        const res = await axios.get(`/users/${userValue?.id}/alerts`, {
+        const res = await axios.get(`/users/${userValue.id}/alerts`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         const data = res.data;
+        console.log('알림 데이터');
 
         setAlarmList(data);
 
         // 불필요한 api 호출 막기
-        const userId = userData?.item.user.item.id;
-
-        if (userId && storageData?.[userId].apply.length === data?.count) {
+        if (storageData[userValue.id]?.apply.length === data?.count) {
           clearInterval(alarmInterval);
         }
       } catch (error) {
@@ -86,7 +72,7 @@ const UserMenu = () => {
     };
 
     const alarmInterval = setInterval(() => {
-      if (userValue) {
+      if (userValue && storageData && storageData[userValue.id]) {
         getAlarmList();
       }
     }, 3000);

@@ -122,14 +122,14 @@ export interface NoticeItem {
   closed: boolean;
 }
 
-export interface ApplyItem {
+export interface ApplyIdItem {
   noticeId: string;
   applicationId: string;
 }
 
 export interface CancelItem {
   user: string;
-  apply: ApplyItem[];
+  apply: ApplyIdItem[];
 }
 
 export interface CancelData {

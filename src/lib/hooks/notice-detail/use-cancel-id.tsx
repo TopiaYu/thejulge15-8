@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { ApplyItem, CancelData } from '../../../types/types';
+import { ApplyIdItem, CancelData } from '../../../types/types';
 
 interface CancelList {
   cancelData: CancelData | null;
   applyItems: (cancelData: CancelData) => void;
-  addApplyItems: (user: string, item: ApplyItem) => void;
+  addApplyItems: (user: string, item: ApplyIdItem) => void;
 }
 
 const useCancelId = create<CancelList>()(
@@ -13,7 +13,7 @@ const useCancelId = create<CancelList>()(
     (set) => ({
       cancelData: null,
       applyItems: (cancelData: CancelData) => set({ cancelData }),
-      addApplyItems: (userId: string, item: ApplyItem) =>
+      addApplyItems: (userId: string, item: ApplyIdItem) =>
         set((state) => {
           const prev = state.cancelData ?? {};
           const userData = prev[userId];
