@@ -6,22 +6,17 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useDetailOption } from '@/lib/hooks/zustand';
 type Option = {
   location: string[];
-  startDay: {
-    year: string;
-    month: string;
-    date: string;
-  };
+  startDay: Date | null;
   pay: number;
 };
 
 export default function DetailFilter() {
   const [detailOpen, setDetailOpen] = useState(false);
-  // const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   //임시 저장소
   const [selectOption, setSelectOption] = useState<Option>({
     location: [''],
-    startDay: { year: '', month: '', date: '' },
+    startDay: null,
     pay: 0,
   });
 
@@ -55,20 +50,6 @@ export default function DetailFilter() {
     '서울시 중구',
     '서울시 중랑구',
   ];
-
-  // 날짜 변경 시 zustand 상태 업데이트
-  // useEffect(() => {
-  //   if (selectedDate) {
-  //     setDetailOption((prev) => ({
-  //       ...prev,
-  //       startDay: {
-  //         year: String(selectedDate.getFullYear()),
-  //         month: String(selectedDate.getMonth() + 1).padStart(2, '0'),
-  //         date: String(selectedDate.getDate()).padStart(2, '0'),
-  //       },
-  //     }));
-  //   }
-  // }, [selectedDate, setDetailOption]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -161,15 +142,12 @@ export default function DetailFilter() {
               <div className="grid gap-[8px]">
                 <label>시작일</label>
                 <DatePicker
+                  selected={selectOption.startDay}
                   onChange={(date) => {
                     if (!date) return;
                     setSelectOption((prev) => ({
                       ...prev,
-                      startDay: {
-                        year: String(date.getFullYear()),
-                        month: String(date.getMonth() + 1).padStart(2, '0'),
-                        date: String(date.getDate()).padStart(2, '0'),
-                      },
+                      startDay: date,
                     }));
                   }}
                   dateFormat="yyyy/MM/dd"
@@ -177,8 +155,6 @@ export default function DetailFilter() {
                   placeholderText="입력"
                 />
               </div>
-
-              <hr className="border-gray-200" />
 
               {/* 금액 필터 */}
               <div className="grid gap-[8px]">
@@ -211,7 +187,7 @@ export default function DetailFilter() {
                   onClick={() => {
                     setSelectOption(() => ({
                       location: [],
-                      startDay: { year: '', month: '', date: '' },
+                      startDay: null,
                       pay: 0,
                     }));
                   }}

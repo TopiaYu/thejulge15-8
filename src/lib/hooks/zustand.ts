@@ -6,7 +6,7 @@ interface SortOptionStore {
 }
 interface Filters {
   location: string[];
-  startDay: { year: string; month: string; date: string };
+  startDay: Date | null;
   pay: number;
 }
 interface DetailOptionStore {
@@ -20,7 +20,7 @@ export const useSortOption = create<SortOptionStore>((set) => ({
 export const useDetailOption = create<DetailOptionStore>((set) => ({
   detailOption: {
     location: [],
-    startDay: { year: '', month: '', date: '' },
+    startDay: null,
     pay: 0,
   },
   setDetailOption: (option) => set({ detailOption: option }),

@@ -49,18 +49,23 @@ export default function JobList() {
       '가나다 순': 'shop',
     };
 
-    const params = {
-      limit: 100,
-      offset: 0, // 페이지네이션 시작점
-      sort: sortMap[sort] || 'time',
-      address: Array.isArray(option.location)
-        ? option.location.slice(0, 3).join(', ')
-        : option.location,
-      hourlyPayGte: option.pay,
-    };
+    const params = new URLSearchParams();
+    params.append('limit', '100');
+    params.append('offset', '0');
+    params.append('sort', sortMap[sort] || 'time');
+    params.append('hourlyPayGte', String(option.pay));
+
+    // ✅ address 여러 개 추가
+    if (Array.isArray(option.location)) {
+      option.location.slice(0, 3).forEach((loc) => {
+        params.append('address', loc); // 같은 키로 append!
+      });
+    } else if (option.location) {
+      params.append('address', option.location);
+    }
 
     try {
-      const response = await axios.get('/notices', { params });
+      const response = await axios.get(`/notices?${params.toString()}`);
       const settingData: JobList[] = response.data.items.map((dataItem: dataItem) => ({
         id: dataItem.item.id,
         hourlyPay: dataItem.item.hourlyPay,
@@ -72,7 +77,7 @@ export default function JobList() {
       }));
       setJobList(settingData);
       console.log({ params });
-      console.log('잡리스트', settingData);
+      console.log('요청 URL:', `/notices?${params.toString()}`);
     } catch (error) {
       console.error('API 호출 에러:', error);
     }
@@ -132,10 +137,16 @@ export default function JobList() {
                 key={job.id}
                 className="w-[171px] h-[261px] p-[8px] bg-white border border-gray-20 rounded-xl md:w-[312px] md:h-[349px] md:p-[14px]"
               >
-                <Link href={job.shop.href}>
-                  <div className="rounded-xl h-[84px] mb-[12px] md:mb-[20px] md:h-[171px]">
-                    {/* <Image src={job.shop.item.imageUrl} alt="대표 이미지" width={300} height={200} /> */}
-                  </div>
+                <Link href={`/notice/${job.shop.item.id}/${job.id}`}>
+                  {/*<div className="rounded-xl h-[84px] mb-[12px] md:mb-[20px] md:h-[171px]">
+                    <Image
+                      src={job.shop.item.imageUrl?.split('?')[0] || '/default-thumbnail.png'}
+                      alt="대표 이미지"
+                      width={300}
+                      height={200}
+                    />
+                  </div>*/}
+
                   <div className="flex flex-col gap-[16px]">
                     <section className="flex flex-col gap-[8px]">
                       <label className="text-base font-bold md:text-xl ">
