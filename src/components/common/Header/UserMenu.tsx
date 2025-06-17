@@ -7,6 +7,7 @@ import axios from '@/lib/api/axios';
 import { AlarmList } from '@/types/types';
 import AlarmDropDown from '../Alarm/AlarmDropDown';
 import useToken from '@/lib/hooks/use-token';
+import { CancelData } from '../../../types/types';
 
 interface UserValue {
   id: string | null;
@@ -19,9 +20,12 @@ const UserMenu = () => {
   const [newAlarm, setNewAlarm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [alarmid, setAlarmId] = useState('');
+  const [storageData, setStorageData] = useState<CancelData>();
   const { userData, logout } = useAuth();
   const router = useRouter();
   const token = useToken();
+  const albaActiveLink = userData?.item.user.item.name ? '/member/myprofile' : '/member/profile';
+  const ownerActiveLink = userData?.item.user.item.name ? '/owner/owner-store-detail' : '/owner';
 
   // 유저 데이터
   useEffect(() => {
@@ -39,7 +43,25 @@ const UserMenu = () => {
     });
   }, [userData]);
 
-  // 알리 목록 조회
+  // 지원 목록 가져오기
+  useEffect(() => {
+    const storage = localStorage.getItem('cancel-data');
+    setStorageData(storage ? JSON.parse(storage) : null);
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'cancel-data') {
+        setStorageData(e.newValue ? JSON.parse(e.newValue) : null);
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
+
+  // 알림 목록 조회
   useEffect(() => {
     const getAlarmList = async () => {
       try {
@@ -49,21 +71,30 @@ const UserMenu = () => {
           },
         });
         const data = res.data;
+
         setAlarmList(data);
+
+        // 불필요한 api 호출 막기
+        const userId = userData?.item.user.item.id;
+
+        if (userId && storageData?.[userId].apply.length === data?.count) {
+          clearInterval(alarmInterval);
+        }
       } catch (error) {
         console.error('Alarm Api 호출 에러:', error);
       }
     };
+
     const alarmInterval = setInterval(() => {
       if (userValue) {
         getAlarmList();
       }
     }, 3000);
+
     return () => {
       clearInterval(alarmInterval);
     };
-  }, [userValue, token]);
-  // console.log(alarmList);
+  }, [userValue, token, storageData]);
 
   // 새로운 알림 있으면 newAlarm true로 변경
   useEffect(() => {
@@ -111,7 +142,7 @@ const UserMenu = () => {
     <>
       {userValue?.type === 'employer' ? (
         <>
-          <Link href="/owner">내 가게</Link>
+          <Link href={ownerActiveLink}>내 가게</Link>
           <button
             onClick={() => {
               logout();
@@ -126,7 +157,7 @@ const UserMenu = () => {
         </>
       ) : (
         <>
-          <Link href="/member/profile">내 프로필</Link>
+          <Link href={albaActiveLink}>내 프로필</Link>
           <button
             onClick={() => {
               logout();

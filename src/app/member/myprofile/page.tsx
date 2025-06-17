@@ -52,7 +52,7 @@ const formatApplication = (app: RawApplication): ApplyItem => {
 const Page = () => {
   const router = useRouter();
   const token = useToken();
-  const { userData } = useAuth();
+  const { userData, updateUserData } = useAuth();
   const userId = userData?.item.user.item.id;
 
   const [profile, setProfile] = useState<UserItem | null>(null);
@@ -73,6 +73,12 @@ const Page = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProfile(response.data.item);
+        updateUserData({
+          name: response.data.item.name,
+          phone: response.data.item.phone,
+          address: response.data.item.address,
+          bio: response.data.item.bio,
+        });
       } catch (error) {
         console.error('프로필 데이터 가져오기 실패:', error);
       }

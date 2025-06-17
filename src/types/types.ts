@@ -30,8 +30,9 @@ export interface UserItem {
   type: 'employer' | 'employee';
   name?: string;
   phone?: string;
-  address: string;
+  address?: string;
   bio?: string;
+  shop?: Shop | null;
 }
 
 export interface LoginResponse {
@@ -119,4 +120,18 @@ export interface NoticeItem {
   startsAt: string;
   workhour: number;
   closed: boolean;
+}
+
+export interface ApplyItem {
+  noticeId: string;
+  applicationId: string;
+}
+
+export interface CancelItem {
+  user: string;
+  apply: ApplyItem[];
+}
+
+export interface CancelData {
+  [key: string]: CancelItem;
 }
