@@ -12,7 +12,7 @@ const AlarmDropDown = ({ alarm, getAlarmId, ref }: AlarmDropDownProps) => {
   return (
     <div
       ref={ref}
-      className="alarm absolute top-6 w-[368px] h-[419px] py-6 px-5 z-10 rounded-[10px] bg-red-10 border border-solid border-gray-30 overflow-y-scroll custom-scroll"
+      className="alarm absolute top-7 w-[368px] h-[419px] py-6 px-5 z-10 rounded-[10px] bg-red-10 border border-solid border-gray-30 overflow-y-scroll custom-scroll"
     >
       <h3 className="mb-4">알림 {alarm ? alarm.count : 0}개</h3>
       {alarm &&

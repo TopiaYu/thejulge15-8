@@ -138,8 +138,10 @@ const UserMenu = () => {
           >
             로그아웃
           </button>
-          <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
-          {isOpen && <AlarmDropDown alarm={alarmList} getAlarmId={getAlarmId} ref={alarmRef} />}
+          <div className="relative flex flex-col items-end">
+            <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
+            {isOpen && <AlarmDropDown alarm={alarmList} getAlarmId={getAlarmId} ref={alarmRef} />}
+          </div>
         </>
       ) : (
         <>
