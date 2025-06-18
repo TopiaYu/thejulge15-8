@@ -13,27 +13,14 @@ export default function ModalConfirm({ isOpen, message, onConfirm, onCancel }: M
   const boxClassName =
     'max-w-[298px] w-full relative -top-35 flex flex-col justify-center items-center bg-white p-6 rounded-xl text-base leading-[26px]';
   const whiteButton =
-    'border border-solid border-orange text-sm text-orange rounded-md py-2.5 px-5';
-  const orangeButton = 'bg-orange text-sm text-white rounded-md py-2.5 px-5';
-
-  useEffect(() => {
-    // 모달이 열릴 때 스크롤을 고정하는 코드
-    document.body.style.cssText = `
-    position: fixed; 
-    top: -${window.scrollY}px;
-    overflow-y: scroll;
-    width: 100%;`;
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    };
-  }, []);
+    'border border-solid border-orange text-sm font-bold text-orange rounded-md py-2.5 px-5 w-[80px] h-[38px]';
+  const orangeButton =
+    'bg-orange text-sm font-bold text-white rounded-md py-2.5 px-5 w-[80px] h-[38px]';
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000B2] backdrop-blur-sm">
       <div className={boxClassName}>
         <Image className="mb-4" src={'/check.png'} width={24} height={24} alt="체크" />
         <p className="mb-8">{message}</p>
