@@ -4,6 +4,7 @@ import NoticeInfo from '@/components/notice-detail/NoticeInfo';
 import axios from '@/lib/api/axios';
 import { use, useEffect, useState } from 'react';
 import LatestNotice from '../../../../components/notice-detail/LatestNotice';
+import { FadeLoader } from 'react-spinners';
 
 interface Props {
   shopId: string;
@@ -58,10 +59,12 @@ const NoticeDetail = ({ params }: { params: Promise<Props> }) => {
     originalHourlyPay: 0,
   });
   const [checkPoint, setCheckPoint] = useState<string | null>();
+  const [isLoading, setIsLoading] = useState(false);
   const { shopId, noticeId } = use(params);
 
   useEffect(() => {
     const getNotice = async () => {
+      setIsLoading(false);
       try {
         const res = await axios.get(`/shops/${shopId}/notices/${noticeId}`);
         const data = res.data;
@@ -81,8 +84,11 @@ const NoticeDetail = ({ params }: { params: Promise<Props> }) => {
           imageUrl: data.item.shop.item.imageUrl,
           originalHourlyPay: data.item.shop.item.originalHourlyPay,
         });
+        setIsLoading(true);
       } catch (error) {
         console.error('공고 조회 에러', error);
+      } finally {
+        setIsLoading(true);
       }
     };
     getNotice();
@@ -137,15 +143,31 @@ const NoticeDetail = ({ params }: { params: Promise<Props> }) => {
   const isPast = startsAt < now;
 
   return (
-    <div className="bg-gray-5 flex flex-col items-center pt-10 sm:pt-[60px] px-3 lg:px-8 pb-20 sm:pb-[60px] lg:pb-[120px]">
-      {notice.noticeId && <NoticeInfo info={notice} isPast={isPast} />}
-      <section className="max-w-[936px] min-w-[350px] w-full">
-        <h3 className="text-lg sm:text-2xl font-bold text-[#111322] mb-4 sm:mb-8">
-          최근에 본 공고
-        </h3>
-        <LatestNotice checkPoint={checkPoint} />
-      </section>
-    </div>
+    <>
+      {!isLoading ? (
+        <div className="w-full h-screen flex items-center justify-center">
+          <FadeLoader
+            color="#EA3C12"
+            height={30}
+            loading
+            margin={10}
+            radius={10}
+            speedMultiplier={1}
+            width={6}
+          />
+        </div>
+      ) : (
+        <div className="bg-gray-5 flex flex-col items-center pt-10 sm:pt-[60px] px-3 lg:px-8 pb-20 sm:pb-[60px] lg:pb-[120px]">
+          {notice.noticeId && <NoticeInfo info={notice} isPast={isPast} />}
+          <section className="max-w-[936px] min-w-[350px] w-full">
+            <h3 className="text-lg sm:text-2xl font-bold text-[#111322] mb-4 sm:mb-8">
+              최근에 본 공고
+            </h3>
+            <LatestNotice checkPoint={checkPoint} />
+          </section>
+        </div>
+      )}
+    </>
   );
 };
 
