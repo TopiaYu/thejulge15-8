@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useSortOption } from '@/lib/zustand';
+import { useSortOption } from '@/lib/hooks/zustand';
 
 export default function Filter() {
   const [filter, setFilter] = useState(false);

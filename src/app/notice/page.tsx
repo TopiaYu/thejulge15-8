@@ -7,6 +7,7 @@ import axios from '@/lib/api/axios';
 import Link from 'next/link';
 import { useSortOption, useDetailOption } from '@/lib/hooks/zustand';
 import Pagenation from '@/components/member/myprofile/Pagination';
+import useAuth from '@/lib/hooks/use-auth';
 
 interface JobList {
   id: string;
@@ -38,7 +39,7 @@ interface Shop {
 
 export default function JobList() {
   const [jobList, setJobList] = useState<JobList[]>([]);
-  const { sortOption } = useSortOption();
+  const sortOption = useSortOption((state) => state.sortOption);
   const { detailOption } = useDetailOption();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,12 +52,13 @@ export default function JobList() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-  // ✅ 추천 공고 가져오기
+  const { userData } = useAuth();
   useEffect(() => {
     async function fetchRecommendList(userID?: string) {
       try {
         let response;
+
+        console.log(userID);
         if (userID) {
           const addressResponse = await axios.get(`/users/${userID}`);
           const userAddress = addressResponse.data.item.address;
@@ -91,11 +93,10 @@ export default function JobList() {
         console.error('추천 공고 불러오기 실패:', error);
       }
     }
-
-    fetchRecommendList();
+    const userId = userData?.item.user.item.id;
+    fetchRecommendList(userId);
   }, []);
 
-  // ✅ 전체 공고 가져오기 (방법 2로)
   useEffect(() => {
     const fetchData = async () => {
       const sortMap: Record<string, string> = {
@@ -121,7 +122,6 @@ export default function JobList() {
 
       try {
         const response = await axios.get('/notices', { params });
-        console.log('요청내용ㅇ', params);
 
         const settingData: JobList[] = response.data.items.map((dataItem: dataItem) => ({
           id: dataItem.item.id,
