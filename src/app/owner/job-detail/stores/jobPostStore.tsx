@@ -12,7 +12,7 @@ interface ShopItem {
   originalHourlyPay: number;
 }
 
-interface JobPostDetailItem {
+export interface JobPostDetailItem {
   id: string;
   hourlyPay: number;
   startsAt: string;
@@ -38,6 +38,7 @@ interface jobPostState {
   error: string | null;
 
   fetchJobPost: (shopId: string, noticeId: string) => Promise<void>;
+  updateJobPostItem: (updatedData: Partial<JobPostDetailItem>) => void;
   clearJobPost: () => void;
 }
 
@@ -54,6 +55,11 @@ export const useJobPostStore = create<jobPostState>((set) => ({
     } catch {
       console.log('error');
     }
+  },
+  updateJobPostItem: (updatedData) => {
+    set((state) => ({
+      jobPostItem: state.jobPostItem ? { ...state.jobPostItem, ...updatedData } : null,
+    }));
   },
   clearJobPost: () => {
     set({ jobPostItem: null, isLoading: false, error: null });

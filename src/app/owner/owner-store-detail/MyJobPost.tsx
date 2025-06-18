@@ -68,7 +68,7 @@ export default function MyJobPost({
 
   return (
     <div
-      className="p-4 max-w-[312px] max-h-[349px] border border-gray-20 bg-white rounded-2xl cursor-pointer"
+      className={`p-4 max-w-[312px] max-h-[349px] border border-gray-20 bg-white rounded-2xl ${notice.closed ? 'cursor-not-allowed' : 'cursor-pointer'} `}
       onClick={handleViewDetail}
     >
       <div className="w-full max-w-[280px] h-40 max-h-[160px] border rounded-xl relative overflow-hidden">
