@@ -2,8 +2,9 @@
 
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
+// categories와 seoulcity 배열을 여기에 정의하여 전역적으로 접근 가능하게 합니다.
 const categories = ['한식', '중식', '일식', '양식', '분식'];
 const seoulcity = [
   '서울시 종로구',
@@ -33,13 +34,24 @@ const seoulcity = [
   '서울시 강동구',
 ];
 
+interface ShopForm {
+  name: string;
+  category: string;
+  district: string;
+  detailAddress: string;
+  basePay: string;
+  description: string;
+  imageUrl: string;
+}
+
 export default function Page() {
   const router = useRouter();
+  const searchParams = useSearchParams(); // useSearchParams 훅 사용
   const categoryRef = useRef<HTMLDivElement>(null);
   const addressRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<ShopForm>({
     name: '',
     category: '',
     district: '',
@@ -53,7 +65,9 @@ export default function Page() {
   const [addressOpen, setAddressOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false); // 모달 표시 상태 추가
+  const [showModal, setShowModal] = useState(false);
+  const [editMode, setEditMode] = useState(false); // 편집 모드 상태
+  const [shopId, setShopId] = useState<string | null>(null); // 편집할 가게의 ID
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -67,6 +81,30 @@ export default function Page() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // 편집 모드 감지 및 가게 정보 로드
+  useEffect(() => {
+    const isEditMode = searchParams.get('editMode') === 'true'; // 쿼리 파라미터 확인
+    setEditMode(isEditMode);
+
+    if (isEditMode) {
+      const editingShopData = localStorage.getItem('editingShopData');
+      if (editingShopData) {
+        const shop = JSON.parse(editingShopData);
+        setForm({
+          name: shop.name || '',
+          category: shop.category || '',
+          district: shop.address1 || '',
+          detailAddress: shop.address2 || '',
+          basePay: shop.originalHourlyPay?.toString() || '', // 숫자를 문자열로 변환
+          description: shop.description || '',
+          imageUrl: shop.imageUrl || '',
+        });
+        setShopId(shop.id); // 가게 ID 저장
+        localStorage.removeItem('editingShopData'); // 사용 후 localStorage에서 데이터 삭제
+      }
+    }
+  }, [searchParams]); // searchParams가 변경될 때마다 useEffect 실행
 
   // 이미지 업로드
   const handleImageUpload = async (file: File) => {
@@ -140,7 +178,7 @@ export default function Page() {
     fileInputRef.current?.click();
   };
 
-  // 가게 등록 API 호출
+  // 가게 등록/편집 API 호출
   const handleSubmit = async () => {
     // 필수 필드 검증
     if (!form.name || !form.category || !form.district || !form.detailAddress || !form.basePay) {
@@ -168,8 +206,13 @@ export default function Page() {
     };
 
     try {
-      const response = await fetch('https://bootcamp-api.codeit.kr/api/15-8/the-julge/shops', {
-        method: 'POST',
+      const url = editMode
+        ? `https://bootcamp-api.codeit.kr/api/15-8/the-julge/shops/${shopId}` // 편집 모드 시 PUT 요청 URL
+        : 'https://bootcamp-api.codeit.kr/api/15-8/the-julge/shops'; // 등록 모드 시 POST 요청 URL
+      const method = editMode ? 'PUT' : 'POST'; // HTTP 메서드 결정
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -191,27 +234,38 @@ export default function Page() {
           router.push('/login');
           return;
         }
-        throw new Error(errorData.message || '가게 등록 실패');
+        throw new Error(
+          errorData.message || (editMode ? '가게 정보 업데이트 실패' : '가게 등록 실패'),
+        );
       }
 
       const responseData = await response.json();
-      console.log('가게 등록 성공:', responseData);
+      console.log(editMode ? '가게 정보 업데이트 성공:' : '가게 등록 성공:', responseData);
 
-      // 성공적으로 등록된 가게 정보를 localStorage에 저장
+      // 성공적으로 등록/업데이트된 가게 정보를 localStorage에 저장
       localStorage.setItem('registeredShop', JSON.stringify(responseData.item));
       setShowModal(true); // 모달 표시
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message || '가게 등록 중 오류가 발생했습니다.');
+        setError(
+          err.message ||
+            (editMode
+              ? '가게 정보 업데이트 중 오류가 발생했습니다.'
+              : '가게 등록 중 오류가 발생했습니다.'),
+        );
       } else {
-        setError('가게 등록 중 알 수 없는 오류가 발생했습니다.');
+        setError(
+          editMode
+            ? '가게 정보 업데이트 중 알 수 없는 오류가 발생했습니다.'
+            : '가게 등록 중 알 수 없는 오류가 발생했습니다.',
+        );
       }
       console.error(err);
     }
   };
 
   const handleClose = () => {
-    router.push('../owner');
+    router.push('/owner'); // 소유주 메인 페이지로 이동
   };
 
   const handleSelect = (key: keyof typeof form, value: string) => {
@@ -231,15 +285,12 @@ export default function Page() {
 
   return (
     <div className="xl:px-[208px] mx-auto p-4 relative">
-      {' '}
-      {/* relative 추가 */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl font-bold">가게 정보</h1>
         <button className="text-2xl cursor-pointer" onClick={handleClose}>
           ✕
         </button>
       </div>
-      {/* ... (기존 폼 내용) ... */}
       {/* 가게 이름 & 분류 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
@@ -363,21 +414,24 @@ export default function Page() {
           onChange={(e) => setForm({ ...form, description: e.target.value })}
         />
       </div>
-      {/* 등록 버튼 */}
+      {/* 등록/완료 버튼 */}
       <div className="flex justify-center">
         <button
           className="cursor-pointer hover:bg-orange-700 transition-colors duration-300 ease-in-out custom-button w-[108px] sm:w-[346px] h-[47px] bg-orange text-white py-2 rounded disabled:bg-gray-400"
           onClick={handleSubmit}
           disabled={uploading || !isFormValid}
         >
-          등록하기
+          {editMode ? '완료하기' : '등록하기'} {/* 편집 모드일 때 "완료하기" 표시 */}
         </button>
       </div>
       {/* 모달 */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-lg text-center w-[327px] h-[200px] flex flex-col justify-center items-center">
-            <p className="text-lg font-semibold mb-6">등록이 완료되었습니다.</p>
+            <p className="text-lg font-semibold mb-6">
+              {editMode ? '수정이 완료되었습니다.' : '등록이 완료되었습니다.'}{' '}
+              {/* 모달 메시지 변경 */}
+            </p>
             <button
               className="bg-orange text-white px-8 py-3 rounded-md hover:bg-orange-700 transition-colors"
               onClick={handleModalConfirm}
