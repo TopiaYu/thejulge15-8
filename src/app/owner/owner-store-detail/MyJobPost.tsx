@@ -44,18 +44,23 @@ export default function MyJobPost({
   const wageComparisonText = `기존 시급보다 ${increaseRate.toFixed(0)}%`;
 
   const handleViewDetail = () => {
-    router.push(`/owner/job-detail/${shopId}/${notice.id}`);
+    console.log(notice.closed);
+    if (!notice.closed) {
+      router.push(`/owner/job-detail/${shopId}/${notice.id}`);
+    } else {
+      alert('마감된 공고입니다.');
+    }
   };
 
   //시간 조절 함수
   function formatJobTime(startsAt: string, workhour: number): string {
     const startDate = new Date(startsAt);
-    const localStartDate = new Date(startDate.getTime() + 9 * 60 * 60 * 1000);
-    const endDate = new Date(localStartDate);
+    // 로컬 타임존으로 자동 변환 (브라우저가 시간대 인식)
+    const endDate = new Date(startDate);
     endDate.setHours(endDate.getHours() + workhour);
     const pad = (num: number) => num.toString().padStart(2, '0');
-    const dateStr = `${localStartDate.getFullYear()}-${pad(localStartDate.getMonth() + 1)}-${pad(localStartDate.getDate())}`;
-    const startTimeStr = `${pad(localStartDate.getHours())}:${pad(localStartDate.getMinutes())}`;
+    const dateStr = `${startDate.getFullYear()}-${pad(startDate.getMonth() + 1)}-${pad(startDate.getDate())}`;
+    const startTimeStr = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
     const endTimeStr = `${pad(endDate.getHours())}:${pad(endDate.getMinutes())}`;
     return `${dateStr} ${startTimeStr}~${endTimeStr}(${workhour}시간)`;
   }
