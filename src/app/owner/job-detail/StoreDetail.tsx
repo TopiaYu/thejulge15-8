@@ -88,7 +88,7 @@ export default function StoreDetail({ item }: StoreDetailProps) {
         <div className="mt-4">
           <h3 className="text-base max-[374px]:text-sm text-orange font-bold">시급</h3>
           <div className="flex gap-2 items-center">
-            <h2 className="text-2xl max-[374px]:text-xl font-bold mt-2">{hourlyPay}</h2>
+            <h2 className="text-2xl max-[374px]:text-xl font-bold mt-2">{`${hourlyPay.toLocaleString('ko-KR')}원`}</h2>
 
             {/* 있으면 보여주기 */}
             {showWageComparison && (

@@ -22,8 +22,6 @@ export default function JobDetail() {
     };
   }, [shopId, noticeId, fetchJobPost, clearJobPost]);
 
-  console.log(`jp`, jobPostItem);
-
   if (isLoading) {
     return (
       <div className="text-center mt-20 text-xl font-bold">공고 정보를 불러오는 중입니다...</div>
@@ -45,7 +43,7 @@ export default function JobDetail() {
   return (
     <>
       <StoreDetail item={jobPostItem} />
-      <ApplicantsTable />
+      <ApplicantsTable shopId={shopId} noticeId={noticeId} />
     </>
   );
 }

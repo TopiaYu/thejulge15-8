@@ -104,7 +104,7 @@ export default function MyJobPost({
         </div>
 
         <div className="flex justify-between items-center mt-3">
-          <h2 className="text-xl font-bold">{notice.hourlyPay}원</h2>
+          <h2 className="text-xl font-bold">{notice.hourlyPay.toLocaleString('ko-KR')}원</h2>
           {/* 있으면 보여주기 */}
           {showWageComparison && (
             <div className="rounded-4xl bg-orange px-3 py-2 flex gap-1">

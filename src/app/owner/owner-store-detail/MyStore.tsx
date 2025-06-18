@@ -29,8 +29,6 @@ export default function MyStore() {
     router.push('/owner/register-job');
   };
 
-  console.log(`shop:`, shop);
-
   if (!shop) {
     return (
       <div className="w-full max-w-[964px] px-8 max-[375px]:px-4 mx-auto mb-15">
@@ -52,10 +50,10 @@ export default function MyStore() {
         <h1 className="text-2xl max-[374px]:text-lg font-bold">내 가게</h1>
       </header>
       <div
-        className="w-full border border-gray-20 grid grid-cols-1 gap-8 p-6 rounded-2xl
+        className="w-full border border-gray-20 grid grid-cols-1 gap-8 p-6 rounded-2xl bg-red-10
                     md:grid-cols-[1fr_minmax(0,346px)]"
       >
-        <div className="w-full min-h-[308px] border-0 rounded-xl bg-gray-200 flex items-center justify-center overflow-hidden">
+        <div className="w-full border-0 rounded-xl bg-gray-200 flex items-center justify-center overflow-hidden">
           {shop.imageUrl ? (
             <img src={shop.imageUrl} alt={shop.name} className="w-full h-full object-cover" />
           ) : (
