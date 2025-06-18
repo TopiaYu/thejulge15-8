@@ -19,7 +19,7 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full md:h-[70px] h-[102px] grid grid-cols-2 grid-rows-2 md:flex md:items-center md:justify-between xl:px-[208px] lg:px-16 sm:px-8 px-5 md:pt-0 pt-[18px]">
+    <header className="w-full md:h-[70px] h-[102px] grid grid-cols-2 grid-rows-2 md:flex md:items-center md:justify-between xl:px-[208px] lg:px-16 sm:px-8 px-5 md:pt-0 pt-[18px] bg-white">
       <div className="relative sm:w-[108px] sm:h-[20px] w-[82px] h-[15px] lg:mr-10 md:mr-8 mr-8 col-start-1 row-start-1 md:mt-0">
         <Link href="/" className="relative w-full h-full inline-block">
           <Image src="/logo.png" fill alt="더줄게 로고" />

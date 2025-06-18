@@ -28,7 +28,7 @@ const NoticeInfo = ({ info, isPast }: { info: NoticeInfo; isPast: boolean }) => 
   const timeClass = 'relative w-4 h-4 sm:w-5 sm:h-5';
   const imgClass = 'last:hidden';
 
-  if (info.noticeId === '') return;
+  if (info.noticeId === '') return null;
 
   return (
     <div className="max-w-[936px] w-full h-">

@@ -50,7 +50,7 @@ const ApplyButton = ({ shopId, noticeId, closed, isPast }: ApplyBtnProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [applicationList, setApplicationList] = useState<ApplicationList>();
   const { userData } = useAuth();
-  const { cancelData, addApplyItems } = useCancelId();
+  const { cancelData, addApplyItems, removeApplyItem } = useCancelId();
   const token = useToken();
 
   //  className
@@ -101,7 +101,9 @@ const ApplyButton = ({ shopId, noticeId, closed, isPast }: ApplyBtnProps) => {
       const userId = userData?.item.user.item.id;
       if (!userId || !cancelData) return;
 
-      const application = cancelData[userId]?.apply?.filter((item) => item.noticeId === noticeId);
+      const application = cancelData[userId]?.apply?.filter(
+        (item) => item.noticeId === noticeId && item.applicationId === applyStatus.id,
+      );
 
       if (!application || application.length === 0) return;
 
@@ -123,6 +125,7 @@ const ApplyButton = ({ shopId, noticeId, closed, isPast }: ApplyBtnProps) => {
           status: data.item.status,
           closed: data.item.notice.closed,
         });
+        removeApplyItem(userId, data.item.id);
       } catch (error) {
         console.error('취소 신청 중 오류 발생:', error);
       }
@@ -169,7 +172,7 @@ const ApplyButton = ({ shopId, noticeId, closed, isPast }: ApplyBtnProps) => {
         status: userItem.item.status,
       }));
     }
-  }, [applicationList, userData]);
+  }, [applicationList]);
 
   const getButtonText = () => {
     if (closed || isPast) return '신청 불가';

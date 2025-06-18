@@ -138,7 +138,7 @@ const NoticeDetail = ({ params }: { params: Promise<Props> }) => {
 
   return (
     <div className="bg-gray-5 flex flex-col items-center pt-10 sm:pt-[60px] px-3 lg:px-8 pb-20 sm:pb-[60px] lg:pb-[120px]">
-      <NoticeInfo info={notice} isPast={isPast} />
+      {notice.noticeId && <NoticeInfo info={notice} isPast={isPast} />}
       <section className="max-w-[936px] min-w-[350px] w-full">
         <h3 className="text-lg sm:text-2xl font-bold text-[#111322] mb-4 sm:mb-8">
           최근에 본 공고

@@ -17,8 +17,8 @@ const NoticeModalItem = ({ status, handler, modalClose }: ModalProps) => {
   const boxClassName =
     'max-w-[298px] w-full relative -top-35 flex flex-col justify-center items-center bg-white p-6 rounded-xl text-base leading-[26px]';
   const whiteButton =
-    'border border-solid border-orange text-sm text-orange rounded-md py-2.5 px-5';
-  const orangeButton = 'bg-orange text-sm text-white rounded-md py-2.5 px-5';
+    'border border-solid border-orange text-sm text-orange rounded-md py-2.5 px-5 cursor-pointer';
+  const orangeButton = 'bg-orange text-sm text-white rounded-md py-2.5 px-5 cursor-pointer';
 
   const loginAlertHandler = () => {
     router.push('/login');
@@ -71,7 +71,7 @@ const NoticeModalItem = ({ status, handler, modalClose }: ModalProps) => {
           <button className={whiteButton} type="button" onClick={modalClose}>
             아니오
           </button>
-          <button className={orangeButton} type="button" onClick={() => handler}>
+          <button className={orangeButton} type="button" onClick={handler}>
             취소하기
           </button>
         </div>
