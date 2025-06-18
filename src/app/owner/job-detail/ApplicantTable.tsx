@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Pagenation from './pagenation';
 import axiosInstance from '@/lib/api/axios';
 import useToken from '@/lib/hooks/use-token';
+import ModalConfirm from './ModalConfirm';
 
 interface Applicant {
   id: string;
@@ -44,21 +45,24 @@ interface ApplicantTableProps {
 }
 
 export default function ApplicantsTable({ shopId, noticeId }: ApplicantTableProps) {
-  const [Applicants, setApplicants] = useState<Applicant[]>([]);
+  const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  // const totalPages = Math.ceil(Applicants.length / itemsPerPage);
-  // const startIndex = (currentPage - 1) * itemsPerPage;
-  // const endIndex = startIndex + itemsPerPage;
-  // const currentApplicant = Applicants.slice(startIndex, endIndex);
   const [totalPages, setTotalPages] = useState(1);
   const token = useToken();
+  //모달상태관련
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [currentApplicantToProcess, setCurrentApplicantToProcess] = useState<Applicant | null>(
+    null,
+  );
+  const [actionType, setActionType] = useState<'accept' | 'reject' | null>(null);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
-
+  //신청자 목록 가져오기
   const fetchApplicants = async (page: number) => {
     setLoading(true);
     const offset = (page - 1) * itemsPerPage;
@@ -89,7 +93,17 @@ export default function ApplicantsTable({ shopId, noticeId }: ApplicantTableProp
     }
   };
 
+  // 신청자 상태 관리 (누를경우 모달나옴)
   const handleApplicantStatusButton = async (applicant: Applicant, action: 'accept' | 'reject') => {
+    setCurrentApplicantToProcess(applicant);
+    setActionType(action);
+    setModalMessage(`신청을 ${action === 'accept' ? '승인' : '거절'}하시겠어요? `);
+    setIsModalOpen(true);
+  };
+  // 모달에서 api put 하기
+  const processApplicationAction = async () => {
+    const applicant = currentApplicantToProcess;
+    const action = actionType;
     if (!token) {
       alert('인증 토큰이 없습니다.');
       return;
@@ -100,7 +114,7 @@ export default function ApplicantsTable({ shopId, noticeId }: ApplicantTableProp
 
     try {
       await axiosInstance.put(
-        `/shops/${shopId}/notices/${noticeId}/applications/${applicant.id}`,
+        `/shops/${shopId}/notices/${noticeId}/applications/${applicant?.id}`,
         { status: newStatus },
         {
           headers: {
@@ -112,6 +126,9 @@ export default function ApplicantsTable({ shopId, noticeId }: ApplicantTableProp
       fetchApplicants(currentPage);
     } catch (error) {
       console.error('에러발생');
+    } finally {
+      setCurrentApplicantToProcess(null);
+      setActionType(null);
     }
   };
 
@@ -139,8 +156,8 @@ export default function ApplicantsTable({ shopId, noticeId }: ApplicantTableProp
             </tr>
           </thead>
           <tbody>
-            {Applicants.length > 0 ? (
-              Applicants.map((applicant) => (
+            {applicants.length > 0 ? (
+              applicants.map((applicant) => (
                 <tr key={applicant.id} className="border-b border-gray-20">
                   <td className="px-3.5 py-4">{applicant.name}</td>
                   <td className="px-3.5 py-4 max-w-[300px]">{applicant.introduction}</td>
@@ -192,6 +209,12 @@ export default function ApplicantsTable({ shopId, noticeId }: ApplicantTableProp
           />
         </div>
       </div>
+      <ModalConfirm
+        isOpen={isModalOpen}
+        message={modalMessage}
+        onConfirm={processApplicationAction}
+        onCancel={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
