@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import useAuth from '@/lib/hooks/use-auth';
 import axios from '@/lib/api/axios';
 import useToken from '@/lib/hooks/use-token';
+import RouterGuard from '@/components/common/RouterGuard';
 
 const regions = [
   '서울시 종로구',
@@ -200,4 +201,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default RouterGuard(Page, ['employee']);

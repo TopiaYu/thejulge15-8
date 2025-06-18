@@ -1,42 +1,49 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-
-interface ApplyItem {
-  noticeId: string;
-  applicationId: string;
-}
-
-interface CancelItem {
-  user: string;
-  apply: ApplyItem[];
-}
-
-interface Cancel {
-  [key: string]: CancelItem;
-}
+import { ApplyIdItem, CancelData, ApplyItem } from '../../../types/types';
 
 interface CancelList {
-  cancelData: Cancel | null;
-  applyItems: (cancelData: Cancel) => void;
-  addApplyItems: (user: string, item: ApplyItem) => void;
+  cancelData: CancelData | null;
+  applyItems: (cancelData: CancelData) => void;
+  addApplyItems: (user: string, item: ApplyIdItem) => void;
+  removeApplyItem: (user: string, itemId: string) => void;
 }
 
 const useCancelId = create<CancelList>()(
   persist(
     (set) => ({
       cancelData: null,
-      applyItems: (cancelData: Cancel) => set({ cancelData }),
-      addApplyItems: (userId: string, item: ApplyItem) =>
+      applyItems: (cancelData: CancelData) => set({ cancelData }),
+      addApplyItems: (userId: string, item: ApplyIdItem) =>
         set((state) => {
           const prev = state.cancelData ?? {};
           const userData = prev[userId];
-          const updated: Cancel = {
+          const updated: CancelData = {
             ...prev,
             [userId]: {
               user: userId,
               apply: userData ? [...userData.apply, item] : [item],
             },
           };
+          return { cancelData: updated };
+        }),
+      removeApplyItem: (userId: string, itemId: string) =>
+        set((state) => {
+          const prev = state.cancelData ?? {};
+          const userData = prev[userId];
+
+          if (!userData) return { cancelData: prev };
+
+          const updateApply = userData.apply.filter((item) => item.applicationId !== itemId);
+
+          const updated = {
+            ...prev,
+            [userId]: {
+              ...userData,
+              apply: updateApply,
+            },
+          };
+
           return { cancelData: updated };
         }),
     }),

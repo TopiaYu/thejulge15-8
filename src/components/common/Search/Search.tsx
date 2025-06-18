@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import InputValidator from '../Header/input-validator';
 import { useEffect, useRef, useState } from 'react';
 import axios from '@/lib/api/axios';
@@ -145,8 +145,6 @@ const Search = ({ value, onChange }: SearchProps) => {
       setFocus(true);
     }
   }, [value]);
-
-  console.log(recentlyRef.current);
 
   return (
     <div className="col-span-2 lg:max-w-[450px] md:max-w-[340px] w-full flex flex-col relative">

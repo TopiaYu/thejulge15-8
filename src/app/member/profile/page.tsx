@@ -2,6 +2,7 @@
 // 내 프로필 상세 페이지(내 프로필 등록하기)
 'use client';
 
+import RouterGuard from '@/components/common/RouterGuard';
 import { useRouter } from 'next/navigation';
 
 const Page = () => {
@@ -32,4 +33,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default RouterGuard(Page, ['employee']);
