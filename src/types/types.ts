@@ -45,7 +45,6 @@ export interface LoginResponse {
   };
   links: [];
 }
-
 export interface AlarmItem {
   id: string;
   createdAt: string;
