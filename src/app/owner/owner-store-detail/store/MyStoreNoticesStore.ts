@@ -61,7 +61,7 @@ export const useMyStoreNoticeStore = create<MyStoreNoticesState>((set, get) => (
   hasMore: true,
 
   fetchNotices: async (shopId, loadMore) => {
-    const limit = 6;
+    const limit = 12;
     const currentOffset = loadMore ? get().currentPageOffset : 0;
     //중복호출 방지
     if (
