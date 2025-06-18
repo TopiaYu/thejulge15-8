@@ -30,8 +30,9 @@ export interface UserItem {
   type: 'employer' | 'employee';
   name?: string;
   phone?: string;
-  address: string;
+  address?: string;
   bio?: string;
+  shop?: Shop | null;
 }
 
 export interface LoginResponse {
@@ -44,7 +45,6 @@ export interface LoginResponse {
   };
   links: [];
 }
-
 export interface AlarmItem {
   id: string;
   createdAt: string;

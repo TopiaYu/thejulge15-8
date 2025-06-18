@@ -60,7 +60,6 @@ export default function MyStore() {
             <span className="text-gray-500">이미지 없음</span>
           )}
         </div>
-
         <div className="mt-4 flex flex-col">
           <h3 className="text-base max-[374px]:text-sm text-orange font-bold">{shop.category}</h3>
           <div className="flex gap-2 items-center">
