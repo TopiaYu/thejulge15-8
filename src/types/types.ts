@@ -45,6 +45,7 @@ export interface LoginResponse {
   };
   links: [];
 }
+
 export interface AlarmItem {
   id: string;
   createdAt: string;
@@ -60,7 +61,6 @@ export interface AlarmItem {
     href: string;
   };
 }
-
 export interface AlarmList {
   offset: number;
   limit: number;
@@ -119,4 +119,18 @@ export interface NoticeItem {
   startsAt: string;
   workhour: number;
   closed: boolean;
+}
+
+export interface ApplyIdItem {
+  noticeId: string;
+  applicationId: string;
+}
+
+export interface CancelItem {
+  user: string;
+  apply: ApplyIdItem[];
+}
+
+export interface CancelData {
+  [key: string]: CancelItem;
 }
