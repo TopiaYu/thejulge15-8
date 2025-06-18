@@ -51,10 +51,13 @@ const Page = () => {
     router.push('/owner/register-store');
   };
 
-  const handleButton = () => {
-    console.log('버튼 클릭됨');
-    // 공고 편집 또는 등록 페이지로 이동 로직 추가 가능
-    // 예: router.push('/owner/edit-notice');
+  const handleEditClick = () => {
+    // 이름 변경: handleButton -> handleEditClick
+    if (shop) {
+      // 편집할 가게 정보를 localStorage에 임시 저장하여 register-store 페이지로 전달
+      localStorage.setItem('editingShopData', JSON.stringify(shop));
+      router.push('/owner/register-store?editMode=true'); // 쿼리 파라미터 추가하여 편집 모드임을 알림
+    }
   };
 
   // 디버깅용 로그
@@ -105,7 +108,7 @@ const Page = () => {
               <div className="flex justify-center mt-3 w-full gap-2">
                 <button
                   className="cursor-pointer border px-1 w-full py-3.5 text-orange text-base max-[374px]:text-sm font-bold bg-white border-orange rounded-md"
-                  onClick={handleButton}
+                  onClick={handleEditClick} // handleEditClick으로 변경
                 >
                   가게 정보 편집하기
                 </button>
