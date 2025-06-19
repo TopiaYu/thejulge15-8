@@ -41,7 +41,7 @@ const formatApplication = (app: RawApplication): ApplyItem => {
   const end = new Date(start.getTime() + app.item.notice.item.workhour * 60 * 60 * 1000);
 
   return {
-    id: Number(app.item.id),
+    id: app.item.id,
     title: app.item.shop.item.name,
     status: statusMap[app.item.status] || '알 수 없음',
     date: `${formatDate(start)} ~ ${formatTimeOnly(end)} (${app.item.notice.item.workhour}시간)`,

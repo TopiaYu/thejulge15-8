@@ -70,7 +70,7 @@ export interface AlarmList {
 }
 
 export interface ApplyItem {
-  id: number;
+  id: string;
   title: string;
   status: string;
   date: string;
