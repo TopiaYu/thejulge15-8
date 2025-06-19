@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useMyStoreNoticeStore } from './store/MyStoreNoticesStore';
 import MyJobPost from './MyJobPost';
 import { useShopDetailStore } from './store/ShopDetailStore';
@@ -69,11 +69,7 @@ interface ShopDetail {
   };
 }
 
-interface RegisteredJobProps {
-  shopId: string;
-}
-
-export default function RegisteredJob({ shopId }: RegisteredJobProps) {
+export default function RegisteredJob() {
   const router = useRouter();
   const {
     shopItem,
@@ -81,6 +77,16 @@ export default function RegisteredJob({ shopId }: RegisteredJobProps) {
     error: shopError,
     fetchShopDetail,
   } = useShopDetailStore();
+
+  const [shopId, setShopId] = useState<string>(''); //shopId 저장
+
+  useEffect(() => {
+    const storeedShop = localStorage.getItem('registeredShop');
+    if (storeedShop) {
+      const paredShop: ShopDetail = JSON.parse(storeedShop);
+      setShopId(paredShop.id);
+    }
+  }, []);
 
   const { notices, totalCount, isLoading, error, hasMore, fetchNotices, clearNotices } =
     useMyStoreNoticeStore();
@@ -134,7 +140,7 @@ export default function RegisteredJob({ shopId }: RegisteredJobProps) {
         <header className="mb-6">
           <h1 className="text-2xl max-[374px]:text-lg font-bold">내가 등록한 공고</h1>
         </header>
-        <div className="grid grid-cols-1 md: grid-cols-2 lg: grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {notices.map((notice) => (
             <MyJobPost
               key={notice.id}

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface PagenationProps {
   currentPage: number;
@@ -7,7 +8,7 @@ interface PagenationProps {
 }
 
 export default function Pagenation({ currentPage, totalPages, onPageChange }: PagenationProps) {
-  const maxPageNumbersToShow = 3;
+  const maxPageNumbersToShow = 7;
   let startPage = Math.max(1, currentPage - Math.floor(maxPageNumbersToShow / 2));
   const endPage = Math.min(totalPages, startPage + maxPageNumbersToShow - 1);
 
@@ -25,10 +26,15 @@ export default function Pagenation({ currentPage, totalPages, onPageChange }: Pa
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className={`px-3 py-1 
-                    ${currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}
+                    ${currentPage === 1 ? '' : 'cursor-pointer'}
                     }`}
       >
-        {'<'}
+        <Image
+          src={currentPage === 1 ? '/left-arrow-disabled.png' : '/left-arrow.png'}
+          alt="prev"
+          width={24}
+          height={24}
+        />
       </button>
 
       {pageNumbers.map((number) => (
@@ -45,9 +51,14 @@ export default function Pagenation({ currentPage, totalPages, onPageChange }: Pa
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`px-3 py-1 ${currentPage === totalPages ? 'cursor-not-allowed' : ''}`}
+        className={`px-3 py-1 ${currentPage === totalPages ? '' : 'cursor-pointer'}`}
       >
-        {'>'}
+        <Image
+          src={currentPage === totalPages ? '/right-arrow-disabled.png' : '/right-arrow.png'}
+          alt="next"
+          width={24}
+          height={24}
+        />
       </button>
     </nav>
   );
