@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import Modal from '@/components/member/Modal';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useToken from '@/lib/hooks/use-token';
-import axios from 'axios';
 import axiosInstance from '@/lib/api/axios';
 
 interface JobPostRequestBody {
