@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '@/components/member/Modal';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useToken from '@/lib/hooks/use-token';
@@ -67,7 +67,7 @@ export default function JobPostFormPage() {
     const noticeIdFromQuery = searchParams.get('noticeId');
     const shopIdFromQuery = searchParams.get('shopId');
 
-    // ✅ 편집 모드: URL에 noticeId와 shopId가 모두 있을 때
+    //편집 모드: URL에 noticeId와 shopId가 모두 있을 때
     if (noticeIdFromQuery && shopIdFromQuery) {
       setIsEditMode(true);
       setShopId(shopIdFromQuery); // API 요청에 사용할 shopId 설정
