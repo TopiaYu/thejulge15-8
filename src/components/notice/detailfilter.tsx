@@ -1,5 +1,5 @@
 'use client';
-
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -13,7 +13,6 @@ type Option = {
 export default function DetailFilter() {
   const [detailOpen, setDetailOpen] = useState(false);
 
-  //임시 저장소
   const [selectOption, setSelectOption] = useState<Option>({
     location: [],
     startDay: null,
@@ -76,7 +75,7 @@ export default function DetailFilter() {
 
         {detailOpen && (
           <>
-            <div className="fixed inset-0 z-50 bg-white md:relative md:inset-auto md:w-[390px] md:rounded-[10px] md:shadow-lg">
+            <div className="flex flex-col gap-[24px] fixed  inset-0 md:absolute md:w-[390px] mt-[8px] md:top-full md:right-0 bg-white border border-gray-200 rounded-[10px] shadow-lg">
               <div
                 ref={wrapperRef}
                 className="flex flex-col gap-[24px] pt-[20px] px-[20px] pb-[20px] overflow-y-auto h-full md:h-auto"
@@ -87,7 +86,12 @@ export default function DetailFilter() {
                     className="w-[24px] font-bold hover:bg-gray-100 cursor-pointer"
                     onClick={() => setDetailOpen(false)}
                   >
-                    X
+                    <button
+                      className="relative w-[24px] font-bold hover:bg-gray-100 cursor-pointer"
+                      onClick={() => setDetailOpen(false)}
+                    >
+                      <Image alt="닫기버튼" src="/close-icon.png" width={20} height={20} />
+                    </button>
                   </button>
                 </div>
 
