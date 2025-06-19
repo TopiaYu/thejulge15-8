@@ -84,7 +84,7 @@ const Page = () => {
       }
     };
     fetchProfile();
-  }, [userId, token]);
+  }, [userId, token, updateUserData]);
 
   //  신청 내역 데이터 가져오기
   useEffect(() => {
