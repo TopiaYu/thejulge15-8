@@ -75,7 +75,18 @@ export default function DetailFilter() {
 
         {detailOpen && (
           <>
-            <div className="flex flex-col gap-[24px] fixed  inset-0 md:absolute md:w-[390px] mt-[8px] md:top-full md:right-0 bg-white border border-gray-200 rounded-[10px] shadow-lg">
+            <div
+              className="
+                flex flex-col gap-[24px]
+                fixed inset-0 
+                md:absolute        
+                md:inset-auto
+                md:top-full md:mt-[8px] md:right-0
+                md:w-[390px]
+                bg-white border border-gray-200 rounded-[10px] shadow-lg
+                overflow-y-auto h-full md:h-auto
+            "
+            >
               <div
                 ref={wrapperRef}
                 className="flex flex-col gap-[24px] pt-[20px] px-[20px] pb-[20px] overflow-y-auto h-full md:h-auto"
@@ -167,16 +178,29 @@ export default function DetailFilter() {
                   <div className="flex gap-[12px] items-center">
                     <div className="relative w-[169px]">
                       <input
-                        value={selectOption.pay}
-                        onChange={(e) =>
-                          setSelectOption((prev) => ({
-                            ...prev,
-                            pay: Number(e.target.value),
-                          }))
-                        }
+                        type="number"
+                        value={selectOption.pay === 0 ? '' : selectOption.pay}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '') {
+                            setSelectOption((prev) => ({
+                              ...prev,
+                              pay: 0,
+                            }));
+                            return;
+                          }
+                          const num = Number(value);
+                          if (!isNaN(num)) {
+                            setSelectOption((prev) => ({
+                              ...prev,
+                              pay: num,
+                            }));
+                          }
+                        }}
                         className="border p-3 border-gray-300 text-gray-700 rounded-md w-full focus:outline-none"
                         placeholder="입력"
                       />
+
                       <span className="absolute top-1/2 -translate-y-1/2 right-[12px] text-sm">
                         원
                       </span>
