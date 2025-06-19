@@ -15,7 +15,7 @@ const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [alarmid, setAlarmId] = useState('');
   const [storageData, setStorageData] = useState<CancelData>();
-  const { userData, logout } = useAuth();
+  const { userData, logout, updateUserData } = useAuth();
   const router = useRouter();
   const token = useToken();
   const albaActiveLink = userData?.item.user.item.name ? '/member/myprofile' : '/member/profile';
@@ -123,6 +123,17 @@ const UserMenu = () => {
       document.removeEventListener('click', handleOutsideClick);
     };
   }, [isOpen]);
+
+  // 유저 데이터 업데이트
+  useEffect(() => {
+    if (!userData || userValue?.type !== 'employer') return;
+    const getUserInfo = async () => {
+      const res = await axios.get(`/users/${userValue.id}`);
+      const data = res.data;
+      updateUserData(data.item);
+    };
+    getUserInfo();
+  }, []);
 
   return (
     <>
