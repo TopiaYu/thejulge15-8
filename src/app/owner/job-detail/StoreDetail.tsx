@@ -45,7 +45,7 @@ export default function StoreDetail({ item }: StoreDetailProps) {
   const router = useRouter();
 
   const handleButton = () => {
-    router.push('/owner/register-job');
+    router.push(`/owner/register-job?shopId=${shop.item.id}&noticeId=${item.id}`);
   };
 
   // 시급 인상률 계산 로직

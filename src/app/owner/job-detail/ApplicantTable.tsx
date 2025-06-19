@@ -90,7 +90,7 @@ export default function ApplicantsTable({ shopId, noticeId }: ApplicantTableProp
         setTotalPages(1);
       }
     } catch (error) {
-      console.error('오류 발생');
+      console.error('오류 발생', error);
     } finally {
       setLoading(false);
     }
