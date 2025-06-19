@@ -186,8 +186,13 @@ export default function JobList() {
                                 src={job.shop.item.imageUrl}
                                 alt="가게 이미지"
                                 fill
-                                className="rounded-xl object-cover w-full h-[174px]"
+                                className="rounded-xl object-cover"
                               />
+                              {job.closed && (
+                                <div className="absolute top-0 left-0 w-full h-full bg-black/60 rounded-xl flex justify-center items-center z-10">
+                                  <span className="text-white font-bold text-lg">지난 공고</span>
+                                </div>
+                              )}
                             </div>
                             <label className="text-base font-bold md:text-xl">
                               {job.shop.item.name}
@@ -195,27 +200,33 @@ export default function JobList() {
                             <div className="flex gap-[6px] h-[20px]">
                               <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
                                 <Image
-                                  src="/clock-icon.png"
+                                  src={job.closed ? '/clock-closed-icon.png' : '/clock-icon.png'}
                                   alt="일시"
                                   fill
                                   className="object-contain"
                                 />
                               </div>
-                              <span className="text-xs text-gray-50 md:text-sm">
+                              <span
+                                className={`text-xs ${job.closed ? 'text-gray-30' : 'text-gray-50'} md:text-sm`}
+                              >
                                 {new Date(job.startsAt).toLocaleDateString('ko-KR', {
                                   year: 'numeric',
                                   month: '2-digit',
                                   day: '2-digit',
                                 })}
                               </span>
-                              <span className="text-xs text-gray-50 md:text-sm">
+                              <span
+                                className={`text-xs ${job.closed ? 'text-gray-30' : 'text-gray-50'} md:text-sm`}
+                              >
                                 ({job.workhour}시간)
                               </span>
                             </div>
                             <div className="flex gap-[6px] h-[20px]">
                               <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
                                 <Image
-                                  src="/location-icon.png"
+                                  src={
+                                    job.closed ? '/location-closed-icon.png' : '/location-icon.png'
+                                  }
                                   alt="장소"
                                   fill
                                   className="object-contain"
@@ -231,11 +242,23 @@ export default function JobList() {
                               {job.hourlyPay.toLocaleString()}원
                             </span>
                             {shouldDisplayIncreaseInfo && (
-                              <div className="flex justify-center items-center rounded-[20px] md:bg-red-40 pt-[8px] md:pb-[8px] md:pr-[12px] md:pl-[12px]">
-                                <span className="text-red-40 text-xs md:text-white md:text-sm">
+                              <div
+                                className={`flex justify-center items-center rounded-[20px] pt-[8px] md:pb-[8px] md:pr-[12px] md:pl-[12px] ${
+                                  job.closed ? 'md:bg-gray-20' : 'md:bg-red-40'
+                                }`}
+                              >
+                                <span
+                                  className={`text-xs sm:text-sm ${
+                                    job.closed ? 'text-gray-30' : 'text-red-40'
+                                  } md:text-white`}
+                                >
                                   기존 시급보다{' '}
                                 </span>
-                                <span className="text-red-40 text-xs md:text-white md:text-sm">
+                                <span
+                                  className={`text-xs md:text-sm ${
+                                    job.closed ? 'text-gray-30' : 'text-red-40'
+                                  } md:text-white`}
+                                >
                                   {displayMessage}
                                 </span>
                                 <div>
@@ -310,50 +333,86 @@ export default function JobList() {
                           fill
                           className="rounded-xl object-cover w-full h-[174px]"
                         />
+                        {job.closed && (
+                          <div className="absolute top-0 left-0 w-full h-full bg-black/60 rounded-xl flex justify-center items-center z-10">
+                            <span className="text-white font-bold text-lg">지난 공고</span>
+                          </div>
+                        )}
                       </div>
-                      <label className="text-base font-bold md:text-xl">{job.shop.item.name}</label>
+                      <label
+                        className={`text-base font-bold md:text-xl ${job.closed ? 'text-gray-30' : 'text-black'}`}
+                      >
+                        {job.shop.item.name}
+                      </label>
                       <div className="flex gap-[6px] h-[20px]">
                         <div className="relative w-[16px] h-[16px] sm:w-[20px] sm:h-[20px]">
-                          <Image src="/clock-icon.png" alt="일시" fill className="object-contain" />
+                          <Image
+                            src={job.closed ? '/clock-closed-icon.png' : '/clock-icon.png'}
+                            alt="일시"
+                            fill
+                            className="object-contain"
+                          />
                         </div>
-                        <span className="text-xs text-gray-50 md:text-sm">
+                        <span
+                          className={`text-xs ${job.closed ? 'text-gray-30' : 'text-gray-50'} md:text-sm`}
+                        >
                           {new Date(job.startsAt).toLocaleDateString('ko-KR', {
                             year: 'numeric',
                             month: '2-digit',
                             day: '2-digit',
                           })}
                         </span>
-                        <span className="text-xs text-gray-50 md:text-sm">
+                        <span
+                          className={`text-xs ${job.closed ? 'text-gray-30' : 'text-gray-50'} md:text-sm`}
+                        >
                           ({job.workhour}시간)
                         </span>
                       </div>
                       <div className="flex gap-[6px] h-[20px]">
                         <div className="relative w-[16px] h-[16px] sm:w-[20px] sm:h-[20px]">
                           <Image
-                            src="/location-icon.png"
+                            src={job.closed ? '/location-closed-icon.png' : '/location-icon.png'}
                             alt="장소"
                             fill
                             className="object-contain"
                           />
                         </div>
-                        <span className="text-xs text-gray-50 md:text-sm">
+                        <span
+                          className={`text-xs ${job.closed ? 'text-gray-30' : 'text-gray-50'} md:text-sm`}
+                        >
                           {job.shop.item.address1}
                         </span>
                       </div>
                     </section>
-                    <section className="flex flex-col justify-between items-start md:flex-row md:items-center">
-                      <span className="font-bold text-lg md:text-2xl">
+                    <section
+                      className={`flex flex-col justify-between items-start md:flex-row md:items-center`}
+                    >
+                      <span
+                        className={`font-bold text-lg md:text-2xl ${job.closed ? 'text-gray-30' : 'text-black'}`}
+                      >
                         {job.hourlyPay.toLocaleString()}원
                       </span>
                       {shouldDisplayIncreaseInfo && (
-                        <div className="flex justify-center items-center rounded-[20px] md:bg-red-40 pt-[8px] md:pb-[8px] md:pr-[12px] md:pl-[12px]">
-                          <span className="text-red-40 text-xs md:text-white sm:text-sm">
+                        <div
+                          className={`flex justify-center items-center rounded-[20px] pt-[8px] md:pb-[8px] md:pr-[12px] md:pl-[12px] ${
+                            job.closed ? 'md:bg-gray-30' : 'md:bg-red-40'
+                          }`}
+                        >
+                          <span
+                            className={`text-xs sm:text-sm ${
+                              job.closed ? 'text-gray-30' : 'text-red-40'
+                            } md:text-white`}
+                          >
                             기존 시급보다{' '}
                           </span>
-                          <span className="text-red-40 text-xs md:text-white md:text-sm">
+                          <span
+                            className={`text-xs md:text-sm ${
+                              job.closed ? 'text-gray-30' : 'text-red-40'
+                            } md:text-white`}
+                          >
                             {displayMessage}
                           </span>
-                          <div className="">
+                          <div>
                             <Image
                               src="/arrow-up-bold.png"
                               alt="시급 인상"
