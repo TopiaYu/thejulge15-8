@@ -54,29 +54,46 @@ export default function JobList() {
   };
   const { userData } = useAuth();
   useEffect(() => {
-    async function fetchRecommendList(userID?: string) {
+    async function fetchRecommendList() {
+      const userAddress = userData?.item.user.item.address;
+
       try {
         let response;
-        console.log(userData);
-        if (userID) {
-          const userAddress = userData?.item.user.item.address;
-          response = await axios.get('/notices', {
-            params: {
-              limit: 3,
-              sort: 'time',
-              address: userAddress,
-            },
-          });
-        } else {
-          response = await axios.get('/notices', {
-            params: {
-              limit: 3,
-              sort: 'time',
-            },
-          });
-        }
+        if (userAddress) {
+          try {
+            response = await axios.get('/notices', {
+              params: {
+                limit: 3,
+                sort: 'time',
+                address: userAddress,
+              },
+            });
 
-        const settingData: JobList[] = response.data.items.map((dataItem: dataItem) => ({
+            if (response.data.items.length > 0) {
+              const settingData: JobList[] = response.data.items.map((dataItem: dataItem) => ({
+                id: dataItem.item.id,
+                hourlyPay: dataItem.item.hourlyPay,
+                startsAt: dataItem.item.startsAt,
+                workhour: dataItem.item.workhour,
+                description: dataItem.item.description,
+                closed: dataItem.item.closed,
+                shop: dataItem.item.shop,
+              }));
+              setRecommendList(settingData);
+              return;
+            }
+          } catch (error) {
+            console.error('사용자 주소로 추천 공고 불러오기 실패 (fallback 시도):', error);
+          }
+        }
+        const fallbackResponse = await axios.get('/notices', {
+          params: {
+            limit: 3,
+            sort: 'time',
+          },
+        });
+
+        const settingData: JobList[] = fallbackResponse.data.items.map((dataItem: dataItem) => ({
           id: dataItem.item.id,
           hourlyPay: dataItem.item.hourlyPay,
           startsAt: dataItem.item.startsAt,
@@ -85,15 +102,16 @@ export default function JobList() {
           closed: dataItem.item.closed,
           shop: dataItem.item.shop,
         }));
-
         setRecommendList(settingData);
       } catch (error) {
-        console.error('추천 공고 불러오기 실패:', error);
+        console.error('추천 공고 최종 불러오기 실패:', error);
       }
     }
-    const userAddress = userData?.item.user.item.address;
-    fetchRecommendList(userAddress);
-  }, []);
+
+    if (userData !== undefined) {
+      fetchRecommendList();
+    }
+  }, [userData]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -410,22 +428,27 @@ export default function JobList() {
                           >
                             {displayMessage}
                           </span>
-                          <div>
-                            <Image
-                              src="/arrow-up-bold.png"
-                              alt="시급 인상"
-                              width={20}
-                              height={20}
-                              className="hidden md:block"
-                            />
-                            <Image
-                              src="/arrow-orange.png"
-                              alt="시급 인상"
-                              width={11}
-                              height={11}
-                              className="block md:hidden"
-                            />
-                          </div>
+                          {job.closed ? (
+                            <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                              <Image
+                                src="/arrow-up-bold.png"
+                                alt="시급 인상"
+                                fill
+                                style={{ objectFit: 'contain' }}
+                                className="block"
+                              />
+                            </div>
+                          ) : (
+                            <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                              <Image
+                                src="/arrow-orange.png"
+                                alt="시급 인상"
+                                fill
+                                style={{ objectFit: 'contain' }}
+                                className="block"
+                              />
+                            </div>
+                          )}
                         </div>
                       )}
                     </section>
