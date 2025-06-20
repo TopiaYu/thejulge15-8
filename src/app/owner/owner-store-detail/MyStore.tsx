@@ -29,6 +29,10 @@ export default function MyStore() {
     router.push('/owner/register-job');
   };
 
+  const handleEditButton = () => {
+    router.push('/owner/register-store?editMode=true'); // 쿼리 파라미터 추가하여 편집 모드임을 알림
+  };
+
   if (!shop) {
     return (
       <div className="w-full max-w-[964px] px-8 max-[375px]:px-4 mx-auto mb-15">
@@ -86,9 +90,9 @@ export default function MyStore() {
           <div className="flex justify-center mt-3 w-full gap-2">
             <button
               className="cursor-pointer border px-1 w-full py-3.5 text-orange text-base max-[374px]:text-sm font-bold bg-white border-orange rounded-md"
-              onClick={handleButton}
+              onClick={handleEditButton}
             >
-              공고 편집하기
+              편집하기
             </button>
             <button
               className="cursor-pointer border px-1 w-full py-3.5 text-white text-base max-[374px]:text-sm font-bold bg-orange rounded-md"
