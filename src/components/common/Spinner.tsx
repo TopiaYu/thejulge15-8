@@ -1,5 +1,3 @@
-// src/components/MySpinner.jsx
-
 import { ClipLoader } from 'react-spinners';
 
 interface MySpinnerProps {

@@ -182,7 +182,7 @@ export default function JobList() {
   return (
     <>
       {isLoading ? (
-        <MySpinner isLoading={isLoading} /> // isLoading prop을 전달
+        <MySpinner isLoading={isLoading} />
       ) : (
         <div>
           <section className="bg-red-10 flex flex-col justify-center items-center py-[40px]">
@@ -305,40 +305,38 @@ export default function JobList() {
                                     >
                                       {displayMessage}
                                     </span>
-                                    {/* 이미지 조건부 렌더링 */}
-                                    {job.closed ? ( // job.closed가 true일 때
+                                    {job.closed ? (
                                       <>
                                         <Image
-                                          src="/arrow-up-bold.png" // 모바일일 때
+                                          src="/arrow-up-bold.png"
                                           alt="시급 인상"
-                                          width={16} // 모바일 크기 16
-                                          height={16} // 모바일 크기 16
-                                          className="block md:hidden" // 모바일에서만 보이게
+                                          width={16}
+                                          height={16}
+                                          className="block md:hidden"
                                         />
                                         <Image
-                                          src="/arrow-up-bold.png" // 데스크톱일 때
+                                          src="/arrow-up-bold.png"
                                           alt="시급 인상"
-                                          width={20} // 데스크톱 크기 20
-                                          height={20} // 데스크톱 크기 20
-                                          className="hidden md:block" // 데스크톱에서만 보이게
+                                          width={20}
+                                          height={20}
+                                          className="hidden md:block"
                                         />
                                       </>
                                     ) : (
-                                      // job.closed가 false일 때
                                       <>
                                         <Image
-                                          src="/arrow-orange.png" // 모바일일 때
+                                          src="/arrow-orange.png"
                                           alt="시급 인상"
-                                          width={16} // 모바일 크기 16
-                                          height={16} // 모바일 크기 16
-                                          className="block md:hidden" // 모바일에서만 보이게
+                                          width={16}
+                                          height={16}
+                                          className="block md:hidden"
                                         />
                                         <Image
-                                          src="/arrow-up-bold.png" // 데스크톱일 때
+                                          src="/arrow-up-bold.png"
                                           alt="시급 인상"
-                                          width={20} // 데스크톱 크기 20
-                                          height={20} // 데스크톱 크기 20
-                                          className="hidden md:block" // 데스크톱에서만 보이게
+                                          width={20}
+                                          height={20}
+                                          className="hidden md:block"
                                         />
                                       </>
                                     )}
@@ -479,40 +477,38 @@ export default function JobList() {
                               >
                                 {displayMessage}
                               </span>
-                              {/* 이미지 조건부 렌더링 */}
-                              {job.closed ? ( // job.closed가 true일 때
+                              {job.closed ? (
                                 <>
                                   <Image
-                                    src="/arrow-up-bold.png" // 모바일일 때
+                                    src="/arrow-up-bold.png"
                                     alt="시급 인상"
-                                    width={16} // 모바일 크기 16
-                                    height={16} // 모바일 크기 16
-                                    className="block md:hidden" // 모바일에서만 보이게
+                                    width={16}
+                                    height={16}
+                                    className="block md:hidden"
                                   />
                                   <Image
-                                    src="/arrow-up-bold.png" // 데스크톱일 때
+                                    src="/arrow-up-bold.png"
                                     alt="시급 인상"
-                                    width={20} // 데스크톱 크기 20
-                                    height={20} // 데스크톱 크기 20
-                                    className="hidden md:block" // 데스크톱에서만 보이게
+                                    width={20}
+                                    height={20}
+                                    className="hidden md:block"
                                   />
                                 </>
                               ) : (
-                                // job.closed가 false일 때
                                 <>
                                   <Image
-                                    src="/arrow-orange.png" // 모바일일 때
+                                    src="/arrow-orange.png"
                                     alt="시급 인상"
-                                    width={16} // 모바일 크기 16
-                                    height={16} // 모바일 크기 16
-                                    className="block md:hidden" // 모바일에서만 보이게
+                                    width={16}
+                                    height={16}
+                                    className="block md:hidden"
                                   />
                                   <Image
-                                    src="/arrow-up-bold.png" // 데스크톱일 때
+                                    src="/arrow-up-bold.png"
                                     alt="시급 인상"
-                                    width={20} // 데스크톱 크기 20
-                                    height={20} // 데스크톱 크기 20
-                                    className="hidden md:block" // 데스크톱에서만 보이게
+                                    width={20}
+                                    height={20}
+                                    className="hidden md:block"
                                   />
                                 </>
                               )}
