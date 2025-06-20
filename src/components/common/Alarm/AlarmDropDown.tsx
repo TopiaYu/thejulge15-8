@@ -61,7 +61,7 @@ const AlarmDropDown = ({ alarm, ref, setNewAlarm, onClick }: AlarmDropDownProps)
   return (
     <div
       ref={ref}
-      className="alarm fixed sm:absolute top-0 left-0 sm:left-auto right-0 sm:right-auto sm:top-7 w-screen h-screen sm:w-[368px] sm:h-[419px] py-6 px-5 z-100 rounded-[10px] bg-red-10 border border-solid border-gray-30 overflow-y-scroll custom-scroll"
+      className="alarm fixed sm:absolute top-0 left-0 sm:left-auto right-0 sm:right-auto sm:top-7 w-full h-screen sm:w-[368px] sm:h-[419px] py-6 px-5 z-100 rounded-[10px] bg-red-10 border border-solid border-gray-30 overflow-y-scroll custom-scroll"
     >
       <div className="flex items-center justify-between mb-4">
         <h3>알림 {alarm ? alarm.count : 0}개</h3>
