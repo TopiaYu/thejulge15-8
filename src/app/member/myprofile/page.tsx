@@ -116,7 +116,7 @@ const Page = () => {
 
   return (
     <div className="w-full">
-      {/* 상단 섹션 : 냐 프로필*/}
+      {/* 상단 섹션 : 내 프로필*/}
       <section className="w-full bg-white pt-6 pb-12">
         <div className="px-4 sm:px-6 lg:px-20 max-w-[1200px] mx-auto gap-6">
           <div className="flex flex-col lg:flex-row justify-between items-start">
