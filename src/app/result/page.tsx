@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useSortOption, useDetailOption } from '@/lib/hooks/zustand';
 
 import NoticeCard from '@/components/notice-detail/NoticeCard';
@@ -87,9 +87,8 @@ export default function ResultPage() {
   const searchParams = useSearchParams();
   const { sortOption } = useSortOption();
   const { detailOption } = useDetailOption();
-  const router = useRouter();
 
-  const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
+  const keyword = searchParams.get('keyword') || '';
   const [noticeList, setNoticeList] = useState<ShopNotice[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -142,7 +141,7 @@ export default function ResultPage() {
       {/* 공고 없음 */}
       {noticeList.length === 0 ? (
         <div className="flex flex-col items-center justify-center w-full my-10">
-          <Image src="/no-result.png" alt="검색 결과 없음" width={250} height={250} />
+          <Image src="/no-result.png" alt="검색 결과 없음" width={300} height={300} />
         </div>
       ) : (
         <>
