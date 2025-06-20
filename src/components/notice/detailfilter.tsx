@@ -1,12 +1,10 @@
 'use client';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { useDetailOption } from '@/lib/hooks/zustand';
 type Option = {
   location: string[];
-  startDay: Date | null;
+  startDay: string | null;
   pay: number;
 };
 
@@ -157,18 +155,17 @@ export default function DetailFilter() {
                 {/* 시작일 필터 */}
                 <div className="grid gap-[8px]">
                   <label>시작일</label>
-                  <DatePicker
-                    selected={selectOption.startDay}
-                    onChange={(date) => {
-                      if (!date) return;
+                  <input
+                    type="date"
+                    value={selectOption.startDay || ''}
+                    onChange={(e) =>
                       setSelectOption((prev) => ({
                         ...prev,
-                        startDay: date,
-                      }));
-                    }}
-                    dateFormat="yyyy/MM/dd"
+                        startDay: e.target.value,
+                      }))
+                    }
                     className="border p-3 border-gray-300 text-gray-700 rounded-md w-full focus:outline-none"
-                    placeholderText="입력"
+                    placeholder="입력"
                   />
                 </div>
 
