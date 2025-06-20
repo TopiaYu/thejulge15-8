@@ -1,9 +1,5 @@
-import JobList from './notice/page';
+import Notice from '@/app/notice/page';
 
 export default function Home() {
-  return (
-    <div>
-      <JobList />
-    </div>
-  );
+  return <Notice />;
 }

@@ -30,7 +30,8 @@ const AlarmCard = ({
   const minute = String(date?.getMinutes()).padStart(2, '0');
 
   // read에 따른 카드 컨텐츠 색상 변환
-  const cardClass = clsx(result === 'accepted' ? 'bg-blue-20' : 'bg-red-40');
+  const cardClass = clsx(result === 'accepted' ? 'text-blue-20' : 'text-red-40');
+  const dotClass = clsx(result === 'accepted' ? 'bg-blue-20' : 'bg-red-40');
   // 지난 시간 계산
   const getTime = useCallback(() => {
     const createDate = new Date(createAt);
@@ -60,19 +61,21 @@ const AlarmCard = ({
   return (
     <div
       key={id}
-      onClick={onClick}
-      className="w-full border border-solid border-gray-20 bg-white rounded-[5px]"
+      onClick={(e) => onClick(e)}
+      className="w-full border border-solid border-gray-20 bg-white rounded-[5px] px-3 py-4 font-normal text-sm leading-5 mb-2 cursor-pointer"
     >
-      <div className={`rounded-[9999px] w-[5px] h-[5px] ${!read ? cardClass : 'bg-black'}`}></div>
-      <p>
+      <div
+        className={`rounded-[9999px] w-[5px] h-[5px] mb-1 ${!read ? dotClass : 'bg-black'}`}
+      ></div>
+      <p className="mb-1">
         {shopName}({year}-{month}-{day} {hour}:{minute}~{Number(hour) + workHour}:{minute}) 공고
         지원이
         <span className={!read ? cardClass : 'bg-black'}>
-          {result === 'accepted' ? '승인' : '거절'}
+          {result === 'accepted' ? ' 승인' : ' 거절'}
         </span>
         되었어요.
       </p>
-      <div>{getTime()}</div>
+      <div className="font-normal text-xs leading-4 text-gray-40">{getTime()}</div>
     </div>
   );
 };

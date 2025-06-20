@@ -6,7 +6,7 @@ interface NewAlarm {
 }
 
 const Alarm = ({ newAlarm, onClick }: NewAlarm) => {
-  const className = clsx('w-2 h-2', newAlarm ? 'bg-[#EA3C12]' : 'bg-black', 'rounded-[9999px]');
+  const className = clsx('w-2 h-2', newAlarm ? 'bg-orange' : 'bg-black', 'rounded-[9999px]');
 
   return (
     <div

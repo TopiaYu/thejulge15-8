@@ -55,7 +55,6 @@ const ApplyButton = ({ shopId, noticeId, closed, isPast }: ApplyBtnProps) => {
 
   //  className
   const className = clsx(
-    'w-full h-12 rounded-md bg-orange font-bold text-sm sm:text-base cursor-pointer',
     applyStatus.status !== 'pending'
       ? 'bg-orange text-white'
       : 'bg-white border-solid border-orange border-[1px] text-orange',
@@ -190,7 +189,7 @@ const ApplyButton = ({ shopId, noticeId, closed, isPast }: ApplyBtnProps) => {
     <>
       <button
         type="button"
-        className={!closed || !isPast ? className : 'bg-gray-40'}
+        className={`${closed || isPast ? 'bg-gray-40 text-white' : className} w-full h-12 rounded-md font-bold text-sm sm:text-base cursor-pointer`}
         onClick={getHandler() || undefined}
       >
         {getButtonText()}
