@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useDetailOption } from '@/lib/hooks/zustand';
 type Option = {
   location: string[];
@@ -95,12 +96,7 @@ export default function DetailFilter() {
                     className="w-[24px] font-bold hover:bg-gray-100 cursor-pointer"
                     onClick={() => setDetailOpen(false)}
                   >
-                    <button
-                      className="relative w-[24px] font-bold hover:bg-gray-100 cursor-pointer"
-                      onClick={() => setDetailOpen(false)}
-                    >
-                      <Image alt="닫기버튼" src="/close-icon.png" width={20} height={20} />
-                    </button>
+                    <Image alt="닫기버튼" src="/close-icon.png" width={20} height={20} />
                   </button>
                 </div>
 
@@ -194,7 +190,7 @@ export default function DetailFilter() {
                             }));
                           }
                         }}
-                        className="border p-3 border-gray-300 text-gray-700 rounded-md w-full focus:outline-none"
+                        className="appearance-none border p-3 border-gray-300 text-gray-700 rounded-md w-full focus:outline-none"
                         placeholder="입력"
                       />
 
