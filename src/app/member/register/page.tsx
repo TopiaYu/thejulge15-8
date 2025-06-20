@@ -48,25 +48,18 @@ const Page = () => {
   const token = useToken();
   const { userData } = useAuth();
 
-  const isFormValid = name.trim() !== '' && phone.trim() !== '';
+  // 유효성 검사 함수
+  const isValidName = name.trim().length > 0 && name.trim().length <= 17;
+  const isValidPhone = (value: string) => /^010\d{7,8}$/.test(value.replace(/\D/g, ''));
+  const isFormValid = isValidName && isValidPhone(phone);
 
   const formatPhoneNumber = (value: string) => {
-    // 숫자만 남기기
     const numbersOnly = value.replace(/\D/g, '');
-
-    // 01X-XXXX-XXXX 형식으로
-    if (numbersOnly.length < 4) {
-      return numbersOnly;
-    } else if (numbersOnly.length < 8) {
-      return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3)}`;
-    } else if (numbersOnly.length <= 11) {
-      return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7)}`;
-    } else {
-      return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7, 11)}`;
-    }
+    if (numbersOnly.length < 4) return numbersOnly;
+    if (numbersOnly.length < 8) return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3)}`;
+    return `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7, 11)}`;
   };
 
-  // 유저 정보 불어오기
   useEffect(() => {
     const fetchUserInfo = async () => {
       const userId = userData?.item?.user?.item?.id;
@@ -99,23 +92,19 @@ const Page = () => {
     try {
       await axios.put(
         `/users/${userId}`,
-        { name, phone, address, bio },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        { name: name.trim(), phone, address, bio },
+        { headers: { Authorization: `Bearer ${token}` } },
       );
-      setShowModal(true); // 모달 열기
+      setShowModal(true);
     } catch (error) {
       console.error('프로필 등록 실패:', error);
-      alert('유효하지 않은 휴대폰 번호입니다.');
+      alert('유효하지 않은 형식입니다.');
     }
   };
 
   const handleModalClose = () => {
-    setShowModal(false); //모달 닫고
-    router.push('/member/myprofile'); // 내프로필 페이지로 이동
+    setShowModal(false);
+    router.push('/member/myprofile');
   };
 
   return (
@@ -134,14 +123,18 @@ const Page = () => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              maxLength={17}
               className="h-[58px] px-4 border border-[#CBC9CF] bg-white rounded-md"
             />
+            {!isValidName && (
+              <span className="text-sm text-red-500 mt-1">이름은 1~17자까지 입력해 주세요.</span>
+            )}
           </div>
 
           {/* 연락처 */}
           <div className="flex flex-col">
             <label htmlFor="phone">
-              연락처<span>*</span>
+              휴대폰<span>*</span>
             </label>
             <input
               id="phone"
@@ -151,6 +144,9 @@ const Page = () => {
               onChange={(e) => setPhone(formatPhoneNumber(e.target.value))}
               className="h-[58px] px-4 border border-[#CBC9CF] bg-white rounded-md"
             />
+            {!isValidPhone(phone) && (
+              <span className="text-sm text-red-500 mt-1">유효한 연락처를 입력해 주세요.</span>
+            )}
           </div>
 
           {/* 선호 지역 */}
@@ -180,22 +176,27 @@ const Page = () => {
             placeholder="입력"
             rows={5}
             value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            className="w-full h-auto px-4 py-2 border border-[#CBC9CF] rounded-md bg-white no resize"
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value.length <= 300) setBio(value);
+            }}
+            className="w-full h-auto px-4 py-2 border border-[#CBC9CF] rounded-md bg-white no resize "
           />
         </div>
+
         {/* 등록 버튼 */}
         <div className="flex justify-center">
           <button
             type="submit"
             disabled={!isFormValid}
-            className="w-[346px] h-[47px] bg-[#ea3c12] text-white rounded-md hover:bg-orange-700 font-bold"
+            className="w-[346px] h-[47px] bg-[#ea3c12] text-white rounded-md hover:bg-orange-700 font-bold disabled:opacity-40"
           >
             등록하기
           </button>
         </div>
       </form>
-      {/* 모달 렌더링 */}
+
+      {/* 모달 */}
       {showModal && <Modal message="등록이 완료되었습니다." onClose={handleModalClose} />}
     </div>
   );
