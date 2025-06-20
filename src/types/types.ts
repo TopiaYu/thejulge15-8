@@ -75,6 +75,8 @@ export interface ApplyItem {
   status: string;
   date: string;
   hourlyPay: string;
+  noticeId: string;
+  shopId: string;
 }
 
 export interface RawApplication {

@@ -46,6 +46,8 @@ const formatApplication = (app: RawApplication): ApplyItem => {
     status: statusMap[app.item.status] || '알 수 없음',
     date: `${formatDate(start)} ~ ${formatTimeOnly(end)} (${app.item.notice.item.workhour}시간)`,
     hourlyPay: `${app.item.notice.item.hourlyPay.toLocaleString()}원`,
+    noticeId: app.item.notice.item.id,
+    shopId: app.item.shop.item.id,
   };
 };
 

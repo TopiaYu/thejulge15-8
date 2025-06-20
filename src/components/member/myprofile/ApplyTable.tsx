@@ -1,7 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
-
 import { ApplyItem } from '@/types/types';
 
 interface ApplyTableProps {
@@ -22,6 +22,8 @@ const getStatusStyle = (status: string) => {
 };
 
 const ApplyTable = ({ data }: ApplyTableProps) => {
+  const router = useRouter();
+
   return (
     <div className="w-full overflow-x-auto">
       <table className="min-w-[640px] w-full text-left border border-[#E5E4E7] rounded-lg shadow-sm">
@@ -35,7 +37,11 @@ const ApplyTable = ({ data }: ApplyTableProps) => {
         </thead>
         <tbody>
           {data.map((item) => (
-            <tr key={item.id} className="border-t border-[#E5E4E7] hover:bg-[#F9F9F9] h-[69px]">
+            <tr
+              key={item.id}
+              className="border-t border-[#E5E4E7] hover:bg-[#F2F2F3] h-[69px] cursor-pointer"
+              onClick={() => router.push(`/notice/${item.shopId}/${item.noticeId}`)}
+            >
               <td className="p-2">{item.title}</td>
               <td className="p-2">{item.date}</td>
               <td className="p-2">{item.hourlyPay}</td>
