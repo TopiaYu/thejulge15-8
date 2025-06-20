@@ -41,11 +41,13 @@ const formatApplication = (app: RawApplication): ApplyItem => {
   const end = new Date(start.getTime() + app.item.notice.item.workhour * 60 * 60 * 1000);
 
   return {
-    id: Number(app.item.id),
+    id: app.item.id,
     title: app.item.shop.item.name,
     status: statusMap[app.item.status] || '알 수 없음',
     date: `${formatDate(start)} ~ ${formatTimeOnly(end)} (${app.item.notice.item.workhour}시간)`,
     hourlyPay: `${app.item.notice.item.hourlyPay.toLocaleString()}원`,
+    noticeId: app.item.notice.item.id,
+    shopId: app.item.shop.item.id,
   };
 };
 
@@ -84,7 +86,7 @@ const Page = () => {
       }
     };
     fetchProfile();
-  }, [userId, token]);
+  }, [userId, token, updateUserData]);
 
   //  신청 내역 데이터 가져오기
   useEffect(() => {
@@ -116,7 +118,7 @@ const Page = () => {
 
   return (
     <div className="w-full">
-      {/* 상단 섹션 : 냐 프로필*/}
+      {/* 상단 섹션 : 내 프로필*/}
       <section className="w-full bg-white pt-6 pb-12">
         <div className="px-4 sm:px-6 lg:px-20 max-w-[1200px] mx-auto gap-6">
           <div className="flex flex-col lg:flex-row justify-between items-start">
@@ -129,7 +131,11 @@ const Page = () => {
               name={profile?.name || ''}
               phone={profile?.phone || ''}
               address={profile?.address || ''}
-              bio={profile?.bio || ''}
+              bio={
+                profile?.bio
+                  ? profile.bio.slice(0, 100) + (profile.bio.length > 100 ? '...' : '')
+                  : ''
+              }
               onEdit={() => router.push('/member/register')}
             />
           </div>

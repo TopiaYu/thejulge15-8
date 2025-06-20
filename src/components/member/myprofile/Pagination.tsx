@@ -18,13 +18,13 @@ const Pagination = ({ totalPages, currentPage, onPageChange }: PaginationProps) 
   const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
   return (
-    <div className="flex justify-center mt-6 items-center gap-2">
+    <div className="flex justify-center mt-6 mb-6 items-center gap-2">
       {/* 왼쪽 화살표 */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         title="이전 페이지"
-        className="disabled:opacity-50"
+        className="disabled:opacity-50 cursor-pointer"
       >
         <Image
           src={currentPage === 1 ? '/left-arrow-disabled.png' : '/left-arrow.png'}
@@ -39,8 +39,8 @@ const Pagination = ({ totalPages, currentPage, onPageChange }: PaginationProps) 
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`w-10 h-10 rounded hover:bg-[#f06a50] ${
-            currentPage === page ? 'bg-[#FF8D72] text-white' : 'text-[#111322]'
+          className={`w-10 h-10 rounded cursor-pointer ${
+            currentPage === page ? 'bg-[#FF8D72] text-white' : 'text-[#111322] hover:bg-[#f06a50]'
           }`}
         >
           {page}
@@ -52,6 +52,7 @@ const Pagination = ({ totalPages, currentPage, onPageChange }: PaginationProps) 
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         title="다음 페이지"
+        className="disabled:opacity-50 cursor-pointer"
       >
         <Image src="/right-arrow.png" alt="next" width={24} height={24} />
       </button>

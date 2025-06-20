@@ -74,11 +74,13 @@ export interface AlarmList {
 }
 
 export interface ApplyItem {
-  id: number;
+  id: string;
   title: string;
   status: string;
   date: string;
   hourlyPay: string;
+  noticeId: string;
+  shopId: string;
 }
 
 export interface RawApplication {
