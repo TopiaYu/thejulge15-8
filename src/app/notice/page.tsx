@@ -170,9 +170,9 @@ export default function JobList() {
             맞춤 공고
           </h1>
 
-          <div className="w-full overflow-x-auto scrollbar-hide">
-            <div className="max-w-[964px] w-full mx-auto px-4">
-              <div className="flex gap-4 justify-center md:justify-start min-w-max">
+          <div className="w-full overflow-x-auto md:overflow-visible scrollbar-hide bg-red-10">
+            <div className="w-full max-w-[968px] mx-auto px-4">
+              <div className="flex gap-4 md:min-w-[964px] md:min-w-0 justify-start">
                 {recommendList.map((job) => {
                   const originalPay = job.shop.item.originalHourlyPay;
                   const currentPay = job.hourlyPay;
@@ -329,7 +329,7 @@ export default function JobList() {
         </div>
       </section>
 
-      <section className="flex flex-col justify-center items-center mb-[29px] md:mb-[40px]">
+      <section className=" w-full flex flex-col justify-center items-center mb-[29px] md:mb-[40px]">
         <div className="w-[350px] md:w-[678px] mb-[16px] flex flex-col gap-[16px] items-start md:flex-row md:justify-between md:items-center md:pb-[32px] pt-[60px] lg:w-[964px]">
           <div className="text-black text-xl md:text-2xl font-bold">전체 공고</div>
           <div className="flex gap-[10px]">
