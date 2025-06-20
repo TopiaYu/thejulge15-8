@@ -47,16 +47,19 @@ export interface LoginResponse {
 }
 
 export interface AlarmItem {
-  id: string;
-  createdAt: string;
-  result: string;
-  read: boolean;
-  shop: Shop;
-  notice: Notice;
-  application: {
-    item: {
-      id: string;
-      status: string;
+  item: {
+    id: string;
+    createdAt: string;
+    result: string;
+    read: boolean;
+    shop: Shop;
+    notice: Notice;
+    application: {
+      item: {
+        id: string;
+        status: string;
+      };
+      href: string;
     };
     href: string;
   };
@@ -67,6 +70,7 @@ export interface AlarmList {
   count: number;
   hasNext: boolean;
   items: AlarmItem[];
+  links?: [];
 }
 
 export interface ApplyItem {
