@@ -53,7 +53,7 @@ const UserMenu = () => {
     const getAlarmList = async () => {
       try {
         const res = await axios.get(
-          `/users/${userValue.id}/alerts?offset=${offsetRef.current}&limit=10`,
+          `/users/${userValue.id}/alerts?offset=0&limit=${offsetRef.current}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -73,6 +73,9 @@ const UserMenu = () => {
         console.error('Alarm Api 호출 에러:', error);
       }
     };
+
+    // 첫 렌더링 시 실행
+    getAlarmList();
 
     const alarmInterval = setInterval(() => {
       getAlarmList();

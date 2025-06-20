@@ -78,7 +78,7 @@ const AlarmDropDown = ({ alarm, ref, setNewAlarm }: AlarmDropDownProps) => {
             />
           );
         })}
-      <div ref={targetRef} className="w-full h-2.5"></div>
+      <div ref={targetRef} className="absolute w-full h-full top-0 left-0"></div>
     </div>
   );
 };

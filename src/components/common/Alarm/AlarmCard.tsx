@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback } from 'react';
+import { RefObject, useCallback } from 'react';
 
 interface Props {
   id: string;
