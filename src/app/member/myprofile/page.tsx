@@ -129,7 +129,11 @@ const Page = () => {
               name={profile?.name || ''}
               phone={profile?.phone || ''}
               address={profile?.address || ''}
-              bio={profile?.bio || ''}
+              bio={
+                profile?.bio
+                  ? profile.bio.slice(0, 100) + (profile.bio.length > 100 ? '...' : '')
+                  : ''
+              }
               onEdit={() => router.push('/member/register')}
             />
           </div>
