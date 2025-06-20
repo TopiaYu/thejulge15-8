@@ -30,7 +30,11 @@ export default function MyStore() {
   };
 
   const handleEditButton = () => {
-    router.push('/owner/register-store?editMode=true'); // 쿼리 파라미터 추가하여 편집 모드임을 알림
+    if (shop) {
+      // 편집할 가게 정보를 localStorage에 임시 저장하여 register-store 페이지로 전달
+      localStorage.setItem('editingShopData', JSON.stringify(shop));
+      router.push('/owner/register-store?editMode=true'); // 쿼리 파라미터 추가하여 편집 모드임을 알림
+    }
   };
 
   if (!shop) {
