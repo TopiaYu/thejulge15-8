@@ -31,6 +31,7 @@ const AlarmDropDown = ({ alarm, getAlarmId, ref }: AlarmDropDownProps) => {
             />
           );
         })}
+      <div className="w-full h-2.5 bg-red-40"></div>
     </div>
   );
 };
