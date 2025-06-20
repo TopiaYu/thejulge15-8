@@ -57,11 +57,9 @@ export default function JobList() {
     async function fetchRecommendList(userID?: string) {
       try {
         let response;
-
-        console.log(userID);
+        console.log(userData);
         if (userID) {
-          const addressResponse = await axios.get(`/users/${userID}`);
-          const userAddress = addressResponse.data.item.address;
+          const userAddress = userData?.item.user.item.address;
           response = await axios.get('/notices', {
             params: {
               limit: 3,
@@ -93,8 +91,8 @@ export default function JobList() {
         console.error('추천 공고 불러오기 실패:', error);
       }
     }
-    const userId = userData?.item.user.item.id;
-    fetchRecommendList(userId);
+    const userAddress = userData?.item.user.item.address;
+    fetchRecommendList(userAddress);
   }, []);
 
   useEffect(() => {
