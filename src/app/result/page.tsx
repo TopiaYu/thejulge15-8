@@ -133,7 +133,7 @@ export default function ResultPage() {
             </p>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 relative z-40">
           <Filter />
           <DetailFilter />
         </div>
@@ -148,7 +148,7 @@ export default function ResultPage() {
         <>
           {/* 공고 리스트 */}
           <div className="w-full max-w-[1100px] mx-auto">
-            <ul className="grid grid-cols-2 xl:grid-cols-3 gap-x-2 gap-y-6">
+            <ul className="grid grid-cols-2 xl:grid-cols-3 gap-x-1 gap-y-6">
               {noticeList.map((notice) => {
                 const { item } = notice;
                 const shop = item.shop.item;
