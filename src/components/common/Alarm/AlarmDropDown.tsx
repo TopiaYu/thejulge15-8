@@ -16,22 +16,21 @@ const AlarmDropDown = ({ alarm, getAlarmId, ref }: AlarmDropDownProps) => {
     >
       <h3 className="mb-4">알림 {alarm ? alarm.count : 0}개</h3>
       {alarm &&
-        alarm.items.map((alItem) => {
+        alarm.items.map((alItem, index) => {
           return (
             <AlarmCard
-              key={alItem.id}
-              id={alItem.id}
-              result={alItem.result}
-              shopName={alItem.shop?.item?.name}
-              startsAt={alItem.notice?.item?.startsAt}
-              workHour={alItem.notice?.item?.workhour}
-              createAt={alItem.createdAt}
-              read={alItem.read}
+              key={alItem.item.id + index}
+              id={alItem.item.id}
+              result={alItem.item.result}
+              shopName={alItem.item.shop?.item?.name}
+              startsAt={alItem.item.notice?.item?.startsAt}
+              workHour={alItem.item.notice?.item?.workhour}
+              createAt={alItem.item.createdAt}
+              read={alItem.item.read}
               onClick={getAlarmId}
             />
           );
         })}
-      <div></div>
     </div>
   );
 };

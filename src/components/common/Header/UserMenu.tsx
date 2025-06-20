@@ -46,25 +46,33 @@ const UserMenu = () => {
   }, []);
 
   // 알림 목록 조회
+  const offsetRef = useRef(0);
+
   useEffect(() => {
     if (!userValue?.id || !storageData) return;
     console.log('알림 데이터 시작');
 
     const getAlarmList = async () => {
       try {
-        const res = await axios.get(`/users/${userValue.id}/alerts`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const res = await axios.get(
+          `/users/${userValue.id}/alerts?offset=${offsetRef.current}&limit=10`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
         const data = res.data;
         console.log('알림 데이터');
+        console.log(data);
 
         setAlarmList(data);
 
         // 불필요한 api 호출 막기
-        if (storageData[userValue.id]?.apply.length === data?.count) {
+        if (!data.hasNext) {
           clearInterval(alarmInterval);
+        } else {
+          offsetRef.current += 10;
         }
       } catch (error) {
         console.error('Alarm Api 호출 에러:', error);
@@ -72,10 +80,8 @@ const UserMenu = () => {
     };
 
     const alarmInterval = setInterval(() => {
-      if (userValue && storageData && storageData[userValue.id]) {
-        getAlarmList();
-      }
-    }, 3000);
+      getAlarmList();
+    }, 30000);
 
     return () => {
       clearInterval(alarmInterval);
@@ -84,11 +90,11 @@ const UserMenu = () => {
 
   // 새로운 알림 있으면 newAlarm true로 변경
   useEffect(() => {
-    const alarmCheckPoint = alarmList?.items.some(({ read }) => read === false);
-    if (alarmCheckPoint) {
+    const alarmCheckPoint = alarmList?.items.some((item) => item.item.read === false);
+    if (alarmCheckPoint && !newAlarm) {
       setNewAlarm(true);
     }
-  }, [alarmList]);
+  }, [alarmList, newAlarm]);
 
   // 알림 읽음 처리
   useEffect(() => {
@@ -104,12 +110,13 @@ const UserMenu = () => {
     };
 
     alarmRead();
-  }, [userData, alarmid, token]);
+  }, [alarmid]);
 
   const getAlarmId = (e: React.MouseEvent<HTMLDivElement>) => {
     setAlarmId(e.currentTarget.id);
   };
 
+  // 알림창 외부 클릭 시 알림창 닫힘
   const alarmRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
