@@ -121,7 +121,7 @@ export default function ResultPage() {
   const totalPages = Math.ceil(totalCount / limit);
 
   return (
-    <div className="w-full px-5 md:px-10 xl:px-40 mt-10">
+    <div className="w-full min-h-screen flex flex-col px-5 md:px-10 xl:px-40 mt-10">
       {/* 검색 + 필터 */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex flex-col gap-2">
@@ -139,50 +139,52 @@ export default function ResultPage() {
       </div>
 
       {/* 공고 없음 */}
-      {noticeList.length === 0 ? (
-        <div className="flex flex-col items-center justify-center w-full my-10">
-          <Image src="/no-result.png" alt="검색 결과 없음" width={300} height={300} />
-        </div>
-      ) : (
-        <>
-          {/* 공고 리스트 */}
-          <div className="w-full max-w-[1100px] mx-auto">
-            <ul className="grid grid-cols-2 xl:grid-cols-3 gap-x-1 gap-y-6">
-              {noticeList.map((notice) => {
-                const { item } = notice;
-                const shop = item.shop.item;
-
-                return (
-                  <NoticeCard
-                    key={item.id}
-                    info={{
-                      shopId: shop.id,
-                      noticeId: item.id,
-                      closed: item.closed,
-                      hourlyPay: item.hourlyPay,
-                      startsAt: item.startsAt,
-                      workhour: item.workhour,
-                      name: shop.name,
-                      address1: shop.address1,
-                      imageUrl: shop.imageUrl,
-                      originalHourlyPay: shop.originalHourlyPay,
-                    }}
-                  />
-                );
-              })}
-            </ul>
+      <div className="flex-grow">
+        {noticeList.length === 0 ? (
+          <div className="flex flex-col items-center justify-center w-full py-20">
+            <Image src="/no-result.png" alt="검색 결과 없음" width={300} height={300} />
           </div>
+        ) : (
+          <>
+            {/* 공고 리스트 */}
+            <div className="w-full max-w-[1100px] mx-auto">
+              <ul className="grid grid-cols-2 xl:grid-cols-3 gap-x-1 gap-y-6">
+                {noticeList.map((notice) => {
+                  const { item } = notice;
+                  const shop = item.shop.item;
 
-          {/* 페이지네이션 */}
-          {totalPages > 1 && (
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={(page) => setCurrentPage(page)}
-            />
-          )}
-        </>
-      )}
+                  return (
+                    <NoticeCard
+                      key={item.id}
+                      info={{
+                        shopId: shop.id,
+                        noticeId: item.id,
+                        closed: item.closed,
+                        hourlyPay: item.hourlyPay,
+                        startsAt: item.startsAt,
+                        workhour: item.workhour,
+                        name: shop.name,
+                        address1: shop.address1,
+                        imageUrl: shop.imageUrl,
+                        originalHourlyPay: shop.originalHourlyPay,
+                      }}
+                    />
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* 페이지네이션 */}
+            {totalPages > 1 && (
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
