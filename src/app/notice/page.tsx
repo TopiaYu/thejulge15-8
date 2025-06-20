@@ -161,6 +161,7 @@ export default function JobList() {
 
     fetchData();
   }, [sortOption, detailOption, currentPage]);
+
   return (
     <>
       <section className="bg-red-10 flex flex-col justify-center items-center py-[40px]">
@@ -277,22 +278,43 @@ export default function JobList() {
                                 >
                                   {displayMessage}
                                 </span>
-                                <div>
-                                  <Image
-                                    src="/arrow-up-bold.png"
-                                    alt="시급 인상"
-                                    width={20}
-                                    height={20}
-                                    className="hidden md:block"
-                                  />
-                                  <Image
-                                    src="/arrow-orange.png"
-                                    alt="시급 인상"
-                                    width={11}
-                                    height={11}
-                                    className="block md:hidden"
-                                  />
-                                </div>
+                                {/* 이미지 조건부 렌더링 */}
+                                {job.closed ? ( // job.closed가 true일 때
+                                  <>
+                                    <Image
+                                      src="/arrow-up-bold.png" // 모바일일 때
+                                      alt="시급 인상"
+                                      width={16} // 모바일 크기 16
+                                      height={16} // 모바일 크기 16
+                                      className="block md:hidden" // 모바일에서만 보이게
+                                    />
+                                    <Image
+                                      src="/arrow-up-bold.png" // 데스크톱일 때
+                                      alt="시급 인상"
+                                      width={20} // 데스크톱 크기 20
+                                      height={20} // 데스크톱 크기 20
+                                      className="hidden md:block" // 데스크톱에서만 보이게
+                                    />
+                                  </>
+                                ) : (
+                                  // job.closed가 false일 때
+                                  <>
+                                    <Image
+                                      src="/arrow-orange.png" // 모바일일 때
+                                      alt="시급 인상"
+                                      width={16} // 모바일 크기 16
+                                      height={16} // 모바일 크기 16
+                                      className="block md:hidden" // 모바일에서만 보이게
+                                    />
+                                    <Image
+                                      src="/arrow-up-bold.png" // 데스크톱일 때
+                                      alt="시급 인상"
+                                      width={20} // 데스크톱 크기 20
+                                      height={20} // 데스크톱 크기 20
+                                      className="hidden md:block" // 데스크톱에서만 보이게
+                                    />
+                                  </>
+                                )}
                               </div>
                             )}
                           </section>
@@ -428,26 +450,42 @@ export default function JobList() {
                           >
                             {displayMessage}
                           </span>
-                          {job.closed ? (
-                            <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                          {/* 이미지 조건부 렌더링 */}
+                          {job.closed ? ( // job.closed가 true일 때
+                            <>
                               <Image
-                                src="/arrow-up-bold.png"
+                                src="/arrow-up-bold.png" // 모바일일 때
                                 alt="시급 인상"
-                                fill
-                                style={{ objectFit: 'contain' }}
-                                className="block"
+                                width={16} // 모바일 크기 16
+                                height={16} // 모바일 크기 16
+                                className="block md:hidden" // 모바일에서만 보이게
                               />
-                            </div>
+                              <Image
+                                src="/arrow-up-bold.png" // 데스크톱일 때
+                                alt="시급 인상"
+                                width={20} // 데스크톱 크기 20
+                                height={20} // 데스크톱 크기 20
+                                className="hidden md:block" // 데스크톱에서만 보이게
+                              />
+                            </>
                           ) : (
-                            <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                            // job.closed가 false일 때
+                            <>
                               <Image
-                                src="/arrow-orange.png"
+                                src="/arrow-orange.png" // 모바일일 때
                                 alt="시급 인상"
-                                fill
-                                style={{ objectFit: 'contain' }}
-                                className="block"
+                                width={16} // 모바일 크기 16
+                                height={16} // 모바일 크기 16
+                                className="block md:hidden" // 모바일에서만 보이게
                               />
-                            </div>
+                              <Image
+                                src="/arrow-up-bold.png" // 데스크톱일 때
+                                alt="시급 인상"
+                                width={20} // 데스크톱 크기 20
+                                height={20} // 데스크톱 크기 20
+                                className="hidden md:block" // 데스크톱에서만 보이게
+                              />
+                            </>
                           )}
                         </div>
                       )}
