@@ -47,6 +47,7 @@ const Search = ({ value, onChange }: SearchProps) => {
     if (validate) {
       router.push(`/result?keyword=${value}`);
     }
+    setFocus(false);
   };
 
   const handleFocus = () => {
@@ -63,7 +64,6 @@ const Search = ({ value, onChange }: SearchProps) => {
     }
     setFocus(false);
     setLiIndex(-1);
-    setIsOpen(false);
   };
 
   const liClickHandler = (e: React.MouseEvent<HTMLLIElement>) => {
@@ -76,6 +76,7 @@ const Search = ({ value, onChange }: SearchProps) => {
     }
     setIsBlurBlocking(true);
     setLiIndex(-1);
+    setFocus(false);
   };
 
   const handleArrowBtn = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -146,6 +147,10 @@ const Search = ({ value, onChange }: SearchProps) => {
     }
   }, [value]);
 
+  console.log(value.length);
+  console.log(isFocus);
+  console.log(isOpen);
+
   return (
     <div className="col-span-2 lg:max-w-[450px] md:max-w-[340px] w-full flex flex-col relative">
       <form
@@ -194,7 +199,7 @@ const Search = ({ value, onChange }: SearchProps) => {
             })}
         </ul>
       ) : null}
-      {recommend.length > 0 && value.length > 0 && isOpen ? (
+      {isFocus && recommend.length > 0 && value.length > 0 && isOpen ? (
         <ul className="w-full absolute top-11 z-50 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
           {recommend.map((item, index) => {
             if (!item) return;
