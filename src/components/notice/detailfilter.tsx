@@ -100,7 +100,6 @@ export default function DetailFilter() {
                   </button>
                 </div>
 
-                {/* 위치 필터 */}
                 <div className="flex flex-col gap-[12px]">
                   <div className="text-base">위치</div>
                   <div className="grid gap-x-[61px] gap-y-[20px] grid-cols-2 overflow-y-auto border rounded-md border-gray-200 h-[258px] p-[20px]">
@@ -148,7 +147,6 @@ export default function DetailFilter() {
 
                 <hr className="border-gray-200" />
 
-                {/* 시작일 필터 */}
                 <div className="grid gap-[8px]">
                   <label>시작일</label>
                   <input
@@ -165,7 +163,6 @@ export default function DetailFilter() {
                   />
                 </div>
 
-                {/* 금액 필터 */}
                 <div className="grid gap-[8px]">
                   <label>금액</label>
                   <div className="flex gap-[12px] items-center">
@@ -202,7 +199,6 @@ export default function DetailFilter() {
                   </div>
                 </div>
 
-                {/* 버튼 */}
                 <div className="flex gap-[8px] h-[49px]">
                   <button
                     className="border border-red-500 text-red-500 w-[82px] h-full rounded-md font-bold cursor-pointer"
