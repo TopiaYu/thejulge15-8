@@ -184,170 +184,171 @@ export default function JobList() {
       {isLoading ? (
         <MySpinner isLoading={isLoading} />
       ) : (
-        <div>
+        <div className="">
           <section className="bg-red-10 flex flex-col justify-center items-center py-[40px]">
             <div className="w-full flex flex-col max-w-[964px] px-4">
               <h1 className="text-black text-xl md:text-2xl font-bold mb-[16px] md:mb-[31px] w-full flex justify-start px-4">
                 맞춤 공고
               </h1>
+              <div className="">
+                <div className="w-full lg:w-[980px] overflow-x-auto scrollbar-hide">
+                  <div className="max-w-[980px] w-full mx-auto">
+                    <div className="flex gap-4 justify-center md:justify-start min-w-max">
+                      {recommendList.map((job) => {
+                        const originalPay = job.shop.item.originalHourlyPay;
+                        const currentPay = job.hourlyPay;
 
-              <div className="w-full overflow-x-auto md:overflow-visible scrollbar-hide bg-red-10">
-                <div className="w-full max-w-[968px] mx-auto px-4">
-                  <div className="flex gap-4 md:min-w-[964px] md:min-w-0 justify-start">
-                    {recommendList.map((job) => {
-                      const originalPay = job.shop.item.originalHourlyPay;
-                      const currentPay = job.hourlyPay;
+                        let percentageIncrease = 0;
+                        let displayMessage = '';
+                        let shouldDisplayIncreaseInfo = false;
 
-                      let percentageIncrease = 0;
-                      let displayMessage = '';
-                      let shouldDisplayIncreaseInfo = false;
+                        if (originalPay > 0 && currentPay > originalPay) {
+                          percentageIncrease = ((currentPay - originalPay) / originalPay) * 100;
+                          displayMessage = `${Math.round(percentageIncrease)}%`;
+                          shouldDisplayIncreaseInfo = true;
+                        } else if (currentPay > 0 && originalPay === 0) {
+                          displayMessage = '새로운 시급';
+                          shouldDisplayIncreaseInfo = true;
+                        }
 
-                      if (originalPay > 0 && currentPay > originalPay) {
-                        percentageIncrease = ((currentPay - originalPay) / originalPay) * 100;
-                        displayMessage = `${Math.round(percentageIncrease)}%`;
-                        shouldDisplayIncreaseInfo = true;
-                      } else if (currentPay > 0 && originalPay === 0) {
-                        displayMessage = '새로운 시급';
-                        shouldDisplayIncreaseInfo = true;
-                      }
-
-                      return (
-                        <div
-                          key={job.id}
-                          className="w-[171px] h-[261px] p-[12px] md:w-[312px] md:h-[349px] md:p-[14px] bg-white border border-gray-200 rounded-xl shrink-0"
-                        >
-                          <Link href={`/notice/${job.shop.item.id}/${job.id}`}>
-                            <div className="flex flex-col gap-[16px]">
-                              <section className="flex flex-col gap-[8px]">
-                                <div className="relative w-[147px] h-[84px] md:w-[280px] md:h-[160px]">
-                                  <Image
-                                    src={job.shop.item.imageUrl}
-                                    alt="가게 이미지"
-                                    fill
-                                    className="rounded-xl object-cover"
-                                  />
-                                  {job.closed && (
-                                    <div className="absolute top-0 left-0 w-full h-full bg-black/60 rounded-xl flex justify-center items-center z-10">
-                                      <span className="text-white font-bold text-lg">
-                                        지난 공고
-                                      </span>
-                                    </div>
-                                  )}
-                                </div>
-                                <label className="text-base font-bold md:text-xl">
-                                  {job.shop.item.name}
-                                </label>
-                                <div className="flex gap-[6px] h-[20px]">
-                                  <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                        return (
+                          <div
+                            key={job.id}
+                            className="w-[171px] h-[261px] p-[12px] md:w-[312px] md:h-[349px] md:p-[14px] bg-white border border-gray-200 rounded-xl shrink-0"
+                          >
+                            <Link href={`/notice/${job.shop.item.id}/${job.id}`}>
+                              <div className="flex flex-col gap-[16px]">
+                                <section className="flex flex-col gap-[8px]">
+                                  <div className="relative w-[147px] h-[84px] md:w-[280px] md:h-[160px]">
                                     <Image
-                                      src={
-                                        job.closed ? '/clock-closed-icon.png' : '/clock-icon.png'
-                                      }
-                                      alt="일시"
+                                      src={job.shop.item.imageUrl}
+                                      alt="가게 이미지"
                                       fill
-                                      className="object-contain"
+                                      className="rounded-xl object-cover"
                                     />
-                                  </div>
-                                  <span
-                                    className={`text-xs ${job.closed ? 'text-gray-30' : 'text-gray-50'} md:text-sm`}
-                                  >
-                                    {new Date(job.startsAt).toLocaleDateString('ko-KR', {
-                                      year: 'numeric',
-                                      month: '2-digit',
-                                      day: '2-digit',
-                                    })}
-                                  </span>
-                                  <span
-                                    className={`text-xs ${job.closed ? 'text-gray-30' : 'text-gray-50'} md:text-sm`}
-                                  >
-                                    ({job.workhour}시간)
-                                  </span>
-                                </div>
-                                <div className="flex gap-[6px] h-[20px]">
-                                  <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
-                                    <Image
-                                      src={
-                                        job.closed
-                                          ? '/location-closed-icon.png'
-                                          : '/location-icon.png'
-                                      }
-                                      alt="장소"
-                                      fill
-                                      className="object-contain"
-                                    />
-                                  </div>
-                                  <span className="text-xs text-gray-50 md:text-sm">
-                                    {job.shop.item.address1}
-                                  </span>
-                                </div>
-                              </section>
-                              <section className="flex flex-col justify-between items-start md:flex-row md:items-center">
-                                <span className="font-bold text-lg md:text-2xl">
-                                  {job.hourlyPay.toLocaleString()}원
-                                </span>
-                                {shouldDisplayIncreaseInfo && (
-                                  <div
-                                    className={`flex justify-center items-center rounded-[20px] pt-[8px] md:pb-[8px] md:pr-[12px] md:pl-[12px] ${
-                                      job.closed ? 'md:bg-gray-20' : 'md:bg-red-40'
-                                    }`}
-                                  >
-                                    <span
-                                      className={`text-xs sm:text-sm ${
-                                        job.closed ? 'text-gray-30' : 'text-red-40'
-                                      } md:text-white`}
-                                    >
-                                      기존 시급보다{' '}
-                                    </span>
-                                    <span
-                                      className={`text-xs md:text-sm ${
-                                        job.closed ? 'text-gray-30' : 'text-red-40'
-                                      } md:text-white`}
-                                    >
-                                      {displayMessage}
-                                    </span>
-                                    {job.closed ? (
-                                      <>
-                                        <Image
-                                          src="/arrow-up-bold.png"
-                                          alt="시급 인상"
-                                          width={16}
-                                          height={16}
-                                          className="block md:hidden"
-                                        />
-                                        <Image
-                                          src="/arrow-up-bold.png"
-                                          alt="시급 인상"
-                                          width={20}
-                                          height={20}
-                                          className="hidden md:block"
-                                        />
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Image
-                                          src="/arrow-orange.png"
-                                          alt="시급 인상"
-                                          width={16}
-                                          height={16}
-                                          className="block md:hidden"
-                                        />
-                                        <Image
-                                          src="/arrow-up-bold.png"
-                                          alt="시급 인상"
-                                          width={20}
-                                          height={20}
-                                          className="hidden md:block"
-                                        />
-                                      </>
+                                    {job.closed && (
+                                      <div className="absolute top-0 left-0 w-full h-full bg-black/60 rounded-xl flex justify-center items-center z-10">
+                                        <span className="text-white font-bold text-lg">
+                                          지난 공고
+                                        </span>
+                                      </div>
                                     )}
                                   </div>
-                                )}
-                              </section>
-                            </div>
-                          </Link>
-                        </div>
-                      );
-                    })}
+                                  <label className="text-base font-bold md:text-xl">
+                                    {job.shop.item.name}
+                                  </label>
+                                  <div className="flex gap-[6px] h-[20px]">
+                                    <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                                      <Image
+                                        src={
+                                          job.closed ? '/clock-closed-icon.png' : '/clock-icon.png'
+                                        }
+                                        alt="일시"
+                                        fill
+                                        className="object-contain"
+                                      />
+                                    </div>
+                                    <span
+                                      className={`text-xs ${job.closed ? 'text-gray-30' : 'text-gray-50'} md:text-sm`}
+                                    >
+                                      {new Date(job.startsAt).toLocaleDateString('ko-KR', {
+                                        year: 'numeric',
+                                        month: '2-digit',
+                                        day: '2-digit',
+                                      })}
+                                    </span>
+                                    <span
+                                      className={`text-xs ${job.closed ? 'text-gray-30' : 'text-gray-50'} md:text-sm`}
+                                    >
+                                      ({job.workhour}시간)
+                                    </span>
+                                  </div>
+                                  <div className="flex gap-[6px] h-[20px]">
+                                    <div className="relative w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                                      <Image
+                                        src={
+                                          job.closed
+                                            ? '/location-closed-icon.png'
+                                            : '/location-icon.png'
+                                        }
+                                        alt="장소"
+                                        fill
+                                        className="object-contain"
+                                      />
+                                    </div>
+                                    <span className="text-xs text-gray-50 md:text-sm">
+                                      {job.shop.item.address1}
+                                    </span>
+                                  </div>
+                                </section>
+                                <section className="flex flex-col justify-between items-start md:flex-row md:items-center">
+                                  <span className="font-bold text-lg md:text-2xl">
+                                    {job.hourlyPay.toLocaleString()}원
+                                  </span>
+                                  {shouldDisplayIncreaseInfo && (
+                                    <div
+                                      className={`flex justify-center items-center rounded-[20px] pt-[8px] md:pb-[8px] md:pr-[12px] md:pl-[12px] ${
+                                        job.closed ? 'md:bg-gray-20' : 'md:bg-red-40'
+                                      }`}
+                                    >
+                                      <span
+                                        className={`text-xs sm:text-sm ${
+                                          job.closed ? 'text-gray-30' : 'text-red-40'
+                                        } md:text-white`}
+                                      >
+                                        기존 시급보다{' '}
+                                      </span>
+                                      <span
+                                        className={`text-xs md:text-sm ${
+                                          job.closed ? 'text-gray-30' : 'text-red-40'
+                                        } md:text-white`}
+                                      >
+                                        {displayMessage}
+                                      </span>
+                                      {job.closed ? (
+                                        <>
+                                          <Image
+                                            src="/arrow-up-bold.png"
+                                            alt="시급 인상"
+                                            width={16}
+                                            height={16}
+                                            className="block md:hidden"
+                                          />
+                                          <Image
+                                            src="/arrow-up-bold.png"
+                                            alt="시급 인상"
+                                            width={20}
+                                            height={20}
+                                            className="hidden md:block"
+                                          />
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Image
+                                            src="/arrow-orange.png"
+                                            alt="시급 인상"
+                                            width={16}
+                                            height={16}
+                                            className="block md:hidden"
+                                          />
+                                          <Image
+                                            src="/arrow-up-bold.png"
+                                            alt="시급 인상"
+                                            width={20}
+                                            height={20}
+                                            className="hidden md:block"
+                                          />
+                                        </>
+                                      )}
+                                    </div>
+                                  )}
+                                </section>
+                              </div>
+                            </Link>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
