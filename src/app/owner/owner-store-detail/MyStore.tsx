@@ -24,7 +24,7 @@ export default function MyStore() {
     const shopFromAuthData = localStorage.getItem('auth-data');
     if (storedShop) {
       setShop(JSON.parse(storedShop));
-    } else {
+    } else if (shopFromAuthData) {
       const authData = JSON.parse(shopFromAuthData);
       const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item;
       setShop(shopDetails);

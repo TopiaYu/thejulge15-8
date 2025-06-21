@@ -3,6 +3,7 @@
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import useAuth from '@/lib/hooks/use-auth';
 
 // categories와 seoulcity 배열을 여기에 정의하여 전역적으로 접근 가능하게 합니다.
 const categories = ['한식', '중식', '일식', '양식', '분식'];
@@ -68,6 +69,8 @@ export default function Page() {
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false); // 편집 모드 상태
   const [shopId, setShopId] = useState<string | null>(null); // 편집할 가게의 ID
+
+  const { updateUserData } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -244,6 +247,10 @@ export default function Page() {
 
       // 성공적으로 등록/업데이트된 가게 정보를 localStorage에 저장
       localStorage.setItem('registeredShop', JSON.stringify(responseData.item));
+      // 등록하면서 동시에 useAuth의 shop에도 저장
+      const newShopData = responseData.item;
+      updateUserData({ shop: newShopData });
+
       setShowModal(true); // 모달 표시
     } catch (err) {
       if (err instanceof Error) {
@@ -265,7 +272,11 @@ export default function Page() {
   };
 
   const handleClose = () => {
-    router.push('/owner/owner-store-detail'); // 소유주 메인 페이지로 이동
+    if (shopId) {
+      router.push('/owner/owner-store-detail'); // 소유주 메인 페이지로 이동
+    } else {
+      router.push('/owner'); // 가게 id 없으면 다시 owner로 보내기
+    }
   };
 
   const handleSelect = (key: keyof typeof form, value: string) => {

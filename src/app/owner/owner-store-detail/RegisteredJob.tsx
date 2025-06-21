@@ -80,14 +80,6 @@ export default function RegisteredJob() {
 
   const [shopId, setShopId] = useState<string>(''); //shopId 저장
 
-  useEffect(() => {
-    const storedShop = localStorage.getItem('registeredShop');
-    if (storedShop) {
-      const paredShop: ShopDetail = JSON.parse(storedShop);
-      setShopId(paredShop.id);
-    }
-  }, []);
-
   // (추후 로직 변경) 로그아웃하면서 로컬스토리지가 사라질 경우 유저의 id를 반영해서 shop정보 가져오기
   useEffect(() => {
     const storedShop = localStorage.getItem('registeredShop');
@@ -95,7 +87,7 @@ export default function RegisteredJob() {
     if (storedShop) {
       const paredShop: ShopDetail = JSON.parse(storedShop);
       setShopId(paredShop.id);
-    } else {
+    } else if (shopFromAuthData) {
       // 로그아웃하면서 로컬스토리지가 사라질 경우 유저의 id를 반영해서 shop정보 가져오기
       const authData = JSON.parse(shopFromAuthData);
       const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item?.id;
