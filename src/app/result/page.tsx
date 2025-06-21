@@ -10,7 +10,7 @@ import Pagination from '@/components/member/myprofile/Pagination';
 
 import Image from 'next/image';
 import axios from '@/lib/api/axios';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 // 정렬값 변환
@@ -117,7 +117,7 @@ function ResultPageContent() {
     };
 
     getNotices();
-  }, [keyword, sortOption, detailOption, currentPage]);
+  }, [keyword, sortOption, detailOption, currentPage, limit]);
 
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -141,7 +141,11 @@ function ResultPageContent() {
 
       {/* 공고 없음 */}
       <div className="flex-grow">
-        {noticeList.length === 0 ? (
+        {noticeList.length === 0 && !keyword ? (
+          <div className="flex flex-col items-center justify-center w-full py-20">
+            <p>검색 결과가 없습니다.</p>
+          </div>
+        ) : noticeList.length === 0 && keyword ? (
           <div className="flex flex-col items-center justify-center w-full py-20">
             <Image src="/no-result.png" alt="검색 결과 없음" width={300} height={300} />
           </div>
