@@ -105,8 +105,13 @@ function JobPostFormPage() {
     // 등록 모드: URL에 noticeId가 없을 때
     else {
       setIsEditMode(false);
+      const storedShop = localStorage.getItem('registeredShop');
       const shopFromAuthData = localStorage.getItem('auth-data');
-      if (shopFromAuthData) {
+      if (storedShop) {
+        const storedShopId = JSON.parse(storedShop);
+        setShopId(storedShopId.id);
+      } else if (shopFromAuthData) {
+        //auth-data에서 shop-id 받아오기
         const authData = JSON.parse(shopFromAuthData);
         const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item?.id;
         setShopId(shopDetails);
