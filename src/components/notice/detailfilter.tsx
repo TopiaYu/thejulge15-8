@@ -219,7 +219,6 @@ export default function DetailFilter() {
                   <button
                     className="font-bold bg-red-500 text-white rounded-md w-full h-[48px] cursor-pointer"
                     onClick={() => {
-                      console.log(detailOption);
                       setDetailOpen(false);
                       setDetailOption(selectOption);
                     }}
