@@ -10,6 +10,7 @@ import Pagination from '@/components/member/myprofile/Pagination';
 
 import Image from 'next/image';
 import axios from '@/lib/api/axios';
+import { usePathname, useRouter } from 'next/navigation';
 
 // 정렬값 변환
 const convertSortToQuery = (sort: string): string | undefined => {
@@ -83,15 +84,22 @@ interface ShopNotice {
 }
 
 export default function ResultPage() {
-  const searchParams = new URLSearchParams(window.location.search);
+  const router = useRouter();
+  const pathname = usePathname();
+  const [searchParams, setSearchParams] = useState<URLSearchParams>();
   const { sortOption } = useSortOption();
   const { detailOption } = useDetailOption();
 
-  const keyword = searchParams.get('keyword') || '';
+  const keyword = searchParams?.get('keyword') || '';
   const [noticeList, setNoticeList] = useState<ShopNotice[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 6;
+
+  useEffect(() => {
+    const url = new URLSearchParams(window.location.search);
+    setSearchParams(url);
+  }, [pathname]);
 
   useEffect(() => {
     const getNotices = async () => {
@@ -120,7 +128,7 @@ export default function ResultPage() {
   const totalPages = Math.ceil(totalCount / limit);
 
   return (
-    <div className="w-full min-h-screen flex flex-col px-5 md:px-10 xl:px-40 mt-10">
+    <div className="max-w-[964px] w-full min-h-screen flex flex-col lg:mx-auto lg:px-0 md:mx-0 md:px-8 px-[13px] mt-10 ">
       {/* 검색 + 필터 */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex flex-col gap-2">
@@ -146,7 +154,7 @@ export default function ResultPage() {
         ) : (
           <>
             {/* 공고 리스트 */}
-            <div className="w-full max-w-[1100px] mx-auto">
+            <div className="w-full max-w-[1100px] mx-auto mb-7 md:mb-10">
               <ul className="flex flex-wrap items-center gap-x-2 gap-y-4 md:gap-x-3.5 sm:gap-y-8">
                 {noticeList.map((notice) => {
                   const { item } = notice;
