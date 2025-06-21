@@ -1,6 +1,6 @@
 const InputValidator = (value: string) => {
   const valueTrim = value.trim();
-  const regex = /[^가-힣a-zA-Z0-9]/g;
+  const regex = /[^가-힣a-zA-Z0-9 ]/g;
 
   if (!valueTrim) {
     // 빈 문자열 검사

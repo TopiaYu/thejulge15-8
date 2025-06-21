@@ -24,6 +24,7 @@ const Search = ({ value, onChange }: SearchProps) => {
   const [liIndex, setLiIndex] = useState(-1);
   const [isOpen, setIsOpen] = useState(true);
   const ref = useRef<HTMLInputElement>(null);
+  const searchEl = useRef<HTMLInputElement>(null);
   const recentlyRef = useRef<(HTMLLIElement | null)[]>([]);
   const recommendRef = useRef<(HTMLLIElement | null)[]>([]);
   const router = useRouter();
@@ -147,12 +148,23 @@ const Search = ({ value, onChange }: SearchProps) => {
     }
   }, [value]);
 
-  console.log(value.length);
-  console.log(isFocus);
-  console.log(isOpen);
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (searchEl.current && !searchEl.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [isOpen]);
 
   return (
-    <div className="col-span-2 lg:max-w-[450px] md:max-w-[340px] w-full flex flex-col relative">
+    <div
+      ref={searchEl}
+      className="col-span-2 lg:max-w-[450px] md:max-w-[340px] w-full flex flex-col relative"
+    >
       <form
         className="mr-auto lg:max-w-[450px] md:max-w-[340px] w-full relative flex items-center col-start-1 row-start-2 col-span-2 text-sm sm:text-base sm:leading-[20px]"
         onSubmit={handleSubmit}
@@ -171,7 +183,7 @@ const Search = ({ value, onChange }: SearchProps) => {
           placeholder="가게 이름으로 찾아보세요"
           autoComplete="off"
           ref={ref}
-          value={value}
+          value={value.trim()}
           onChange={(e) => onChange(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
