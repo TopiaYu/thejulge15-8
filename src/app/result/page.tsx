@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { useSortOption, useDetailOption } from '@/lib/hooks/zustand';
 
 import NoticeCard from '@/components/notice-detail/NoticeCard';
@@ -84,7 +83,7 @@ interface ShopNotice {
 }
 
 export default function ResultPage() {
-  const searchParams = useSearchParams();
+  const searchParams = new URLSearchParams(window.location.search);
   const { sortOption } = useSortOption();
   const { detailOption } = useDetailOption();
 
