@@ -68,7 +68,7 @@ export default function MyJobPost({
     const dateStr = `${startDate.getFullYear()}-${pad(startDate.getMonth() + 1)}-${pad(startDate.getDate())}`;
     const startTimeStr = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
     const endTimeStr = `${pad(endDate.getHours())}:${pad(endDate.getMinutes())}`;
-    return `${dateStr} ${startTimeStr}~${endTimeStr}(${workhour}시간)`;
+    return `${dateStr} ${startTimeStr}~${endTimeStr} (${workhour}시간)`;
   }
   const displayTime = formatJobTime(notice.startsAt, notice.workhour);
 
