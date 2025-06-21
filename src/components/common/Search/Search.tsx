@@ -17,12 +17,10 @@ interface Recommend {
 }
 
 const Search = ({ value, onChange }: SearchProps) => {
-  const [isFocus, setFocus] = useState<boolean>(false);
-  const [isBlurBlocking, setIsBlurBlocking] = useState(false);
   const [recently, setRecently] = useState<string[]>([]);
   const [recommend, setRecommend] = useState<Recommend[]>([]);
   const [liIndex, setLiIndex] = useState(-1);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
   const searchEl = useRef<HTMLInputElement>(null);
   const recentlyRef = useRef<(HTMLLIElement | null)[]>([]);
@@ -48,22 +46,14 @@ const Search = ({ value, onChange }: SearchProps) => {
     if (validate) {
       router.push(`/result?keyword=${value}`);
     }
-    setFocus(false);
   };
 
   const handleFocus = () => {
-    if (value.length === 0) {
-      setFocus(true);
-      setIsOpen(true);
-    }
+    setIsDropDownOpen(true);
   };
 
   const handleBlur = () => {
-    if (isBlurBlocking) {
-      setIsBlurBlocking(false);
-      return;
-    }
-    setFocus(false);
+    setTimeout(() => setIsDropDownOpen(false), 100);
     setLiIndex(-1);
   };
 
@@ -75,9 +65,8 @@ const Search = ({ value, onChange }: SearchProps) => {
       ref.current?.focus();
       router.push(`/result?keyword=${value}`);
     }
-    setIsBlurBlocking(true);
     setLiIndex(-1);
-    setFocus(false);
+    setIsDropDownOpen(false);
   };
 
   const handleArrowBtn = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -91,6 +80,7 @@ const Search = ({ value, onChange }: SearchProps) => {
         onChange(selectedItem);
         router.push(`/result?keyword=${selectedItem}`);
       }
+      setIsDropDownOpen(false);
       return;
     }
 
@@ -144,21 +134,21 @@ const Search = ({ value, onChange }: SearchProps) => {
     }
 
     if (ref.current === document.activeElement && value.length === 0) {
-      setFocus(true);
+      setIsDropDownOpen(true);
     }
   }, [value]);
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (searchEl.current && !searchEl.current.contains(e.target as Node)) {
-        setIsOpen(false);
+        setIsDropDownOpen(false);
       }
     };
     document.addEventListener('click', handleOutsideClick);
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
-  }, [isOpen]);
+  }, [isDropDownOpen]);
 
   return (
     <div
@@ -183,14 +173,14 @@ const Search = ({ value, onChange }: SearchProps) => {
           placeholder="가게 이름으로 찾아보세요"
           autoComplete="off"
           ref={ref}
-          value={value.trim()}
+          value={value}
           onChange={(e) => onChange(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onKeyDown={handleArrowBtn}
         />
       </form>
-      {isFocus && value.length === 0 && recently.length > 0 && isOpen ? (
+      {isDropDownOpen && recently.length > 0 ? (
         <ul className="w-full absolute top-11 z-50 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
           {recently.length !== 0 &&
             recently.map((item, index) => {
@@ -211,7 +201,7 @@ const Search = ({ value, onChange }: SearchProps) => {
             })}
         </ul>
       ) : null}
-      {isFocus && recommend.length > 0 && value.length > 0 && isOpen ? (
+      {isDropDownOpen && recommend.length > 0 && value.length > 0 ? (
         <ul className="w-full absolute top-11 z-50 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
           {recommend.map((item, index) => {
             if (!item) return;
