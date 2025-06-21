@@ -13,6 +13,7 @@ import Image from 'next/image';
 import axios from '@/lib/api/axios';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+import MySpinner from '@/components/common/Spinner';
 
 // 정렬값 변환
 const convertSortToQuery = (sort: string): string | undefined => {
@@ -172,7 +173,7 @@ function ResultPageContent() {
 
 export default function ResultPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<MySpinner isLoading={true} />}>
       <ResultPageContent />
     </Suspense>
   );
