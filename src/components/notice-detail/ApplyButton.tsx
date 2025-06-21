@@ -189,7 +189,7 @@ const ApplyButton = ({ shopId, noticeId, closed, isPast }: ApplyBtnProps) => {
     <>
       <button
         type="button"
-        className={`${closed || isPast ? 'bg-gray-40 text-white' : className} w-full h-12 rounded-md font-bold text-sm sm:text-base cursor-pointer`}
+        className={`${closed || isPast ? 'bg-gray-40 text-white !cursor-default' : className} w-full h-12 rounded-md font-bold text-sm sm:text-base cursor-pointer`}
         onClick={getHandler() || undefined}
       >
         {getButtonText()}

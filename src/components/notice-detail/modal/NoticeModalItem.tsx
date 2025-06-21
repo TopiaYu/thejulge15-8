@@ -15,7 +15,7 @@ const NoticeModalItem = ({ status, handler, modalClose }: ModalProps) => {
   const { userData } = useAuth();
   const router = useRouter();
   const boxClassName =
-    'max-w-[298px] w-full relative -top-35 flex flex-col justify-center items-center bg-white p-6 rounded-xl text-base leading-[26px]';
+    'max-w-[298px] w-full relative flex flex-col justify-center items-center bg-white p-6 rounded-xl text-base leading-[26px]';
   const whiteButton =
     'border border-solid border-orange text-sm text-orange rounded-md py-2.5 px-5 cursor-pointer';
   const orangeButton = 'bg-orange text-sm text-white rounded-md py-2.5 px-5 cursor-pointer';

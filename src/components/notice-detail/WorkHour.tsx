@@ -12,12 +12,14 @@ const WorkHour = ({ startsAt, workhour, className }: WorkHourProps) => {
   const day = String(date?.getDate()).padStart(2, '0');
   const hour = String(date?.getHours()).padStart(2, '0');
   const minute = String(date?.getMinutes()).padStart(2, '0');
+  const addHour = Number(hour) + workhour;
+  const endHour = addHour > 24 ? addHour - 24 : addHour;
   return (
     <>
       <div className={className}>
         <Image src={'/time.png'} fill alt="시간" />
       </div>
-      {`${year}-${month}-${day} ${hour}:${minute}~${Number(hour) + workhour}:${minute} (${workhour}시간)`}
+      {`${year}-${month}-${day} ${hour}:${minute}~${endHour}:${minute} (${workhour}시간)`}
     </>
   );
 };

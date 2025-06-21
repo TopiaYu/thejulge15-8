@@ -164,6 +164,7 @@ const Search = ({ value, onChange }: SearchProps) => {
           type="text"
           name="keyword"
           placeholder="가게 이름으로 찾아보세요"
+          autoComplete="off"
           ref={ref}
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -173,7 +174,7 @@ const Search = ({ value, onChange }: SearchProps) => {
         />
       </form>
       {isFocus && value.length === 0 && recently.length > 0 && isOpen ? (
-        <ul className="w-full absolute top-11 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
+        <ul className="w-full absolute top-11 z-50 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
           {recently.length !== 0 &&
             recently.map((item, index) => {
               if (!item) return;
@@ -194,7 +195,7 @@ const Search = ({ value, onChange }: SearchProps) => {
         </ul>
       ) : null}
       {recommend.length > 0 && value.length > 0 && isOpen ? (
-        <ul className="w-full absolute top-11 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
+        <ul className="w-full absolute top-11 z-50 rounded-md p-1 flex flex-col gap-1 border border-solid border-gray-20 bg-gray-10">
           {recommend.map((item, index) => {
             if (!item) return;
             return (
