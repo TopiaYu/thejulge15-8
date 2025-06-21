@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { json } from 'stream/consumers';
 
 interface ShopData {
   name: string;
@@ -17,12 +18,29 @@ interface ShopData {
 export default function MyStore() {
   const [shop, setShop] = useState<ShopData | null>(null);
 
+  // (추후 로직 변경) 로그아웃하면서 로컬스토리지가 사라질 경우 유저의 id를 반영해서 shop정보 가져오기
   useEffect(() => {
     const storedShop = localStorage.getItem('registeredShop');
+    const shopFromAuthData = localStorage.getItem('auth-data');
     if (storedShop) {
       setShop(JSON.parse(storedShop));
+    } else if (shopFromAuthData) {
+      const authData = JSON.parse(shopFromAuthData);
+      const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item;
+      setShop(shopDetails);
     }
   }, []);
+
+  // useEffect(() => {
+  //   const shopFromAuthData = localStorage.getItem('auth-data');
+  //   if (shopFromAuthData) {
+  //     const authData = JSON.parse(shopFromAuthData);
+  //     const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item;
+  //     setShop(shopDetails);
+  //   } else {
+  //     console.error();
+  //   }
+  // }, []);
 
   const router = useRouter();
   const handleButton = () => {
@@ -53,7 +71,7 @@ export default function MyStore() {
   }
 
   return (
-    <div className="w-full max-w-[964px] px-8 max-[375px]:px-4 mx-auto mb-15">
+    <div className="w-full max-w-[1028px] px-8 max-[376px]:px-4 mx-auto mb-15">
       <header className="mt-15 mb-6">
         <h1 className="text-2xl max-[374px]:text-lg font-bold">내 가게</h1>
       </header>
@@ -61,9 +79,15 @@ export default function MyStore() {
         className="w-full border border-gray-20 grid grid-cols-1 gap-8 p-6 rounded-2xl bg-red-10
                     md:grid-cols-[1fr_minmax(0,346px)]"
       >
-        <div className="w-full border-0 rounded-xl bg-gray-200 flex items-center justify-center overflow-hidden">
+        <div className="w-full aspect-video h-full border-0 rounded-xl bg-gray-200 flex items-center justify-center overflow-hidden relative">
           {shop.imageUrl ? (
-            <img src={shop.imageUrl} alt={shop.name} className="w-full h-full object-cover" />
+            <Image
+              src={shop.imageUrl}
+              alt={shop.name}
+              layout="fill"
+              objectFit="cover"
+              className="w-full h-full object-cover"
+            />
           ) : (
             <span className="text-gray-500">이미지 없음</span>
           )}

@@ -6,6 +6,7 @@ import Modal from '@/components/member/Modal';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useToken from '@/lib/hooks/use-token';
 import axiosInstance from '@/lib/api/axios';
+import RouterGuard from '@/components/common/RouterGuard';
 
 interface JobPostRequestBody {
   hourlyPay: number;
@@ -35,8 +36,7 @@ interface JobPostDetailResponseItem {
     href: string;
   };
 }
-
-export default function JobPostFormPage() {
+function JobPostFormPage() {
   // 폼 입력 값 상태
   const [hourlyPay, setHourlyPay] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
@@ -106,12 +106,17 @@ export default function JobPostFormPage() {
     else {
       setIsEditMode(false);
       const storedShop = localStorage.getItem('registeredShop');
+      const shopFromAuthData = localStorage.getItem('auth-data');
       if (storedShop) {
-        const parsedShop = JSON.parse(storedShop);
-        setShopId(parsedShop.id);
+        const storedShopId = JSON.parse(storedShop);
+        setShopId(storedShopId.id);
+      } else if (shopFromAuthData) {
+        //auth-data에서 shop-id 받아오기
+        const authData = JSON.parse(shopFromAuthData);
+        const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item?.id;
+        setShopId(shopDetails);
       } else {
-        alert('가게 정보가 없습니다. 가게를 먼저 등록해주세요.');
-        router.push('/owner');
+        console.error('에러 발생');
       }
       setFormLoading(false);
     }
@@ -292,3 +297,5 @@ export default function JobPostFormPage() {
     </div>
   );
 }
+
+export default RouterGuard(JobPostFormPage, ['employer']);

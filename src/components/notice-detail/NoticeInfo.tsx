@@ -3,6 +3,7 @@ import WorkHour from './WorkHour';
 import NoticeImage from './NoticeImage';
 import ApplyButton from './ApplyButton';
 import Image from 'next/image';
+import useAuth from '@/lib/hooks/use-auth';
 
 interface NoticeInfo {
   noticeId: string;
@@ -22,6 +23,7 @@ interface NoticeInfo {
 }
 
 const NoticeInfo = ({ info, isPast }: { info: NoticeInfo; isPast: boolean }) => {
+  const { userData } = useAuth();
   const className =
     'relative p-6 w-full rounded-xl overflow-hidden min-h-[178px] sm:h-full mb-3 md:mb-0 sm:mb-4';
   const rateArrow = 'relative w-[11px] h-[11px] sm:w-[13px] sm:h-[13px]';
@@ -47,24 +49,32 @@ const NoticeInfo = ({ info, isPast }: { info: NoticeInfo; isPast: boolean }) => 
         <div className="flex flex-col items-start justify-between md:max-w-[346px] w-full h-full">
           <div>
             <p className="text-orange text-sm sm:text-base font-bold">시급</p>
-            <div className="text-[#111322] text-xl sm:text-2xl font-bold flex items-center gap-2 mb-3">
+            <div className="text-[#111322] text-xl sm:text-2xl font-bold flex items-center gap-2 mb-3 text-ellipsis">
               {info?.hourlyPay.toLocaleString()}원
-              <span className="flex items-center bg-orange rounded-[20px] text-white text-xs sm:text-sm font-normal sm:font-bold py-2 px-3 gap-1.5">
-                <PayRate
-                  hourlyPay={info?.hourlyPay}
-                  originalPay={info?.originalHourlyPay}
-                  closed={info.closed}
-                  className={rateArrow}
-                  imgClass={imgClass}
-                />
-              </span>
+              {info?.hourlyPay <= info?.originalHourlyPay ? null : (
+                <span className="flex items-center bg-orange rounded-[20px] text-white text-xs sm:text-sm font-normal sm:font-bold py-2 px-3 gap-1.5">
+                  <PayRate
+                    hourlyPay={info?.hourlyPay}
+                    originalPay={info?.originalHourlyPay}
+                    closed={info.closed}
+                    className={rateArrow}
+                    imgClass={imgClass}
+                  />
+                </span>
+              )}
             </div>
             <div className="text-gray-50 text-sm sm:text-base flex items-center gap-1.5 mb-3">
               <WorkHour startsAt={info.startsAt} workhour={info.workhour} className={timeClass} />
             </div>
             <div className="text-gray-50 text-sm sm:text-base flex items-center gap-1.5 mb-3">
               <div className="relative w-4 h-4 sm:w-5 sm:h-5">
-                <Image src={'/location.png'} fill alt="주소" />
+                <Image
+                  src={'/location.png'}
+                  fill
+                  sizes="16px"
+                  className="aspect-square"
+                  alt="주소"
+                />
               </div>
               {info.address1}
             </div>
@@ -72,13 +82,14 @@ const NoticeInfo = ({ info, isPast }: { info: NoticeInfo; isPast: boolean }) => 
               {info.shopDescription}
             </div>
           </div>
-
-          <ApplyButton
-            shopId={info.shopId}
-            noticeId={info.noticeId}
-            closed={info.closed}
-            isPast={isPast}
-          />
+          {userData?.item.user.item.type !== 'employer' && (
+            <ApplyButton
+              shopId={info.shopId}
+              noticeId={info.noticeId}
+              closed={info.closed}
+              isPast={isPast}
+            />
+          )}
         </div>
       </div>
       <div className="bg-gray-10 rounded-xl p-8 mb-[60px] text-sm sm:text-base">

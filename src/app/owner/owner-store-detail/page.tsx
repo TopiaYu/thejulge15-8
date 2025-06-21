@@ -1,9 +1,10 @@
 'use client';
 
+import RouterGuard from '@/components/common/RouterGuard';
 import MyStore from './MyStore';
 import RegisteredJob from './RegisteredJob';
 
-export default function OwnerStoreDetail() {
+function OwnerStoreDetail() {
   return (
     <>
       <MyStore />
@@ -11,3 +12,5 @@ export default function OwnerStoreDetail() {
     </>
   );
 }
+
+export default RouterGuard(OwnerStoreDetail, ['employer']);
