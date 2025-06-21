@@ -147,7 +147,7 @@ export default function ResultPage() {
           <>
             {/* 공고 리스트 */}
             <div className="w-full max-w-[1100px] mx-auto">
-              <ul className="grid grid-cols-2 xl:grid-cols-3 gap-x-1 gap-y-6">
+              <ul className="flex flex-wrap items-center gap-x-2 gap-y-4 md:gap-x-3.5 sm:gap-y-8">
                 {noticeList.map((notice) => {
                   const { item } = notice;
                   const shop = item.shop.item;
