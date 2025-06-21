@@ -72,7 +72,7 @@ const NoticeCard = ({ info }: { info: LatestData }) => {
             <div
               className={`${clsx(closed ? 'opacity-30' : 'opacity-100')}, relative w-4 h-4 sm:w-5 sm:h-5`}
             >
-              <Image src={'/location.png'} fill alt="주소" />
+              <Image src={'/location.png'} fill sizes="16px" className="aspect-square" alt="주소" />
             </div>
             {address1}
           </div>
@@ -80,7 +80,7 @@ const NoticeCard = ({ info }: { info: LatestData }) => {
             <span className="text-ellipsis overflow-hidden whitespace-nowrap">
               {hourlyPay.toLocaleString()}원
             </span>
-            {hourlyPay <= originalHourlyPay ? null : (
+            {hourlyPay < originalHourlyPay && hourlyPay === originalHourlyPay ? null : (
               <span
                 className={`flex items-center ${hourlyPay < originalHourlyPay ? 'sm:bg-white' : 'sm:bg-orange'} rounded-[20px] text-orange sm:text-white text-xs sm:text-sm font-normal sm:font-bold sm:py-2 sm:px-3 gap-1.5`}
               >

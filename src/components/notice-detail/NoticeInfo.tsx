@@ -68,7 +68,13 @@ const NoticeInfo = ({ info, isPast }: { info: NoticeInfo; isPast: boolean }) => 
             </div>
             <div className="text-gray-50 text-sm sm:text-base flex items-center gap-1.5 mb-3">
               <div className="relative w-4 h-4 sm:w-5 sm:h-5">
-                <Image src={'/location.png'} fill alt="주소" />
+                <Image
+                  src={'/location.png'}
+                  fill
+                  sizes="16px"
+                  className="aspect-square"
+                  alt="주소"
+                />
               </div>
               {info.address1}
             </div>

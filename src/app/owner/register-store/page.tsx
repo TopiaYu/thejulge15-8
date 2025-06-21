@@ -3,6 +3,7 @@
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import RouterGuard from '@/components/common/RouterGuard';
 
 // categories와 seoulcity 배열을 여기에 정의하여 전역적으로 접근 가능하게 합니다.
 const categories = ['한식', '중식', '일식', '양식', '분식'];
@@ -44,7 +45,7 @@ interface ShopForm {
   imageUrl: string;
 }
 
-export default function Page() {
+function Page() {
   const router = useRouter();
   const searchParams = useSearchParams(); // useSearchParams 훅 사용
   const categoryRef = useRef<HTMLDivElement>(null);
@@ -444,3 +445,5 @@ export default function Page() {
     </div>
   );
 }
+
+export default RouterGuard(Page, ['employer']);

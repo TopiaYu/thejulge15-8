@@ -17,7 +17,7 @@ const WorkHour = ({ startsAt, workhour, className }: WorkHourProps) => {
   return (
     <>
       <div className={className}>
-        <Image src={'/time.png'} fill alt="시간" />
+        <Image src={'/time.png'} fill sizes="16px" className="aspect-square" alt="시간" />
       </div>
       {`${year}-${month}-${day} ${hour}:${minute}~${endHour}:${minute} (${workhour}시간)`}
     </>
