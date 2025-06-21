@@ -7,10 +7,11 @@ import NoticeCard from '@/components/notice-detail/NoticeCard';
 import Filter from '@/components/notice/filter';
 import DetailFilter from '@/components/notice/detailfilter';
 import Pagination from '@/components/member/myprofile/Pagination';
+import { NoticeItem, ShopItem } from '@/types/types';
 
 import Image from 'next/image';
 import axios from '@/lib/api/axios';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 // 정렬값 변환
@@ -27,12 +28,6 @@ const convertSortToQuery = (sort: string): string | undefined => {
     default:
       return undefined;
   }
-};
-
-// 날짜 포맷
-const formatRFC3339 = (date: Date | null): string | undefined => {
-  if (!date) return undefined;
-  return date.toISOString();
 };
 
 // API 요청
@@ -60,26 +55,11 @@ const fetchNotices = async (params: {
   return res.data;
 };
 
-// 타입 정의
-interface ShopNotice {
-  item: {
-    id: string;
-    hourlyPay: number;
-    startsAt: string;
-    workhour: number;
-    description: string;
-    closed: boolean;
+/// API 응답 타입
+interface NoticeWithShop {
+  item: NoticeItem & {
     shop: {
-      item: {
-        id: string;
-        name: string;
-        category: string;
-        address1: string;
-        address2: string;
-        description: string;
-        imageUrl: string;
-        originalHourlyPay: number;
-      };
+      item: ShopItem;
     };
   };
 }
@@ -90,7 +70,7 @@ function ResultPageContent() {
   const { detailOption } = useDetailOption();
 
   const keyword = searchParams.get('keyword') || '';
-  const [noticeList, setNoticeList] = useState<ShopNotice[]>([]);
+  const [noticeList, setNoticeList] = useState<NoticeWithShop[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 6;
@@ -102,7 +82,7 @@ function ResultPageContent() {
           keyword,
           sort: convertSortToQuery(sortOption),
           address: detailOption.location[0],
-          startsAtGte: formatRFC3339(detailOption.startDay),
+          startsAtGte: detailOption.startDay ?? undefined,
           hourlyPayGte: detailOption.pay,
           offset: (currentPage - 1) * limit,
           limit,
@@ -117,7 +97,7 @@ function ResultPageContent() {
     };
 
     getNotices();
-  }, [keyword, sortOption, detailOption, currentPage, limit]);
+  }, [keyword, sortOption, detailOption, currentPage]);
 
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -141,11 +121,7 @@ function ResultPageContent() {
 
       {/* 공고 없음 */}
       <div className="flex-grow">
-        {noticeList.length === 0 && !keyword ? (
-          <div className="flex flex-col items-center justify-center w-full py-20">
-            <p>검색 결과가 없습니다.</p>
-          </div>
-        ) : noticeList.length === 0 && keyword ? (
+        {noticeList.length === 0 ? (
           <div className="flex flex-col items-center justify-center w-full py-20">
             <Image src="/no-result.png" alt="검색 결과 없음" width={300} height={300} />
           </div>
