@@ -6,6 +6,7 @@ import Modal from '@/components/member/Modal';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useToken from '@/lib/hooks/use-token';
 import axiosInstance from '@/lib/api/axios';
+import RouterGuard from '@/components/common/RouterGuard';
 
 interface JobPostRequestBody {
   hourlyPay: number;
@@ -35,8 +36,7 @@ interface JobPostDetailResponseItem {
     href: string;
   };
 }
-
-export default function JobPostFormPage() {
+function JobPostFormPage() {
   // 폼 입력 값 상태
   const [hourlyPay, setHourlyPay] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
@@ -292,3 +292,5 @@ export default function JobPostFormPage() {
     </div>
   );
 }
+
+export default RouterGuard(JobPostFormPage, ['employer']);

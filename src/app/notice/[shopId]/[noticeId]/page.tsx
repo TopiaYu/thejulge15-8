@@ -93,7 +93,6 @@ const NoticeDetail = ({ params }: { params: Promise<Props> }) => {
     };
     getNotice();
   }, [shopId, noticeId]);
-  console.log(notice);
 
   useEffect(() => {
     const latest = localStorage.getItem('latest');

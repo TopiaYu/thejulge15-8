@@ -59,7 +59,7 @@ export default function Login() {
       const token = response.data?.item?.token;
       if (token) {
         localStorage.setItem('accessToken', token);
-        router.push('/posts');
+        router.push('/');
       } else {
         alert('로그인에 실패했습니다.');
       }

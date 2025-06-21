@@ -16,8 +16,20 @@ const PayRate = ({ hourlyPay, originalPay, closed, className, imgClass = '' }: P
           <span>기존 시급보다</span>
           <span>{rate}%</span>
           <div className={className}>
-            <Image src={'/arrow.png'} fill alt="인상률" className={`h-[13px] ${imgClass}`} />
-            <Image src={'/arrow-orange.png'} fill alt="인상률" className={`h-[13px] ${imgClass}`} />
+            <Image
+              src={'/arrow.png'}
+              fill
+              sizes="13px"
+              alt="인상률"
+              className={`h-[13px] ${imgClass} aspect-square`}
+            />
+            <Image
+              src={'/arrow-orange.png'}
+              fill
+              sizes="13px"
+              alt="인상률"
+              className={`h-[13px] ${imgClass} aspect-square`}
+            />
           </div>
         </>
       )}
