@@ -10,7 +10,8 @@ import Pagination from '@/components/member/myprofile/Pagination';
 
 import Image from 'next/image';
 import axios from '@/lib/api/axios';
-import { usePathname, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 // 정렬값 변환
 const convertSortToQuery = (sort: string): string | undefined => {
@@ -83,23 +84,16 @@ interface ShopNotice {
   };
 }
 
-export default function ResultPage() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [searchParams, setSearchParams] = useState<URLSearchParams>();
+function ResultPageContent() {
+  const searchParams = useSearchParams();
   const { sortOption } = useSortOption();
   const { detailOption } = useDetailOption();
 
-  const keyword = searchParams?.get('keyword') || '';
+  const keyword = searchParams.get('keyword') || '';
   const [noticeList, setNoticeList] = useState<ShopNotice[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 6;
-
-  useEffect(() => {
-    const url = new URLSearchParams(window.location.search);
-    setSearchParams(url);
-  }, [pathname]);
 
   useEffect(() => {
     const getNotices = async () => {
@@ -193,5 +187,13 @@ export default function ResultPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ResultPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResultPageContent />
+    </Suspense>
   );
 }

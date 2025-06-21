@@ -147,10 +147,6 @@ const Search = ({ value, onChange }: SearchProps) => {
     }
   }, [value]);
 
-  console.log(value.length);
-  console.log(isFocus);
-  console.log(isOpen);
-
   return (
     <div className="col-span-2 lg:max-w-[450px] md:max-w-[340px] w-full flex flex-col relative">
       <form
