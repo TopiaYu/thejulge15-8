@@ -5,8 +5,9 @@ import ApplicantsTable from '../../ApplicantTable';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useJobPostStore } from '../../stores/jobPostStore';
+import RouterGuard from '@/components/common/RouterGuard';
 
-export default function JobDetail() {
+const JobDetail = () => {
   const params = useParams();
   const shopId = params.shopId as string;
   const noticeId = params.noticeId as string;
@@ -46,4 +47,6 @@ export default function JobDetail() {
       <ApplicantsTable shopId={shopId} noticeId={noticeId} />
     </>
   );
-}
+};
+
+export default RouterGuard(JobDetail, ['employer']);

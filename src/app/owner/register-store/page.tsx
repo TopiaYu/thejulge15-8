@@ -265,7 +265,7 @@ export default function Page() {
   };
 
   const handleClose = () => {
-    router.push('/owner'); // 소유주 메인 페이지로 이동
+    router.push('/owner/owner-store-detail'); // 소유주 메인 페이지로 이동
   };
 
   const handleSelect = (key: keyof typeof form, value: string) => {

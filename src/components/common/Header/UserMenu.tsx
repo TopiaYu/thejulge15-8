@@ -19,7 +19,7 @@ const UserMenu = () => {
   const router = useRouter();
   const token = useToken();
   const albaActiveLink = userData?.item.user.item.name ? '/member/myprofile' : '/member/profile';
-  const ownerActiveLink = userData?.item.user.item.name ? '/owner/owner-store-detail' : '/owner';
+  const ownerActiveLink = userData?.item.user.item.shop ? '/owner/owner-store-detail' : '/owner';
 
   const userValue = useMemo(() => {
     if (!userData) return null;

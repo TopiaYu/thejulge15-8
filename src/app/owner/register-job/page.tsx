@@ -105,13 +105,13 @@ export default function JobPostFormPage() {
     // 등록 모드: URL에 noticeId가 없을 때
     else {
       setIsEditMode(false);
-      const storedShop = localStorage.getItem('registeredShop');
-      if (storedShop) {
-        const parsedShop = JSON.parse(storedShop);
-        setShopId(parsedShop.id);
+      const shopFromAuthData = localStorage.getItem('auth-data');
+      if (shopFromAuthData) {
+        const authData = JSON.parse(shopFromAuthData);
+        const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item?.id;
+        setShopId(shopDetails);
       } else {
-        alert('가게 정보가 없습니다. 가게를 먼저 등록해주세요.');
-        router.push('/owner');
+        console.error('에러 발생');
       }
       setFormLoading(false);
     }
