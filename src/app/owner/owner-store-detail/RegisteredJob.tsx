@@ -89,31 +89,31 @@ export default function RegisteredJob() {
   }, []);
 
   // (추후 로직 변경) 로그아웃하면서 로컬스토리지가 사라질 경우 유저의 id를 반영해서 shop정보 가져오기
-  // useEffect(() => {
-  //   const storedShop = localStorage.getItem('registeredShop');
-  //   const shopFromAuthData = localStorage.getItem('auth-data');
-  //   if (storedShop) {
-  //     const paredShop: ShopDetail = JSON.parse(storedShop);
-  //     setShopId(paredShop.id);
-  //   } else {
-  //     // 로그아웃하면서 로컬스토리지가 사라질 경우 유저의 id를 반영해서 shop정보 가져오기
-  //     const authData = JSON.parse(shopFromAuthData);
-  //     const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item?.id;
-  //     setShopId(shopDetails);
-  //   }
-  // }, []);
-
   useEffect(() => {
+    const storedShop = localStorage.getItem('registeredShop');
     const shopFromAuthData = localStorage.getItem('auth-data');
-    if (shopFromAuthData) {
+    if (storedShop) {
+      const paredShop: ShopDetail = JSON.parse(storedShop);
+      setShopId(paredShop.id);
+    } else {
       // 로그아웃하면서 로컬스토리지가 사라질 경우 유저의 id를 반영해서 shop정보 가져오기
       const authData = JSON.parse(shopFromAuthData);
       const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item?.id;
       setShopId(shopDetails);
-    } else {
-      console.error();
     }
   }, []);
+
+  // useEffect(() => {
+  //   const shopFromAuthData = localStorage.getItem('auth-data');
+  //   if (shopFromAuthData) {
+  //     // 로그아웃하면서 로컬스토리지가 사라질 경우 유저의 id를 반영해서 shop정보 가져오기
+  //     const authData = JSON.parse(shopFromAuthData);
+  //     const shopDetails = authData?.state?.userData?.item?.user?.item?.shop?.item?.id;
+  //     setShopId(shopDetails);
+  //   } else {
+  //     console.error();
+  //   }
+  // }, []);
 
   const { notices, totalCount, isLoading, error, hasMore, fetchNotices, clearNotices } =
     useMyStoreNoticeStore();
@@ -143,7 +143,7 @@ export default function RegisteredJob() {
   if (notices.length === 0 && !isLoading && totalCount === 0) {
     return (
       <div className="bg-gray-5 py-15">
-        <div className="w-full max-w-[964px] px-8 max-[375px]:px-4 mx-auto">
+        <div className="w-full max-w-[1028px] px-8 max-[376px]:px-4 mx-auto">
           <header className="mb-6">
             <h1 className="text-2xl max-[374px]:text-lg font-bold">등록한 공고</h1>
           </header>
@@ -163,11 +163,11 @@ export default function RegisteredJob() {
 
   return (
     <div className="bg-gray-5 py-15">
-      <div className="w-full max-w-[964px] px-8 max-[375px]:px-4 mx-auto">
+      <div className="w-full max-w-[1028px] px-8 max-[376px]:px-4 mx-auto">
         <header className="mb-6">
           <h1 className="text-2xl max-[374px]:text-lg font-bold">내가 등록한 공고</h1>
         </header>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-3.5 gap-y-8">
           {notices.map((notice) => (
             <MyJobPost
               key={notice.id}
