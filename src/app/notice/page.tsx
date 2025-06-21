@@ -53,11 +53,13 @@ export default function JobList() {
     setCurrentPage(page);
   };
   const { userData } = useAuth();
+
+  // 첫 번째 useEffect 수정: userData를 의존성 배열에 추가
   useEffect(() => {
     async function fetchRecommendList(userID?: string) {
       try {
         let response;
-        console.log(userData);
+        // console.log(userData); // 이 console.log는 필요에 따라 유지하거나 제거해도 됩니다.
         if (userID) {
           const userAddress = userData?.item.user.item.address;
           response = await axios.get('/notices', {
@@ -92,8 +94,12 @@ export default function JobList() {
       }
     }
     const userAddress = userData?.item.user.item.address;
-    fetchRecommendList(userAddress);
-  }, []);
+    // userAddress가 있거나 userData가 로드되었을 때만 fetchRecommendList 실행
+    // userData가 null이 아닐 때만 fetchRecommendList(userAddress) 호출
+    if (userData !== undefined) {
+      fetchRecommendList(userAddress);
+    }
+  }, [userData]); // userData를 의존성 배열에 추가
 
   useEffect(() => {
     const fetchData = async () => {
@@ -142,7 +148,8 @@ export default function JobList() {
     };
 
     fetchData();
-  }, [sortOption, detailOption, currentPage]);
+  }, [sortOption, detailOption, currentPage, itemsCounts]); // itemsCounts도 의존성 추가 (변할 일 없으면 추가 안 해도 무방)
+
   return (
     <>
       <section className="bg-red-10 flex flex-col justify-center items-center py-[40px]">

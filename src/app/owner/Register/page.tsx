@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import Image from 'next/image'; // Image 컴포넌트를 임포트합니다.
 
 // 가게 정보 타입 정의
 interface Shop {
@@ -72,10 +72,14 @@ const Page = () => {
           <div className="w-full border border-gray-20 grid grid-cols-1 gap-8 p-6 rounded-2xl md:grid-cols-[1fr_minmax(0,346px)]">
             <div className="w-full min-h-[308px] border-0 rounded-xl bg-gray-200 flex items-center justify-center overflow-hidden">
               {shop.imageUrl ? (
-                <img
+                // <img> 태그를 <Image /> 컴포넌트로 변경
+                <Image
                   src={shop.imageUrl}
-                  alt={shop.name || 'Shop'}
-                  className="w-full h-full object-cover"
+                  alt={shop.name || 'Shop Image'} // alt 속성은 필수로 입력해야 합니다.
+                  fill // 부모 div의 크기에 맞춰 채웁니다.
+                  className="w-full h-full object-cover" // 기존 스타일 유지
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // 반응형 이미지 크기 지정 (필요에 따라 조정)
+                  priority // LCP(Largest Contentful Paint)에 중요한 이미지라면 추가
                 />
               ) : (
                 <span className="text-gray-500">이미지 없음</span>
