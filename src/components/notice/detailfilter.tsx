@@ -1,12 +1,11 @@
 'use client';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDetailOption } from '@/lib/hooks/zustand';
 type Option = {
   location: string[];
-  startDay: Date | null;
+  startDay: string | null;
   pay: number;
 };
 
@@ -97,16 +96,10 @@ export default function DetailFilter() {
                     className="w-[24px] font-bold hover:bg-gray-100 cursor-pointer"
                     onClick={() => setDetailOpen(false)}
                   >
-                    <button
-                      className="relative w-[24px] font-bold hover:bg-gray-100 cursor-pointer"
-                      onClick={() => setDetailOpen(false)}
-                    >
-                      <Image alt="닫기버튼" src="/close-icon.png" width={20} height={20} />
-                    </button>
+                    <Image alt="닫기버튼" src="/close-icon.png" width={20} height={20} />
                   </button>
                 </div>
 
-                {/* 위치 필터 */}
                 <div className="flex flex-col gap-[12px]">
                   <div className="text-base">위치</div>
                   <div className="grid gap-x-[61px] gap-y-[20px] grid-cols-2 overflow-y-auto border rounded-md border-gray-200 h-[258px] p-[20px]">
@@ -154,25 +147,22 @@ export default function DetailFilter() {
 
                 <hr className="border-gray-200" />
 
-                {/* 시작일 필터 */}
                 <div className="grid gap-[8px]">
                   <label>시작일</label>
-                  <DatePicker
-                    selected={selectOption.startDay}
-                    onChange={(date) => {
-                      if (!date) return;
+                  <input
+                    type="date"
+                    value={selectOption.startDay || ''}
+                    onChange={(e) =>
                       setSelectOption((prev) => ({
                         ...prev,
-                        startDay: date,
-                      }));
-                    }}
-                    dateFormat="yyyy/MM/dd"
+                        startDay: e.target.value,
+                      }))
+                    }
                     className="border p-3 border-gray-300 text-gray-700 rounded-md w-full focus:outline-none"
-                    placeholderText="입력"
+                    placeholder="입력"
                   />
                 </div>
 
-                {/* 금액 필터 */}
                 <div className="grid gap-[8px]">
                   <label>금액</label>
                   <div className="flex gap-[12px] items-center">
@@ -197,7 +187,7 @@ export default function DetailFilter() {
                             }));
                           }
                         }}
-                        className="border p-3 border-gray-300 text-gray-700 rounded-md w-full focus:outline-none"
+                        className="appearance-none border p-3 border-gray-300 text-gray-700 rounded-md w-full focus:outline-none"
                         placeholder="입력"
                       />
 
@@ -209,7 +199,6 @@ export default function DetailFilter() {
                   </div>
                 </div>
 
-                {/* 버튼 */}
                 <div className="flex gap-[8px] h-[49px]">
                   <button
                     className="border border-red-500 text-red-500 w-[82px] h-full rounded-md font-bold cursor-pointer"
@@ -226,7 +215,6 @@ export default function DetailFilter() {
                   <button
                     className="font-bold bg-red-500 text-white rounded-md w-full h-[48px] cursor-pointer"
                     onClick={() => {
-                      console.log(detailOption);
                       setDetailOpen(false);
                       setDetailOption(selectOption);
                     }}
