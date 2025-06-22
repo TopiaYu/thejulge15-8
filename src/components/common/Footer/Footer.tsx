@@ -13,20 +13,38 @@ const Footer = () => {
           </ul>
         </li>
         <li>
-          <ul className="flex items-center justify-between gap-2.5">
+          <ul className="flex items-center justify-between gap-2.5 h-auto">
             <li>
               <Link href="mailto:thejulge@example.com">
-                <Image src="/email.png" width={25} height={25} alt="Email" />
+                <Image
+                  src="/email.png"
+                  width={25}
+                  height={25}
+                  className="aspect-square"
+                  alt="Email"
+                />
               </Link>
             </li>
             <li>
               <Link href="https://www.facebook.com/">
-                <Image src="/facebook.png" width={25} height={25} alt="Facebook" />
+                <Image
+                  src="/facebook.png"
+                  width={25}
+                  height={25}
+                  className="aspect-square"
+                  alt="Facebook"
+                />
               </Link>
             </li>
             <li>
               <Link href="https://www.instagram.com/">
-                <Image src="/insta.png" width={25} height={25} alt="Instagram" />
+                <Image
+                  src="/insta.png"
+                  width={25}
+                  height={25}
+                  className="aspect-square"
+                  alt="Instagram"
+                />
               </Link>
             </li>
           </ul>

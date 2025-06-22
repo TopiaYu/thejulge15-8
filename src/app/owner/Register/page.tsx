@@ -118,7 +118,7 @@ const Page = () => {
         ) : (
           // 등록된 가게가 없을 때 표시할 UI
           <div className="w-full mt-4 h-[217px] border border-solid border-gray-200 rounded-[12px] flex flex-col items-center justify-center">
-            <div className="font-normal text-base text-center mb-2">
+            <div className="font-normal text-base text-center mb-4">
               내 가게를 소개하고 공고도 등록해 보세요.
             </div>
             <button

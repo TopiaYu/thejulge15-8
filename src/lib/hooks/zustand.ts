@@ -6,7 +6,7 @@ interface SortOptionStore {
 }
 interface Filters {
   location: string[];
-  startDay: Date | null;
+  startDay: string | null;
   pay: number;
 }
 interface DetailOptionStore {

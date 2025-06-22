@@ -11,14 +11,25 @@ interface NoticeImage {
 const NoticeImage = ({ imageUrl, name, closed, className, isPast }: NoticeImage) => {
   return (
     <div className={className}>
-      {imageUrl !== '' ? <Image fill src={imageUrl} alt={name} className="object-cover" /> : ''}
+      {imageUrl !== '' ? (
+        <Image
+          fill
+          src={imageUrl}
+          alt={name}
+          sizes="50vw"
+          priority
+          className="object-cover aspect-video"
+        />
+      ) : (
+        ''
+      )}
       {closed && (
         <div className="flex justify-center items-center text-lg sm:text-2xl text-gray-30 absolute w-full h-full top-0 left-0 bg-black opacity-50 z-10">
           마감 완료
         </div>
       )}
       {isPast && (
-        <div className="flex justify-center items-center text-lg sm:text-2xl text-gray-30 absolute w-full h-full top-0 left-0 bg-black opacity-50 z-10">
+        <div className="flex justify-center items-center text-lg sm:text-2xl text-gray-30 absolute w-full h-full top-0 left-0 bg-black opacity-80 z-10">
           지난 공고
         </div>
       )}

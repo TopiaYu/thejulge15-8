@@ -13,13 +13,12 @@ const UserMenu = () => {
   const [alarmList, setAlarmList] = useState<AlarmList | null>(null);
   const [newAlarm, setNewAlarm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [alarmid, setAlarmId] = useState('');
   const [storageData, setStorageData] = useState<CancelData>();
   const { userData, logout, updateUserData } = useAuth();
   const router = useRouter();
   const token = useToken();
   const albaActiveLink = userData?.item.user.item.name ? '/member/myprofile' : '/member/profile';
-  const ownerActiveLink = userData?.item.user.item.name ? '/owner/owner-store-detail' : '/owner';
+  const ownerActiveLink = userData?.item.user.item.shop ? '/owner/owner-store-detail' : '/owner';
 
   const userValue = useMemo(() => {
     if (!userData) return null;
@@ -50,12 +49,11 @@ const UserMenu = () => {
 
   useEffect(() => {
     if (!userValue?.id || !storageData) return;
-    console.log('알림 데이터 시작');
 
     const getAlarmList = async () => {
       try {
         const res = await axios.get(
-          `/users/${userValue.id}/alerts?offset=${offsetRef.current}&limit=10`,
+          `/users/${userValue.id}/alerts?offset=0&limit=${offsetRef.current}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -63,15 +61,9 @@ const UserMenu = () => {
           },
         );
         const data = res.data;
-        console.log('알림 데이터');
-        console.log(data);
-
         setAlarmList(data);
 
-        // 불필요한 api 호출 막기
-        if (!data.hasNext) {
-          clearInterval(alarmInterval);
-        } else {
+        if (data.hasNext) {
           offsetRef.current += 10;
         }
       } catch (error) {
@@ -81,7 +73,7 @@ const UserMenu = () => {
 
     const alarmInterval = setInterval(() => {
       getAlarmList();
-    }, 30000);
+    }, 15000);
 
     return () => {
       clearInterval(alarmInterval);
@@ -91,30 +83,10 @@ const UserMenu = () => {
   // 새로운 알림 있으면 newAlarm true로 변경
   useEffect(() => {
     const alarmCheckPoint = alarmList?.items.some((item) => item.item.read === false);
-    if (alarmCheckPoint && !newAlarm) {
+    if (alarmCheckPoint) {
       setNewAlarm(true);
     }
-  }, [alarmList, newAlarm]);
-
-  // 알림 읽음 처리
-  useEffect(() => {
-    if (!alarmid) return;
-    const alarmRead = async () => {
-      const userId = userData?.item.user.item.id;
-      const res = await axios.put(`/users/${userId}/alerts/${alarmid}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = res.data;
-    };
-
-    alarmRead();
-  }, [alarmid]);
-
-  const getAlarmId = (e: React.MouseEvent<HTMLDivElement>) => {
-    setAlarmId(e.currentTarget.id);
-  };
+  }, [alarmList]);
 
   // 알림창 외부 클릭 시 알림창 닫힘
   const alarmRef = useRef<HTMLDivElement>(null);
@@ -156,10 +128,6 @@ const UserMenu = () => {
           >
             로그아웃
           </button>
-          <div className="relative flex flex-col items-end">
-            <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
-            {isOpen && <AlarmDropDown alarm={alarmList} getAlarmId={getAlarmId} ref={alarmRef} />}
-          </div>
         </>
       ) : (
         <>
@@ -173,9 +141,16 @@ const UserMenu = () => {
           >
             로그아웃
           </button>
-          <div className="relative flex flex-col items-end">
+          <div className="sm:relative flex sm:flex-col sm:items-end">
             <Alarm newAlarm={newAlarm} onClick={() => setIsOpen(!isOpen)} />
-            {isOpen && <AlarmDropDown alarm={alarmList} getAlarmId={getAlarmId} ref={alarmRef} />}
+            {isOpen && (
+              <AlarmDropDown
+                alarm={alarmList}
+                ref={alarmRef}
+                setNewAlarm={setNewAlarm}
+                onClick={() => setIsOpen(!isOpen)}
+              />
+            )}
           </div>
         </>
       )}

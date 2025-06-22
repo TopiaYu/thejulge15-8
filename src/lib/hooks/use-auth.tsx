@@ -17,7 +17,10 @@ const useAuth = create<AuthState>()(
       userData: null,
       isInitialized: false,
       login: (userData: LoginResponse) => set({ userData, isInitialized: true }),
-      logout: () => set({ userData: null }),
+      logout: () => {
+        localStorage.removeItem('registeredShop');
+        set({ userData: null });
+      },
       updateUserData: (newUserData: Partial<UserItem>) =>
         set((state) => {
           if (!state.userData) return {};

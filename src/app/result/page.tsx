@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { useSortOption, useDetailOption } from '@/lib/hooks/zustand';
-
 import NoticeCard from '@/components/notice-detail/NoticeCard';
 import Filter from '@/components/notice/filter';
 import DetailFilter from '@/components/notice/detailfilter';
 import Pagination from '@/components/member/myprofile/Pagination';
-
 import Image from 'next/image';
 import axios from '@/lib/api/axios';
+import { NoticeItem, ShopItem } from '@/types/types';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import MySpinner from '@/components/common/Spinner';
 
 // 정렬값 변환
 const convertSortToQuery = (sort: string): string | undefined => {
@@ -26,12 +27,6 @@ const convertSortToQuery = (sort: string): string | undefined => {
     default:
       return undefined;
   }
-};
-
-// 날짜 포맷
-const formatRFC3339 = (date: Date | null): string | undefined => {
-  if (!date) return undefined;
-  return date.toISOString();
 };
 
 // API 요청
@@ -59,37 +54,22 @@ const fetchNotices = async (params: {
   return res.data;
 };
 
-// 타입 정의
-interface ShopNotice {
-  item: {
-    id: string;
-    hourlyPay: number;
-    startsAt: string;
-    workhour: number;
-    description: string;
-    closed: boolean;
+/// API 응답 타입
+interface NoticeWithShop {
+  item: NoticeItem & {
     shop: {
-      item: {
-        id: string;
-        name: string;
-        category: string;
-        address1: string;
-        address2: string;
-        description: string;
-        imageUrl: string;
-        originalHourlyPay: number;
-      };
+      item: ShopItem;
     };
   };
 }
 
-export default function ResultPage() {
+function ResultPageContent() {
   const searchParams = useSearchParams();
   const { sortOption } = useSortOption();
   const { detailOption } = useDetailOption();
 
   const keyword = searchParams.get('keyword') || '';
-  const [noticeList, setNoticeList] = useState<ShopNotice[]>([]);
+  const [noticeList, setNoticeList] = useState<NoticeWithShop[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 6;
@@ -101,7 +81,7 @@ export default function ResultPage() {
           keyword,
           sort: convertSortToQuery(sortOption),
           address: detailOption.location[0],
-          startsAtGte: formatRFC3339(detailOption.startDay),
+          startsAtGte: detailOption.startDay ?? undefined,
           hourlyPayGte: detailOption.pay,
           offset: (currentPage - 1) * limit,
           limit,
@@ -121,7 +101,7 @@ export default function ResultPage() {
   const totalPages = Math.ceil(totalCount / limit);
 
   return (
-    <div className="w-full min-h-screen flex flex-col px-5 md:px-10 xl:px-40 mt-10">
+    <div className="max-w-[964px] w-full min-h-screen flex flex-col lg:mx-auto lg:px-0 md:mx-0 md:px-8 px-[13px] mt-10 ">
       {/* 검색 + 필터 */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex flex-col gap-2">
@@ -147,8 +127,8 @@ export default function ResultPage() {
         ) : (
           <>
             {/* 공고 리스트 */}
-            <div className="w-full max-w-[1100px] mx-auto">
-              <ul className="grid grid-cols-2 xl:grid-cols-3 gap-x-1 gap-y-6">
+            <div className="w-full max-w-[1100px] mx-auto mb-7 md:mb-10">
+              <ul className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {noticeList.map((notice) => {
                   const { item } = notice;
                   const shop = item.shop.item;
@@ -186,5 +166,13 @@ export default function ResultPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ResultPage() {
+  return (
+    <Suspense fallback={<MySpinner isLoading={true} />}>
+      <ResultPageContent />
+    </Suspense>
   );
 }

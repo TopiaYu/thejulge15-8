@@ -31,7 +31,8 @@ const NoticeCard = ({ info }: { info: LatestData }) => {
     imageUrl,
     originalHourlyPay,
   } = info;
-  const className = 'relative w-full h-full min-h-[84px] rounded-xl overflow-hidden';
+  const className =
+    'relative w-full h-full max-h-[105px] min-h-[105px] sm:min-h-[150px] rounded-xl overflow-hidden';
   const rateArrow = 'relative w-[11px] h-[11px] sm:w-[13px] sm:h-[13px]';
   const imgClass = 'first:hidden sm:first:inline-block sm:last:hidden';
   const timeClass = `relative w-4 h-4 sm:w-5 sm:h-5 shrink-0`;
@@ -42,10 +43,7 @@ const NoticeCard = ({ info }: { info: LatestData }) => {
 
   const isPast = startAt < now;
   return (
-    <Link
-      href={`/notice/${shopId}/${noticeId}`}
-      className="md:w-[312px] sm:max-w-[332px] w-full h-[261px] sm:h-[359px] md:h-[349px]"
-    >
+    <Link href={`/notice/${shopId}/${noticeId}`} className="w-full h-full">
       <div className="w-full h-full p-3 md:p-4 flex flex-col gap-3 md:gap-5 border border-solid border-gray-20 rounded-xl">
         <NoticeImage
           imageUrl={imageUrl}
@@ -71,23 +69,27 @@ const NoticeCard = ({ info }: { info: LatestData }) => {
             <div
               className={`${clsx(closed ? 'opacity-30' : 'opacity-100')}, relative w-4 h-4 sm:w-5 sm:h-5`}
             >
-              <Image src={'/location.png'} fill alt="주소" />
+              <Image src={'/location.png'} fill sizes="16px" className="aspect-square" alt="주소" />
             </div>
             {address1}
           </div>
-          <div className="flex flex-col sm:flex-row sm:gap-7 sm:items-center text-[18px]">
-            {hourlyPay.toLocaleString()}원
-            <span
-              className={`flex items-center ${hourlyPay < originalHourlyPay ? 'sm:bg-white' : 'sm:bg-orange'} rounded-[20px] text-orange sm:text-white text-xs sm:text-sm font-normal sm:font-bold sm:py-2 sm:px-3 gap-1.5`}
-            >
-              <PayRate
-                hourlyPay={hourlyPay}
-                originalPay={originalHourlyPay}
-                closed={closed}
-                className={rateArrow}
-                imgClass={imgClass}
-              />
+          <div className="flex flex-col sm:flex-row sm:items-center text-[18px] sm:justify-between">
+            <span className="text-ellipsis overflow-hidden whitespace-nowrap">
+              {hourlyPay.toLocaleString()}원
             </span>
+            {hourlyPay < originalHourlyPay && hourlyPay === originalHourlyPay ? null : (
+              <span
+                className={`flex items-center ${hourlyPay < originalHourlyPay || hourlyPay === originalHourlyPay ? 'sm:bg-white' : 'sm:bg-orange'} rounded-[20px] text-orange sm:text-white text-xs sm:text-sm font-normal sm:font-bold sm:py-2 sm:px-3 gap-1.5`}
+              >
+                <PayRate
+                  hourlyPay={hourlyPay}
+                  originalPay={originalHourlyPay}
+                  closed={closed}
+                  className={rateArrow}
+                  imgClass={imgClass}
+                />
+              </span>
+            )}
           </div>
         </div>
       </div>

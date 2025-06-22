@@ -39,7 +39,7 @@ interface StoreDetailProps {
 }
 
 export default function StoreDetail({ item }: StoreDetailProps) {
-  const { hourlyPay, startsAt, workhour, description, shop } = item;
+  const { hourlyPay, startsAt, workhour, description, shop, closed } = item;
   const { name, category, address1, address2, imageUrl, originalHourlyPay } = shop.item;
   const fullAddress = `${address1} ${address2}`;
   const router = useRouter();
@@ -67,10 +67,15 @@ export default function StoreDetail({ item }: StoreDetailProps) {
     const dateStr = `${startDate.getFullYear()}-${pad(startDate.getMonth() + 1)}-${pad(startDate.getDate())}`;
     const startTimeStr = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
     const endTimeStr = `${pad(endDate.getHours())}:${pad(endDate.getMinutes())}`;
-    return `${dateStr} ${startTimeStr}~${endTimeStr}(${workhour}시간)`;
+    return `${dateStr} ${startTimeStr}~${endTimeStr} (${workhour}시간)`;
   }
 
   const displayTime = formatJobTime(startsAt, workhour);
+
+  const isExpired = closed;
+  const startsAtDate = new Date(startsAt);
+  const now = new Date();
+  const isPassed = startsAtDate.getTime() < now.getTime();
 
   return (
     <div className="w-full max-w-[964px] px-8 max-[375px]:px-4 mx-auto">
@@ -84,6 +89,13 @@ export default function StoreDetail({ item }: StoreDetailProps) {
       >
         <div className="w-full min-h-[308px] border-0 rounded-xl bg-amber-700 relative overflow-hidden">
           <Image src={imageUrl} alt="가게 이미지" layout="fill" objectFit="cover" />
+          {(isExpired || isPassed) && (
+            <div className="absolute inset-0 h-full w-full flex justify-center items-center bg-black opacity-70 z-10">
+              <span className="text-gray-20 font-bold text-3xl z-20">
+                {isExpired ? '마감 완료' : '지난 공고'}
+              </span>
+            </div>
+          )}
         </div>
         <div className="mt-4">
           <h3 className="text-base max-[374px]:text-sm text-orange font-bold">시급</h3>

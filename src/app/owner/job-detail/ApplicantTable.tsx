@@ -163,7 +163,8 @@ export default function ApplicantsTable({ shopId, noticeId }: ApplicantTableProp
             {applicants.length > 0 ? (
               applicants.map((applicant) => (
                 <tr key={applicant.id} className="border-b border-gray-20">
-                  <td className="px-3.5 py-4 w-[90px]">{applicant.name}</td>
+                  {/* 이름수 고정 */}
+                  <td className="px-3.5 py-4 w-[90px]">{applicant.name?.substring(0, 4)}</td>
                   <td className="px-3.5 py-4 w-[340px] hidden sm:table-cell">
                     <div // 스크롤 스타일을 위해서 div 추가
                       className="overflow-y-auto max-h-12"
