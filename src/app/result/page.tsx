@@ -2,15 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useSortOption, useDetailOption } from '@/lib/hooks/zustand';
-
 import NoticeCard from '@/components/notice-detail/NoticeCard';
 import Filter from '@/components/notice/filter';
 import DetailFilter from '@/components/notice/detailfilter';
 import Pagination from '@/components/member/myprofile/Pagination';
-import { NoticeItem, ShopItem } from '@/types/types';
-
 import Image from 'next/image';
 import axios from '@/lib/api/axios';
+import { NoticeItem, ShopItem } from '@/types/types';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import MySpinner from '@/components/common/Spinner';
