@@ -79,7 +79,7 @@ const NoticeCard = ({ info }: { info: LatestData }) => {
             </span>
             {hourlyPay < originalHourlyPay && hourlyPay === originalHourlyPay ? null : (
               <span
-                className={`flex items-center ${hourlyPay < originalHourlyPay ? 'sm:bg-white' : 'sm:bg-orange'} rounded-[20px] text-orange sm:text-white text-xs sm:text-sm font-normal sm:font-bold sm:py-2 sm:px-3 gap-1.5`}
+                className={`flex items-center ${hourlyPay < originalHourlyPay || hourlyPay === originalHourlyPay ? 'sm:bg-white' : 'sm:bg-orange'} rounded-[20px] text-orange sm:text-white text-xs sm:text-sm font-normal sm:font-bold sm:py-2 sm:px-3 gap-1.5`}
               >
                 <PayRate
                   hourlyPay={hourlyPay}

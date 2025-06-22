@@ -11,7 +11,7 @@ const PayRate = ({ hourlyPay, originalPay, closed, className, imgClass = '' }: P
   const rate = Math.floor(((hourlyPay - originalPay) / originalPay) * 100);
   return (
     <>
-      {rate < 0 ? null : (
+      {rate < 0 || rate === 0 ? null : (
         <>
           <span>기존 시급보다</span>
           <span>{rate}%</span>
