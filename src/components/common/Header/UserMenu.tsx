@@ -63,10 +63,7 @@ const UserMenu = () => {
         const data = res.data;
         setAlarmList(data);
 
-        // 불필요한 api 호출 막기
-        if (!data.hasNext) {
-          clearInterval(alarmInterval);
-        } else {
+        if (data.hasNext) {
           offsetRef.current += 10;
         }
       } catch (error) {
@@ -74,12 +71,9 @@ const UserMenu = () => {
       }
     };
 
-    // 첫 렌더링 시 실행
-    getAlarmList();
-
     const alarmInterval = setInterval(() => {
       getAlarmList();
-    }, 30000);
+    }, 15000);
 
     return () => {
       clearInterval(alarmInterval);
