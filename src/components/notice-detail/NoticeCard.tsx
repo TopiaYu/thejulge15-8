@@ -43,10 +43,7 @@ const NoticeCard = ({ info }: { info: LatestData }) => {
 
   const isPast = startAt < now;
   return (
-    <Link
-      href={`/notice/${shopId}/${noticeId}`}
-      className="lg:w-[32.33%] w-[48.999%] min-h-[261px] sm:h-[359px] md:h-[349px]"
-    >
+    <Link href={`/notice/${shopId}/${noticeId}`} className="w-full h-full">
       <div className="w-full h-full p-3 md:p-4 flex flex-col gap-3 md:gap-5 border border-solid border-gray-20 rounded-xl">
         <NoticeImage
           imageUrl={imageUrl}

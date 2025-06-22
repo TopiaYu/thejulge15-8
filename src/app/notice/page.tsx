@@ -185,9 +185,9 @@ export default function JobList() {
         <MySpinner isLoading={isLoading} />
       ) : (
         <div className="">
-          <section className="bg-red-10 flex flex-col justify-center items-center py-[40px]">
-            <div className="w-full flex flex-col max-w-[964px] px-4">
-              <h1 className="text-black text-xl md:text-2xl font-bold mb-[16px] md:mb-[31px] w-full flex justify-start px-4">
+          <section className="bg-red-10 flex flex-col justify-center items-center py-[40px] mt-2">
+            <div className="w-full flex flex-col max-w-[996px] px-4">
+              <h1 className="text-black text-xl md:text-2xl font-bold mb-[16px] md:mb-[31px] w-full flex justify-start">
                 맞춤 공고
               </h1>
               <div className="">
