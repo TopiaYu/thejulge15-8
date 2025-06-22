@@ -42,7 +42,7 @@ const Search = ({ value, onChange }: SearchProps) => {
     const oldHistory = history.filter((item: string) => item && value !== item);
     const updateHistory = [value, ...oldHistory].slice(0, 5);
     localStorage.setItem('searched', JSON.stringify(updateHistory));
-
+    setRecently(updateHistory);
     if (validate) {
       router.push(`/result?keyword=${value}`);
     }
@@ -60,6 +60,12 @@ const Search = ({ value, onChange }: SearchProps) => {
   const liClickHandler = (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault();
     const value = e.currentTarget.textContent;
+    const storage = localStorage.getItem('searched');
+    const history = storage ? JSON.parse(storage) : [];
+    const oldHistory = history.filter((item: string) => item && value !== item);
+    const updateHistory = [value, ...oldHistory].slice(0, 5);
+    localStorage.setItem('searched', JSON.stringify(updateHistory));
+    setRecently(updateHistory);
     if (value !== null) {
       onChange(value);
       ref.current?.focus();
