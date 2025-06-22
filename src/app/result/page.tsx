@@ -128,7 +128,7 @@ function ResultPageContent() {
           <>
             {/* 공고 리스트 */}
             <div className="w-full max-w-[1100px] mx-auto mb-7 md:mb-10">
-              <ul className="flex flex-wrap items-center gap-x-2 gap-y-4 md:gap-x-3.5 sm:gap-y-8">
+              <ul className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {noticeList.map((notice) => {
                   const { item } = notice;
                   const shop = item.shop.item;

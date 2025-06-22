@@ -63,7 +63,7 @@ export default function DetailFilter() {
   }, [detailOpen]);
 
   return (
-    <div className="z-1 flex flex-row">
+    <div className="z-[9999] flex flex-row">
       <div className="relative">
         <button
           onClick={() => setDetailOpen(!detailOpen)}

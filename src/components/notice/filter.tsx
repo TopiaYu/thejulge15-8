@@ -28,7 +28,7 @@ export default function Filter() {
   }, []);
 
   return (
-    <div className="relative z-1" ref={wrapperRef}>
+    <div className="relative z-[9999]" ref={wrapperRef}>
       <button
         onClick={() => setFilter(!filter)}
         className="relative bg-gray-100 rounded-[5px] text-sm font-bold w-[105px] h-[30px] flex items-center justify-center cursor-pointer"
